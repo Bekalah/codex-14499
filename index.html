@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Cosmic Helix Renderer (ND-safe, Offline)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <style>
+    /* ND-safe: calm contrast, no motion, generous spacing */
+    :root { --bg:#0b0b12; --ink:#e8e8f0; --muted:#a6a6c1; }
+    html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    header { padding:12px 16px; border-bottom:1px solid #1d1d2a; }
+    .status { color:var(--muted); font-size:12px; }
+    #stage { display:block; margin:16px auto; box-shadow:0 0 0 1px #1d1d2a; }
+    .note { max-width:900px; margin:0 auto 16px; color:var(--muted); }
+    code { background:#11111a; padding:2px 4px; border-radius:3px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>Cosmic Helix Renderer</strong> — layered sacred geometry (offline, ND-safe)</div>
+    <div class="status" id="status">Loading palette…</div>
+  </header>
+
+  <canvas id="stage" width="1440" height="900" aria-label="Layered sacred geometry canvas"></canvas>
+  <p class="note">This static renderer encodes Vesica, Tree-of-Life, Fibonacci, and a static double-helix lattice. No animation, no autoplay, no external libs. Open this file directly.</p>
+
+  <script type="module">
+    import { renderHelix } from "./js/helix-renderer.mjs";
+
+    const elStatus = document.getElementById("status");
+    const canvas = document.getElementById("stage");
+    const ctx = canvas.getContext("2d");
+
+    async function loadJSON(path) {
+      try {
+        const res = await fetch(path, { cache: "no-store" });
+        if (!res.ok) throw new Error(String(res.status));
+        return await res.json();
+      } catch (err) {
+        return null;
+      }
+    }
+
+    const defaults = {
+      palette: {
+        bg:"#0b0b12",
+        ink:"#e8e8f0",
+        layers:["#b1c7ff","#89f7fe","#a0ffa1","#ffd27f","#f5a3ff","#d0d0e6"]
+      },
+      constants: {
+        THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144
+      }
+    };
+
+    const [palette, constants] = await Promise.all([
+      loadJSON("./data/palette.json"),
+      loadJSON("./data/constants.json")
+    ]);
+    const active = palette || defaults.palette;
+    const NUM = Object.assign({}, defaults.constants, constants || {});
+
+    function hexToRgb(hex){
+      const m = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})/i.exec(hex);
+      return m ? {r:parseInt(m[1],16), g:parseInt(m[2],16), b:parseInt(m[3],16)} : {r:0,g:0,b:0};
+    }
+    function luminance({r,g,b}){
+      const a=[r,g,b].map(v=>{
+        v/=255; return v<=0.03928? v/12.92 : Math.pow((v+0.055)/1.055,2.4);
+      });
+      return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
+    }
+    function contrastRatio(c1,c2){
+      const L1=luminance(hexToRgb(c1));
+      const L2=luminance(hexToRgb(c2));
+      const lighter=Math.max(L1,L2), darker=Math.min(L1,L2);
+      return (lighter+0.05)/(darker+0.05);
+    }
+
+    const ratio = contrastRatio(active.bg, active.ink);
+    elStatus.textContent = (palette ? "Palette loaded." : "Palette missing; using safe fallback.") + (constants ? " Constants loaded." : " Constants missing; defaults.") + ` Contrast ${ratio.toFixed(2)}:1`;
+
+    renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:active, NUM });
+  </script>
+</body>
+</html>
