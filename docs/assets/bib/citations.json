@@ -1,0 +1,10 @@
+[
+  {
+    "id": "w3c_media",
+    "type": "webpage",
+    "title": "Audio and Video: Accessible Alternatives",
+    "author": [{"family": "W3C", "given": "Web Accessibility Initiative"}],
+    "issued": {"date-parts": [[2019]]},
+    "URL": "https://www.w3.org/WAI/media/av/accessible/"
+  }
+]
