@@ -88,7 +88,7 @@ function drawFibonacci(ctx, { width, height, color, NUM }) {
   /* ND-safe: static logarithmic spiral built from 99 points. */
   const cx = width / 2;
   const cy = height / 2;
-  const phi = (1 + Math.sqrt(5)) / 2;
+  const phi = (1 + Math.sqrt(5)) / 2; // Golden Ratio keeps the spiral in sacred proportion
   const a = Math.min(width, height) / NUM.ONEFORTYFOUR;
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
