@@ -1,0 +1,9 @@
+{
+  "name": "codex-14499",
+  "version": "1.0.0",
+  "description": "Cosmic helix renderer and codex validation scripts",
+  "type": "module",
+  "scripts": {
+    "test": "pytest"
+  }
+}
