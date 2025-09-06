@@ -1,0 +1,16 @@
+.DS_Store
+Thumbs.db
+node_modules/
+__pycache__/
+*.pyc
+dist/
+build/
+.cache/
+*.zip
+*.tif
+*.tiff
+*.psd
+*.psb
+*.wav
+*.aiff
+*.aif
