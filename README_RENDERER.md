@@ -23,3 +23,13 @@ Colors come from `data/palette.json`. If the file is missing the renderer falls 
 - No motion or autoplay
 - Calming contrast and soft colors
 - Pure ES module, no dependencies, no builds
+
+## Tests
+
+Offline reassurance without workflow pipes:
+
+```sh
+npm test
+```
+
+This uses Node's script runner to call `pytest -q`, keeping everything local and dependency-free.
