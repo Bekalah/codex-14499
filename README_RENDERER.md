@@ -1,3 +1,12 @@
+```
+0     1     0     1     0     1     0
+ \   / \   / \   / \   / \   / \   /
+  \ /   \ /   \ /   \ /   \ /   \ /
+  / \   / \   / \   / \   / \   / \
+ /   \ /   \ /   \ /   \ /   \ /   \
+1     0     1     0     1     0     1
+```
+
 # Cosmic Helix Renderer
 
 Static offline canvas renderer for layered sacred geometry.
