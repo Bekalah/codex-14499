@@ -8,6 +8,7 @@
 ```
 
 # Cosmic Helix Renderer
+*Per Texturas Numerorum, Spira Loquitur*
 
 Static offline canvas renderer for layered sacred geometry.
 
