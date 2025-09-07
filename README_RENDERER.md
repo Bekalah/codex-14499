@@ -9,10 +9,10 @@ Static offline canvas renderer for layered sacred geometry.
 
 ## Layers
 
-1. Vesica field
-2. Tree-of-Life scaffold
-3. Fibonacci curve
-4. Static double-helix lattice
+1. Vesica field — establishes a harmonic grid of intersecting circles.
+2. Tree-of-Life scaffold — 10 sephirot with 22 connecting paths.
+3. Fibonacci curve — static growth spiral based on the golden ratio.
+4. Double-helix lattice — two phase-shifted waves joined by rungs.
 
 ## Palette
 
@@ -20,9 +20,16 @@ Colors come from `data/palette.json`. If the file is missing the renderer falls 
 
 ## ND-safe Design
 
-- No motion or autoplay
-- Calming contrast and soft colors
-- Pure ES module, no dependencies, no builds
+- No motion, autoplay, or external requests.
+- Calming contrast and soft colors for readability.
+- Geometry uses numerology constants (3,7,9,11,22,33,99,144) for proportions.
+- Pure ES module; no dependencies or build tools.
+
+## References
+
+Bibliography entries live in `data/citations.json`, including:
+
+- W3C Web Accessibility Initiative, "Audio and Video: Accessible Alternatives," 2019.
 
 ## Tests
 
