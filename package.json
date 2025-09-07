@@ -1,0 +1,8 @@
+{
+  "name": "codex-14499",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "pytest -q"
+  }
+}
