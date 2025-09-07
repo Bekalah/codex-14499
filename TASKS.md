@@ -1,7 +1,6 @@
 # Update Tasks
-
-- [ ] Provide contrast ratio verification for palette to ensure ND-safe readability.
-- [ ] Allow geometry constants (e.g., 3,7,9,11,22,33,99,144) to be adjusted via a small JSON config for experimentation.
-- [ ] Document layer math in greater depth in `README_RENDERER.md` to aid future contributors.
-- [ ] Add optional screenshot of rendered canvas to `README_RENDERER.md` for quick preview.
-- [ ] Test renderer across additional browsers to confirm offline fetch behavior and color rendering.
+- [ ] Research multi-repo composition patterns (microfrontends, plugin loaders) to refine cross-repo layering without duplication.
+- [ ] Expand `registry.json` to include version pins and integrity hashes for sibling data.
+- [ ] Implement optional schema tests for `assets/data/interface.schema.json` to guard contributions.
+- [ ] Add graceful fallbacks when sibling repos are unavailable so `composeView` still returns a usable snapshot.
+- [ ] Document Safety UI controls and cross-repo loading flow in `README_RENDERER.md`.
