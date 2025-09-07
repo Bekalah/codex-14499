@@ -1,7 +1,14 @@
 # Update Tasks
 
-- [ ] Provide contrast ratio verification for palette to ensure ND-safe readability.
-- [ ] Allow geometry constants (e.g., 3,7,9,11,22,33,99,144) to be adjusted via a small JSON config for experimentation.
+## Completed
+
+- [x] Static renderer, palette, and geometry configs load offline.
+- [x] Allow geometry constants (e.g., 3,7,9,11,22,33,99,144) to be adjusted via a small JSON config for experimentation.
+- [x] Provide contrast ratio verification for palette to ensure ND-safe readability.
+
+## Next Steps
+
 - [ ] Document layer math in greater depth in `README_RENDERER.md` to aid future contributors.
 - [ ] Add optional screenshot of rendered canvas to `README_RENDERER.md` for quick preview.
 - [ ] Test renderer across additional browsers to confirm offline fetch behavior and color rendering.
+- [ ] Map how API, renderer, and data can serve multiple games and complex world-building contexts.

@@ -18,6 +18,10 @@ Static offline canvas renderer for layered sacred geometry.
 
 Colors come from `data/palette.json`. If the file is missing the renderer falls back to a safe default and notes this inline.
 
+## Geometry Constants
+
+Numerology values (3,7,9,11,22,33,99,144) may be tweaked in `data/geometry.json`. Missing file reverts to the default set encoded in `index.html`.
+
 ## ND-safe Design
 
 - No motion or autoplay
