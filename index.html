@@ -49,7 +49,11 @@
         ink:"#e8e8f0",
         layers:["#b1c7ff","#89f7fe","#a0ffa1","#ffd27f","#f5a3ff","#d0d0e6"]
       },
+
       NUM: { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 }
+
+      constants: { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 }
+
     };
 
     const [palette, constants] = await Promise.all([
@@ -60,10 +64,15 @@
     const active = palette || defaults.palette;
     const NUM = constants || defaults.NUM;
 
+
     let msg = palette ? "Palette loaded." : "Palette missing; using safe fallback.";
     msg += " ";
     msg += constants ? "Constants loaded." : "Constants missing; using defaults.";
     elStatus.textContent = msg.trim();
+
+    const constants = await loadJSON("./data/constants.json");
+    const NUM = constants || defaults.constants;
+
 
     // ND-safe rationale: no motion, high readability, soft colors, layered order
     renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:active, NUM });
