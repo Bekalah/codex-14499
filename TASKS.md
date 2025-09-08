@@ -1,4 +1,9 @@
-# Update Tasks
+## Working
+
+- [x] Replaced broken helix renderer with a static HTML+Canvas version using layered sacred geometry.
+- [x] Palette loads from `data/palette.json` with a safe fallback if the file is missing.
+
+## To Do
 
 
 - [ ] Provide contrast ratio verification for palette to ensure ND-safe readability.
@@ -9,3 +14,4 @@
 - [ ] Document layer math in greater depth in `README_RENDERER.md` to aid future contributors.
 - [ ] Add optional screenshot of rendered canvas to `README_RENDERER.md` for quick preview.
 - [ ] Test renderer across additional browsers to confirm offline fetch behavior and color rendering.
+- [ ] Introduce style toggles to adapt visuals for book, learning, or music modes without breaking ND-safe rules.
