@@ -28,6 +28,14 @@ Static offline canvas renderer for layered sacred geometry.
 
 Colors come from `data/palette.json`. If the file is missing the renderer falls back to a safe default and notes this inline.
 
+Numerology constants (3,7,9,11,22,33,99,144) may be tweaked via `data/constants.json`. Delete the file to restore defaults.
+
+To check color contrast ratios against the background, run:
+
+```sh
+npm run contrast
+```
+
 ## ND-safe Design
 
 - No motion, autoplay, or external requests.
