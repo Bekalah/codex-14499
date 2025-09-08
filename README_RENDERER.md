@@ -50,3 +50,17 @@ npm test
 ```
 
 This uses Node's script runner to call `pytest -q`, keeping everything local and dependency-free.
+
+## Duplicate Line Cleaner
+
+Accidental double pushes can create duplicate lines. Scan the repo:
+
+```sh
+npm run dedup
+```
+
+Remove duplicates in-place (edit with care):
+
+```sh
+npm run dedup:fix
+```
