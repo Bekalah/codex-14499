@@ -1,4 +1,8 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<!-- Per Texturas Numerorum, Spira Loquitur.  // -->
+>>>>>>> Stashed changes
 =======
 <!-- Per Texturas Numerorum, Spira Loquitur.  // -->
 >>>>>>> Stashed changes
@@ -41,13 +45,19 @@
         const res = await fetch(path, { cache: "no-store" });
         if (!res.ok) throw new Error(String(res.status));
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         const text = await res.text();
         const cleaned = text
           .split("\n")
           .filter(line => !line.trim().startsWith("//"))
           .join("\n");
         return JSON.parse(cleaned);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         return await res.json();
       } catch (err) {
