@@ -6,15 +6,18 @@
     1) Vesica field (intersecting circles)
     2) Tree-of-Life scaffold (10 sephirot + 22 paths; simplified layout)
     3) Fibonacci curve (log spiral polyline; static)
-    4) Double-helix lattice (two phase-shifted sine waves)
+    4) Double-helix lattice (two phase-shifted strands)
   Notes:
     - No motion or animation.
     - All geometry parameterized by numerology constants.
     - Golden Ratio used in Fibonacci curve.
+    - Geometry uses numerology constants.
+    - Golden Ratio used for Fibonacci curve.
 */
 
 export function renderHelix(ctx, opts) {
   const { width, height, palette, NUM } = opts;
+  // ND-safe: fill background first to avoid flashes
   ctx.fillStyle = palette.bg;
   ctx.fillRect(0, 0, width, height);
 
@@ -32,13 +35,12 @@ export function drawVesica(ctx, { width, height, palette, NUM }) {
   ctx.strokeStyle = palette.layers[0];
   const radius = Math.min(width, height) / NUM.THREE;
   const offset = radius / NUM.NINE;
-  const centerY = height / 2;
-
+  const cy = height / 2;
   for (let i = -NUM.THREE; i <= NUM.THREE; i++) {
     const cx = width / 2 + i * offset * NUM.SEVEN;
     ctx.beginPath();
-    ctx.arc(cx - radius / NUM.THREE, centerY, radius, 0, Math.PI * 2);
-    ctx.arc(cx + radius / NUM.THREE, centerY, radius, 0, Math.PI * 2);
+    ctx.arc(cx - radius / NUM.THREE, cy, radius, 0, Math.PI * 2);
+    ctx.arc(cx + radius / NUM.THREE, cy, radius, 0, Math.PI * 2);
     ctx.stroke();
   }
   ctx.restore();
@@ -72,6 +74,7 @@ export function drawTree(ctx, { width, height, palette, NUM }) {
   });
   ctx.stroke();
   nodes.forEach(([nx,ny])=>{
+  nodes.forEach(([nx, ny]) => {
     ctx.beginPath();
     ctx.arc(nx*width, ny*height, r, 0, Math.PI*2);
     ctx.fill();
