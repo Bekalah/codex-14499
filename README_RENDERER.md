@@ -5,6 +5,7 @@ Static offline renderer for the Codex 144:99 geometry helix. Double-click `index
 Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser—no server or network calls.
 Static offline renderer for the Codex 144:99 geometry helix. Double-click `index.html` to open in any modern browser.
 No server, no network.
+Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser—no server or network calls.
 
 ## Files
 - `index.html` – entry point with 1440×900 canvas and safe palette fallback.
