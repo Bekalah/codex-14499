@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Octagram Node (Pathworking, Atelier-Safe)",
+  "type": "object",
+  "required": ["tarot","archetype","letter","sephira","triple_key","gameplay","safety","provenance"],
+  "properties": {
+    "tarot": {"type":"string"},
+    "archetype": {"type":"string"},
+    "letter": {"type":"string","description":"Hebrew letter for the path/card if applicable"},
+    "sephira": {"type":"string","description":"Sephira or inter-sephiroth path focus"},
+    "astrology": {"type":"string","description":"Sign/planet, decan slice"},
+    "ray": {"type":"integer"},
+    "freq_hz": {"type":"integer"},
+    "pigment": {"type":"string"},
+    "crystal": {"type":"string"},
+    "artifact": {"type":"string"},
+    "psyche": {"type":"object"},
+    "triple_key": {
+      "type":"object",
+      "required": ["master","shem","tara"],
+      "properties": {
+        "master":{"type":"string","description":"Canon lineage master"},
+        "shem":{"type":"object","required":["angel","daemon","ladder_ref"],"properties":{
+          "angel":{"type":"string"},
+          "daemon":{"type":"string"},
+          "ladder_ref":{"type":"string","description":"Path reference within Double Tree/Jacob’s Ladder"}}
+        },
+        "tara":{"type":"object","required":["name"],"properties":{
+          "name":{"type":"string"},
+          "mantra":{"type":"string"},
+          "color":{"type":"string"}}
+        }
+      }
+    },
+    "gameplay": {
+      "type":"object",
+      "required":["hall","atelier_tasks","puzzle_trial","witch_mode"],
+      "properties":{
+        "hall":{"type":"string"},
+        "atelier_tasks":{"type":"array","items":{"type":"string"}},
+        "puzzle_trial":{"type":"string"},
+        "witch_mode":{"type":"string"}
+      }
+    },
+    "links": {"type":"array","items":{"type":"string"}, "description":"Open-source texts or internal docs (ND-safe)"},
+    "safety":{"type":"object","required":["nd_safe"],"properties":{"nd_safe":{"type":"boolean"},"notes":{"type":"string"}}},
+    "provenance":{"type":"array","items":{"type":"string"}}
+  }
+}
