@@ -38,12 +38,12 @@
         const res = await fetch(path, { cache: "no-store" });
         if (!res.ok) throw new Error(String(res.status));
         const text = await res.text();
+        // allow JSON files to contain // comments; strip them
         const cleaned = text
           .split("\n")
           .filter(line => !line.trim().startsWith("//"))
           .join("\n");
         return JSON.parse(cleaned);
-        return await res.json();
       } catch (err) {
         return null;
       }
@@ -64,7 +64,7 @@
     // Numerology constants used by geometry routines
     const NUM = { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 };
 
-    // ND-safe rationale: no motion, high readability, soft colors, layered order
+    // ND-safe rationale: no motion, high readability, soft colors, layer order
     renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:active, NUM });
   </script>
 </body>
