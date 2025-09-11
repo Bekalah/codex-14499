@@ -43,8 +43,7 @@
           .filter(line => !line.trim().startsWith("//"))
           .join("\n");
         return JSON.parse(cleaned);
-        return await res.json();
-      } catch (err) {
+      } catch {
         return null;
       }
     }
