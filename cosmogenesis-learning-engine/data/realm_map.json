@@ -1,0 +1,8 @@
+{
+  "realms": [
+    {"id":"realm_rosslyn","name":"Rosslyn Cathedral","palette":["#0F0F12","#D6A431","#7D4EFF"],"overlays":["rose","platonic"]},
+    {"id":"realm_hilma","name":"Hilma Dream Temple","palette":["#F2D6E6","#B2C9FF","#1FA96B"],"overlays":["rose","celtic_spiral"]},
+    {"id":"realm_reiki_grid","name":"Reiki Grid Chamber","palette":["#C5D7E8","#89A6C8","#3344AA"],"overlays":["vesica","merkaba"]},
+    {"id":"realm_crystal","name":"Crystal Codex Room","palette":["#1B1B1B","#FFC857","#2A62D1"],"overlays":["platonic","merkaba"]}
+  ]
+}
