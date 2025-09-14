@@ -124,6 +124,11 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
 
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // ND-safe: fill background first to avoid flashes
+    - Golden Ratio used for Fibonacci curve.
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // ND-safe: fill background before drawing to avoid flashes
   ctx.fillStyle = palette.bg;
   ctx.fillRect(0, 0, width, height);
 
@@ -179,7 +184,7 @@ function drawVesica(ctx, w, h, color, NUM) {
 // ND-safe: static intersecting circles
 function drawVesica(ctx, w, h, color, NUM) {
 // ND-safe: static intersecting circles, soft lines
-function drawVesica(ctx, width, height, color, NUM) {
+<<function drawVesica(ctx, width, height, color, NUM) {
   const r = Math.min(width, height) / NUM.THREE;
   const step = r / NUM.NINE;
   const cy = height / 2;
@@ -188,18 +193,24 @@ function drawVesica(ctx, width, height, color, NUM) {
   for (let i = -NUM.THREE; i <= NUM.THREE; i++) {
     const cx = width / 2 + i * step * NUM.SEVEN;
 // ND-safe: static intersecting circles, soft lines.
+>>>>>>>+codex/update-co
+=====
+>>>>>>> origin/codex/update-json-files-for-atelier-modes-tvbc0t
 export function drawVesica(ctx, w, h, color, NUM) {
   ctx.save();
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
 function drawVesica(ctx, w, h, color, NUM) {
   const r = Math.min(w, h) / NUM.THREE;
-  const step = r / NUM.NINE;
+<<  const step = r / NUM.NINE;
+>>>>>>>+codex/update-co
+=====
+>>>>>>> origin/codex/update-json-files-for-atelier-modes-tvbc0t
   const offset = r / NUM.THREE;
   const cy = h / 2;
 
   ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
+<<  ctx.lineWidth = 2;
   const r = Math.min(w, h) / NUM.THREE;
   const cx = w / 2;
   const cy = h / 2;
@@ -228,14 +239,26 @@ function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     ctx.beginPath();
     ctx.arc(cx - r / NUM.THREE, cy, r, 0, Math.PI * 2);
     ctx.arc(cx + r / NUM.THREE, cy, r, 0, Math.PI * 2);
-    ctx.stroke();
+>>>>>>>+codex/update-co
+===
+  ct  ctx.lineWidth = 1.5;
+  for (let i = -NUM.THREE; i <= NUM.THREE; i++) {
+    const cx = w / 2 + i * offset;
+    ctx.beginPath();
+    ctx.arc(cx - r / 2, cy, r, 0, Math.PI * 2);
+    ctx.arc(cx + r / 2, cy, r, 0, Math.PI * 2);
+>>>>>>>+origin/codex/up
+ctx.stroke();
   }
 }
 
 // Layer 2: Tree-of-Life scaffold
 // ND-safe: nodes and paths only, no flashing
-function drawTree(ctx, width, height, pathColor, nodeColor, NUM) {
+<<<<function drawTree(ctx, width, height, pathColor, nodeColor, NUM) {
   const r = width / NUM.NINETYNINE;
+>>>>>>>+codex/update-co
+===
+>>>>>>> origin/codex/update-json-files-for-atelier-modes-tvbc0t
 export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const nodes = [
     [w / 2, h * 0.08],
@@ -403,6 +426,17 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [1,2],[3,5],[6,7],[1,3],[2,5],[4,8],[5,7]
   ]; // 22 paths
 
+    [0.5, 0.95],
+  ];
+  const paths = [
+    [0,1],[0,2],[1,2],
+    [1,3],[1,4],[2,4],[2,3],
+    [3,4],[3,5],[4,5],
+    [3,6],[4,7],[6,7],
+    [6,8],[7,8],[6,9],[7,9],[8,9],
+    [5,6],[5,7],[5,8],[5,9],
+  ]; // 22 paths
+
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = 1.5;
   paths.forEach(([a, b]) => {
@@ -417,6 +451,8 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
+    ctx.moveTo(x1 * w, y1 * h);
+    ctx.lineTo(x2 * w, y2 * h);
     ctx.stroke();
   });
 
@@ -443,6 +479,9 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   nodes.forEach(([x, y]) => {
     ctx.beginPath();
     ctx.arc(x*w, y*h, r, 0, Math.PI*2);
+  nodes.forEach(([nx, ny]) => {
+    ctx.beginPath();
+    ctx.arc(nx * w, ny * h, r, 0, Math.PI * 2);
     ctx.fill();
   });
   ctx.restore();
@@ -516,6 +555,9 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
 // ND-safe: single log spiral, uses the Golden Ratio
 export function drawFibonacci(ctx, w, h, color, NUM) {
   const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+// ND-safe: single log spiral, uses the Golden Ratio
+export function drawFibonacci(ctx, w, h, color, NUM) {
+  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
   const steps = NUM.THIRTYTHREE;
   const scale = Math.min(w, h) / NUM.ONEFORTYFOUR;
   const cx = w / 2;
@@ -525,6 +567,11 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
   ctx.beginPath();
   let angle = 0;
   let radius = scale;
+  let angle = 0;
+  let radius = scale;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
   ctx.moveTo(cx, cy);
 
   for (let i = 0; i < steps; i++) {
@@ -893,6 +940,19 @@ function drawHelix(ctx, w, h, colorA, colorB, NUM) {
   for (let x = 0; x <= w; x += step) {
     const y = h/2 + amp * Math.sin((turns * 2 * Math.PI * x) / w);
     if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+export function drawHelix(ctx, w, h, strandColor, rungColor, NUM) {
+  const turns = NUM.ELEVEN;
+  const steps = NUM.NINETYNINE;
+  const amp = w / NUM.THIRTYTHREE;
+  ctx.lineWidth = 1.5;
+
+  ctx.strokeStyle = strandColor;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const x = w / 2 + amp * Math.sin(t * turns * 2 * Math.PI);
+    const y = t * h;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   }
   ctx.restore();
 }
@@ -923,5 +983,25 @@ function drawHelix(ctx, w, h, colorA, colorB, NUM) {
   }
 export { drawVesica, drawTree, drawFibonacci, drawHelix };
   ctx.restore();
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const x = w / 2 + amp * Math.sin(t * turns * 2 * Math.PI + Math.PI);
+    const y = t * h;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = rungColor;
+  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
+    const t = i / NUM.THIRTYTHREE;
+    const y = t * h;
+    const x1 = w / 2 + amp * Math.sin(t * turns * 2 * Math.PI);
+    const x2 = w / 2 + amp * Math.sin(t * turns * 2 * Math.PI + Math.PI);
+    ctx.beginPath();
+    ctx.moveTo(x1, y);
+    ctx.lineTo(x2, y);
+    ctx.stroke();
+  }
 }
 
