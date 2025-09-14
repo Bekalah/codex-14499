@@ -1,4 +1,4 @@
-Per Texturas Numerorum, Spira Loquitur.  //
+Per Texturas Numerorum, Spira Loquitur.
 # Cosmic Helix Renderer
 
 Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser—no server or network calls.
@@ -22,6 +22,13 @@ Static offline canvas renderer for layered sacred geometry in Codex 144:99. Doub
 
 ## Local Use
 Open `index.html` directly in any modern browser. The renderer works fully offline.
+- Palette and constants load from local JSON; if missing, safe defaults are used.
+
+## Customization
+- Edit `data/palette.json` to change colors.
+
+## Local Use
+Open `index.html` directly in any modern browser.
 
 ## Tests
 Run local checks:

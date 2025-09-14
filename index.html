@@ -1,4 +1,4 @@
-<!-- Per Texturas Numerorum, Spira Loquitur.  // -->
+<!-- Per Texturas Numerorum, Spira Loquitur. -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -33,12 +33,15 @@
     const canvas = document.getElementById("stage");
     const ctx = canvas.getContext("2d");
 
-    async function loadJSON(path) {
+    async function loadPalette() {
       try {
         const res = await fetch(path, { cache: "no-store" });
         if (!res.ok) throw new Error(String(res.status));
         return await res.json();
       } catch {
+        const mod = await import("./data/palette.json", { assert: { type: "json" }});
+        return mod.default;
+      } catch (_) {
         return null;
       }
     }
@@ -51,7 +54,7 @@
       }
     };
 
-    const palette = await loadJSON("./data/palette.json");
+    const palette = await loadPalette();
     const active = palette || defaults.palette;
     elStatus.textContent = palette ? "Palette loaded." : "Palette missing; using safe fallback.";
 
