@@ -117,6 +117,9 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
     - Drawing order preserves contemplative depth.
 */
 
+  ND-safe: no motion, calm palette, pure functions.
+*/
+
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // Fill background first to avoid flashes
     4) Double-helix lattice (two phase-shifted strands)
@@ -349,6 +352,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   ctx.save();
 // ND-safe: simple nodes and paths only.
 export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
+function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const nodes = [
     [w/2, h*0.05],
     [w/4, h*0.2], [w*3/4, h*0.2],
@@ -428,6 +432,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   ]; // 22 paths
 
     [1,2],[3,5],[6,7],[1,3],[2,5],[4,8],[5,7]
+    [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7],
   ]; // 22 paths
 
     [0.5, 0.95],
@@ -910,6 +915,7 @@ export { drawVesica, drawTree, drawFibonacci, drawHelix };
 function drawHelix(ctx, w, h, color1, color2, NUM) {
 // ND-safe: two static strands with rungs; no oscillation.
 export function drawHelix(ctx, w, h, color1, color2, NUM) {
+function drawHelix(ctx, w, h, color1, color2, NUM) {
   const turns = NUM.NINETYNINE / NUM.NINE; // 11 turns
   const amp = h / 4;
   const step = w / NUM.ONEFORTYFOUR;
@@ -1013,3 +1019,4 @@ export { drawVesica, drawTree, drawFibonacci, drawHelix };
   }
 }
 
+export { drawVesica, drawTree, drawFibonacci, drawHelix };
