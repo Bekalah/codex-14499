@@ -130,6 +130,9 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
     - Golden Ratio used for Fibonacci curve.
 */
 
+  ND-safe: no motion, calm palette, pure functions.
+*/
+
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // ND-safe: fill background before drawing to avoid flashes
   ctx.fillStyle = palette.bg;
@@ -414,6 +417,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [1,2],[3,5],[4,8],[5,6],[6,7],[3,5],[2,5],[4,7]
     [6,8],[7,8],[8,9],
     [1,2],[3,5],[1,6],[2,7],[3,7],[5,6],[4,8]
+    [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7],
   ]; // 22 paths
 
     [0,1],[0,2],[1,2],
