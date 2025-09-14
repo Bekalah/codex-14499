@@ -1,4 +1,5 @@
 // Per Texturas Numerorum, Spira Loquitur.
+// Per Texturas Numerorum, Spira Loquitur. //
 /*
   helix-renderer.mjs
   ND-safe static renderer for layered sacred geometry.
@@ -52,6 +53,16 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
 
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // ND-safe: fill background first to avoid flashes
+
+  ND-safe notes:
+    - No motion or animation
+    - Calm palette passed via palette.json
+    - Geometry uses numerology constants
+    - Golden Ratio used for Fibonacci curve
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // Fill background first to avoid flashes
   ctx.fillStyle = palette.bg;
   ctx.fillRect(0, 0, width, height);
 
@@ -69,8 +80,7 @@ export function drawVesica(ctx, w, h, color, NUM) {
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   const r = Math.min(w, h) / NUM.THREE;
-  const cx1 = w / 2 - r / 2;
-  const cx2 = w / 2 + r / 2;
+  const step = r / NUM.NINE;
   const cy = h / 2;
 
   ctx.strokeStyle = color;
@@ -80,6 +90,14 @@ export function drawVesica(ctx, w, h, color, NUM) {
   ctx.arc(cx2, cy, r, 0, Math.PI * 2);
   ctx.stroke();
   ctx.restore();
+  ctx.lineWidth = 1.5;
+  for (let i = -NUM.THREE; i <= NUM.THREE; i++) {
+    const cx = w / 2 + i * step * NUM.SEVEN;
+    ctx.beginPath();
+    ctx.arc(cx - r / NUM.THREE, cy, r, 0, Math.PI * 2);
+    ctx.arc(cx + r / NUM.THREE, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 }
 
 // Layer 2: Tree-of-Life scaffold
@@ -166,6 +184,18 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
     [3,6],[4,6],[5,6],
     [5,7],[6,7],
     [6,8],[7,8],[8,9]
+  const nodes = [
+    [w/2, h*0.05],
+    [w/4, h*0.2], [w*3/4, h*0.2],
+    [w/4, h*0.4], [w/2, h*0.35], [w*3/4, h*0.4],
+    [w/4, h*0.6], [w*3/4, h*0.6],
+    [w/2, h*0.8],
+    [w/2, h*0.95],
+  ];
+
+  const paths = [
+    [0,1],[0,2],[1,2],[1,3],[2,5],[3,4],[5,4],[3,6],[5,7],[6,8],[7,8],
+    [8,9],[1,4],[2,4],[3,5],[6,7],[1,6],[2,7],[4,6],[4,7],[0,4],[4,8]
   ]; // 22 paths
 
   ctx.strokeStyle = lineColor;
@@ -263,22 +293,20 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
   ctx.stroke();
   ctx.save();
   const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
-  const steps = NUM.NINETYNINE / NUM.THREE; // 33 points
+  const steps = NUM.THIRTYTHREE;
   const scale = Math.min(w, h) / NUM.ONEFORTYFOUR * NUM.THIRTYTHREE;
+  let angle = 0;
+  let radius = scale;
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   ctx.beginPath();
-  let angle = 0;
-  let radius = scale;
-  let x = w / 2 + radius * Math.cos(angle);
-  let y = h / 2 + radius * Math.sin(angle);
-  ctx.moveTo(x, y);
-  for (let i = 1; i <= steps; i++) {
-    angle += Math.PI / NUM.SEVEN;
-    radius *= PHI;
-    x = w / 2 + radius * Math.cos(angle);
-    y = h / 2 + radius * Math.sin(angle);
+  ctx.moveTo(w/2, h/2);
+  for (let i = 0; i < steps; i++) {
+    const x = w/2 + radius * Math.cos(angle);
+    const y = h/2 + radius * Math.sin(angle);
     ctx.lineTo(x, y);
+    radius *= PHI;
+    angle += Math.PI / NUM.SEVEN;
   }
   ctx.stroke();
   ctx.restore();
@@ -333,6 +361,21 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     ctx.stroke();
   });
   ctx.restore();
+export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
+  const amplitude = w / NUM.THIRTYTHREE;
+  const steps = NUM.NINETYNINE;
+  [colorA, colorB].forEach((color, i) => {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let s = 0; s <= steps; s++) {
+      const t = s / steps;
+      const x = w/2 + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + i * Math.PI);
+      const y = t * h;
+      if (s === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  });
 }
 
 // Layer 4: Double-helix lattice
