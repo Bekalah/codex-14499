@@ -3,6 +3,7 @@
 Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser—no server or network calls.
 Static offline canvas renderer for layered sacred geometry in Codex 144:99.
 Double-click `index.html` in any modern browser—no server or network calls.
+Static offline canvas renderer for the Codex 144:99 geometry helix. Double-click `index.html` in any modern browser—no server or network calls.
 
 ## Files
 - `index.html` – entry point with 1440×900 canvas and safe palette fallback.
@@ -26,6 +27,8 @@ Double-click `index.html` in any modern browser—no server or network calls.
 - Optionally add `data/constants.json` with numerology values to tweak proportions.
 - Geometry uses constants 3, 7, 9, 11, 22, 33, 99, 144.
 - Palette loads locally; if missing, a built-in fallback is used.
+- Geometry uses constants 3, 7, 9, 11, 22, 33, 99, 144.
+- If `data/palette.json` is missing, a built-in fallback palette renders instead.
 
 ## Local Use
 Open `index.html` directly in any modern browser.

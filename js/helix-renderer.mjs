@@ -7,6 +7,8 @@
     1) Vesica field (intersecting circles)
     2) Tree-of-Life scaffold (10 nodes, 22 paths)
     3) Fibonacci curve (log spiral polyline)
+    2) Tree-of-Life scaffold (10 sephirot + 22 paths)
+    3) Fibonacci curve (log spiral polyline; static)
     4) Double-helix lattice (two phase-shifted strands)
 
   Notes:
@@ -17,6 +19,7 @@
     - No motion or animation
     - Soft contrast palette provided externally
     - Layer order preserves contemplative depth
+    - Golden Ratio used in Fibonacci curve.
 */
 
 export function renderHelix(ctx, { width, height, palette, NUM }) {
@@ -44,8 +47,7 @@ export function drawVesica(ctx, w, h, color, NUM) {
   ctx.lineWidth = 2;
 
   const r = Math.min(w, h) / NUM.THREE;
-  const cx1 = w / 2 - r / 2;
-  const cx2 = w / 2 + r / 2;
+  const offset = r / NUM.SEVEN;
   const cy = h / 2;
 
   ctx.beginPath();
@@ -53,6 +55,15 @@ export function drawVesica(ctx, w, h, color, NUM) {
   ctx.arc(cx2, cy, r, 0, Math.PI * 2);
   ctx.stroke();
   ctx.restore();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  for (let i = -NUM.THREE; i <= NUM.THREE; i++) {
+    const cx = w / 2 + i * offset * NUM.NINE;
+    ctx.beginPath();
+    ctx.arc(cx - r / 2, cy, r, 0, Math.PI * 2);
+    ctx.arc(cx + r / 2, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 }
 
 // Layer 2: Tree-of-Life scaffold
@@ -102,6 +113,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const paths = [
     [0,1],[0,2],
     [1,2],
+    [0,1],[0,2],[1,2],
     [1,3],[1,4],[2,4],[2,5],
     [3,4],[4,5],
     [3,6],[4,6],[4,7],[5,7],
@@ -110,6 +122,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [8,9],
     [3,5],[5,6],[5,8],
     [2,3],[1,5]
+    [3,5],[2,3],[2,6],[5,6],[4,8]
   ]; // 22 paths
 
   paths.forEach(([a, b]) => {
@@ -161,6 +174,20 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
   for (let i = 0; i < steps; i++) {
     x = w / 2 + radius * Math.cos(angle);
     y = h / 2 + radius * Math.sin(angle);
+  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+  const steps = NUM.THIRTYTHREE; // 33 points
+  const scale = Math.min(w, h) / NUM.ONEFORTYFOUR;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  let angle = 0;
+  let radius = scale;
+  const cx = w / 2;
+  const cy = h / 2;
+  ctx.moveTo(cx, cy);
+  for (let i = 0; i < steps; i++) {
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
     ctx.lineTo(x, y);
     radius *= PHI;
     angle += Math.PI / NUM.SEVEN;
@@ -176,6 +203,11 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
   const turns = NUM.ELEVEN; // 11 gentle turns
   const amp = h / 4;
   const step = w / NUM.ONEFORTYFOUR;
+export function drawHelix(ctx, w, h, color1, color2, NUM) {
+  const turns = NUM.ELEVEN;
+  const amp = w / NUM.NINE;
+  const steps = NUM.ONEFORTYFOUR;
+  ctx.lineWidth = 1.5;
 
   ctx.lineWidth = 1.5;
   ctx.strokeStyle = colorA;
@@ -196,6 +228,9 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
   for (let i = 0; i <= steps; i++) {
     const t = i / steps;
     const x = w / 2 + amplitude * Math.sin(turns * 2 * Math.PI * t);
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const x = w / 2 + amp * Math.sin(turns * 2 * Math.PI * t);
     const y = t * h;
     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   }
@@ -222,6 +257,19 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
     const y = t * h;
     const x1 = w / 2 + amplitude * Math.sin(turns * 2 * Math.PI * t);
     const x2 = w / 2 + amplitude * Math.sin(turns * 2 * Math.PI * t + Math.PI);
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const x = w / 2 + amp * Math.sin(turns * 2 * Math.PI * t + Math.PI);
+    const y = t * h;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
+    const t = i / NUM.THIRTYTHREE;
+    const y = t * h;
+    const x1 = w / 2 + amp * Math.sin(turns * 2 * Math.PI * t);
+    const x2 = w / 2 + amp * Math.sin(turns * 2 * Math.PI * t + Math.PI);
     ctx.beginPath();
     ctx.moveTo(x1, y);
     ctx.lineTo(x2, y);
