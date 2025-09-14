@@ -8,6 +8,11 @@
     1) Vesica field (intersecting circles)
     2) Tree-of-Life scaffold (10 sephirot + 22 paths)
     3) Fibonacci curve (log spiral polyline)
+    4) Double-helix lattice (two phase-shifted strands)
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // ND-safe: fill background first to avoid flashes
     3) Fibonacci curve (log spiral)
     4) Double-helix lattice (static strands)
   Rationale: no motion, soft contrast, numerology constants.
@@ -193,6 +198,9 @@ function drawVesica(ctx, w, h, color, NUM) {
 // ND-safe: nodes and paths only, no flashing
 function drawTree(ctx, width, height, pathColor, nodeColor, NUM) {
   const r = width / NUM.NINETYNINE;
+export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
+  const nodes = [
+    [w / 2, h * 0.08],
 function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   ctx.save();
   ctx.strokeStyle = lineColor;
@@ -296,6 +304,12 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   ];
 
   const paths = [
+    [0,1],[0,2],
+    [1,3],[1,4],[2,4],[2,5],
+    [3,4],[4,5],
+    [3,6],[4,6],[4,7],[5,7],
+    [6,8],[7,8],[8,9],
+    [1,2],[3,5],[1,6],[2,7],[3,7],[5,6],[4,8]
     [0,1],[0,2],[1,3],[1,4],[2,4],[2,5],
     [3,4],[4,5],[3,6],[4,6],[4,7],[5,7],
     [6,8],[7,8],[8,9]
@@ -339,6 +353,11 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = 1.5;
   paths.forEach(([a, b]) => {
+    const [x1, y1] = nodes[a];
+    const [x2, y2] = nodes[b];
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
     ctx.beginPath();
     ctx.moveTo(nodes[a][0] * w, nodes[a][1] * h);
     ctx.lineTo(nodes[b][0] * w, nodes[b][1] * h);
