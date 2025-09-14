@@ -126,6 +126,7 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
   ctx.strokeStyle = lineColor;
   ctx.fillStyle = nodeColor;
 
+  ctx.save();
   const nodes = [
     [w / 2, h * 0.08],
     [w / 4, h * 0.2], [w * 3 / 4, h * 0.2],
@@ -139,7 +140,7 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
     [0,1],[0,2],[1,3],[1,4],[2,4],[2,5],
     [3,4],[4,5],[3,6],[4,6],[4,7],[5,7],
     [6,8],[7,8],[8,9],
-    [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7]
+    [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7],
   ]; // 22 paths
 
   ctx.lineWidth = 1.5;
@@ -229,6 +230,7 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
 // Layer 4: Double-helix lattice
 // ND-safe: static lattice without oscillation
 export function drawHelix(ctx, w, h, color1, color2, NUM) {
+  ctx.save();
   const turns = NUM.NINETYNINE / NUM.NINE; // 11 turns
   const amplitude = h / 4;
   const step = w / NUM.ONEFORTYFOUR;
@@ -303,3 +305,6 @@ function drawHelix(ctx, w, h, colorA, colorB, NUM) {
 }
 
 export { drawVesica, drawTree, drawFibonacci, drawHelix };
+  ctx.restore();
+}
+
