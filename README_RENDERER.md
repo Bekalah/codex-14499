@@ -61,6 +61,17 @@ Open `index.html` directly in a modern browser. No server or network needed.
 - Edit `data/palette.json` to change colors.
 - Palette loads from `data/palette.json`; safe defaults if missing.
 
+## Numerology as Spiral Grammar
+The project's numbers form a Fibonacci-coded scaffold rather than decorative wallpaper:
+
+- **21 pillars** — Fibonacci step (8 + 13) aligned with Tarot majors and the 21 Taras; pillars spiral upward as thresholds.
+- **33 spine** — vertebral initiations; not Fibonacci itself but a harmonic 3 × 11 ladder.
+- **72 Shem angels/demons** — 8 × 9 lunar decans, a sacred 12-multiple tracing lunar phases.
+- **78 archetypes** — Tarot complete (22 + 56), weaving majors and minors into one continuum.
+- **99 gates** — triplicity (3 × 33) expanding the spine into recursive gateways.
+- **144 lattice** — 12², the eighth Fibonacci number forming the Codex's base grid.
+- **243 completion** — 3⁵, quintuple power of the triad sealing the Cathedral.
+
 ## Customization
 - Edit `data/palette.json` to change colors.
 - Optionally add `data/constants.json` with numerology values to tweak proportions.
