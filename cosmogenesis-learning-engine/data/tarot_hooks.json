@@ -1,0 +1,6 @@
+{
+  "MAJOR_01_Magician":      {"style":"alchemist","sigil":"☿","realm":"realm_crystal"},
+  "MAJOR_02_HighPriestess":{"style":"mystic_scholar","sigil":"☾","realm":"realm_reiki_grid"},
+  "MAJOR_03_Empress":       {"style":"druid","sigil":"♀","realm":"realm_hilma"},
+  "MAJOR_09_Hermit":        {"style":"mystic_scholar","sigil":"☿","realm":"realm_rosslyn"}
+}
