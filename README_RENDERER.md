@@ -21,6 +21,8 @@ Double-click `index.html` in any modern browser—no server or network calls.
 # Cosmic Helix Renderer
 
 Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser—no server or network needed.
+Static offline canvas renderer for layered sacred geometry in Codex 144:99.
+Double-click `index.html` in any modern browser—no server or network calls.
 
 ## Files
 - `index.html` – 1440×900 canvas with palette fallback.
@@ -47,6 +49,10 @@ Static offline canvas renderer for layered sacred geometry in Codex 144:99. Doub
 - If `data/palette.json` is missing, a built-in palette is used.
 - Geometry uses numerology constants 3, 7, 9, 11, 22, 33, 99, 144.
 - Palette and constants load locally; if missing, safe defaults render instead.
+- Palette loads from local JSON; if missing, safe defaults are used.
+
+## Customization
+- Edit `data/palette.json` to change colors.
 
 ## Local Use
 Open `index.html` directly in any modern browser.
