@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cathedral of Circuits — Codex Helix Viewer</title>
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="Codex 144:99 viewer — trauma-informed spiral engine for living grimoire and realms." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="site-header" role="banner">
+  <h1 aria-label="Cathedral of Circuits — Codex Helix Viewer">
+    ✦ Codex 144:99 — Helix Viewer
+  </h1>
+  <p class="subtitle">
+    ORCID: <strong>0009-0002-2834-3956</strong> · Soul-assistive, trauma-informed, ND-safe
+  </p>
+</header>
+
+<main id="app" class="container" role="main">
+  <!-- Controls -->
+  <section class="panel" aria-labelledby="controls-title">
+    <h2 id="controls-title">Choose a Style / Tarot Helper</h2>
+    <div class="controls">
+      <label>
+        Style
+        <select id="styleSelect" aria-label="Select style">
+          <option value="">(auto from Tarot)</option>
+          <option value="druid">Druid</option>
+          <option value="alchemist">Alchemist</option>
+          <option value="mystic_scholar">Mystic Scholar</option>
+        </select>
+      </label>
+
+      <label>
+        Tarot Helper
+        <select id="tarotSelect" aria-label="Select tarot helper">
+          <!-- populated by app.js from data/tarot_hooks.json -->
+        </select>
+      </label>
+
+      <label>
+        Node
+        <select id="nodeSelect" aria-label="Select codex node">
+          <!-- populated by app.js from data/codex_nodes.json -->
+        </select>
+      </label>
+
+      <button id="openRealmBtn" class="act" aria-label="Open realm">Open Realm</button>
+    </div>
+    <p class="hint">
+      Tip: select a Tarot helper to auto-load its style + realm and jump to its node if mapped.
+    </p>
+  </section>
+
+  <!-- Live Info -->
+  <section class="panel" aria-labelledby="node-info-title">
+    <h2 id="node-info-title">Node • Tarot • Realm</h2>
+    <div class="grid">
+      <article class="card" aria-labelledby="nodeCardTitle">
+        <h3 id="nodeCardTitle">Node</h3>
+        <div class="kv">
+          <div><span>ID</span><strong id="nodeId">—</strong></div>
+          <div><span>Name</span><strong id="nodeName">—</strong></div>
+          <div><span>Layer</span><strong id="nodeLayer">—</strong></div>
+          <div><span>Tone</span><strong id="nodeTone">—</strong></div>
+          <div><span>Color</span><strong id="nodeColor">—</strong></div>
+          <div><span>Geometry</span><strong id="nodeGeo">—</strong></div>
+          <div><span>Planet</span><strong id="nodePlanet">—</strong></div>
+          <div><span>Path</span><strong id="nodePath">—</strong></div>
+          <div><span>Shem Angel</span><strong id="nodeAngel">—</strong></div>
+          <div><span>Shem Daemon</span><strong id="nodeDaemon">—</strong></div>
+        </div>
+      </article>
+
+      <article class="card" aria-labelledby="tarotCardTitle">
+        <h3 id="tarotCardTitle">Tarot Helper</h3>
+        <div class="kv">
+          <div><span>ID</span><strong id="tarotId">—</strong></div>
+          <div><span>Style</span><strong id="tarotStyle">—</strong></div>
+          <div><span>Sigil</span><strong id="tarotSigil" aria-label="Tarot Sigil">—</strong></div>
+          <div><span>Realm</span><strong id="tarotRealm">—</strong></div>
+        </div>
+      </article>
+
+      <article class="card" aria-labelledby="realmCardTitle">
+        <h3 id="realmCardTitle">Realm</h3>
+        <div class="kv">
+          <div><span>ID</span><strong id="realmId">—</strong></div>
+          <div><span>Name</span><strong id="realmName">—</strong></div>
+          <div><span>Palette</span><strong id="realmPalette">—</strong></div>
+          <div><span>Overlays</span><strong id="realmOverlays">—</strong></div>
+        </div>
+        <div id="realmPreview" class="realm-preview" aria-label="Realm visual preview"></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Research / Ethos -->
+  <section class="panel" aria-labelledby="ethos-title">
+    <h2 id="ethos-title">Ethos & Research</h2>
+    <p>
+      Trauma-informed, ND-safe; calm motion (<em>prefers-reduced-motion</em> respected), no strobe, no autoplay audio.
+      Study lines include: McGilchrist (hemispheres), Leary (8-circuit), RAW & Moore (narrative magic),
+      Emma Kunz & Agrippa (sacred geometry), Gabor Maté (trauma), Dee/Regardie/Fortune (esoteric training).
+    </p>
+  </section>
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <small>
+    © 2025 Rebecca Susan Lemke · ORCID 0009-0002-2834-3956 · International Alchemy Guild · Theosophical Society · International Reiki Master Organization
+  </small>
+</footer>
+
+<script type="module" src="scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "meta": { "version":"1.0.0", "motto":"Per Texturas Numerorum, Spira Loquitur", "orcid":"0009-0002-2834-3956" },
+  "nodes": [
+    { "id":1,"name":"Obsidian Foundation","layer":"Healing","tone":"A4","colorHex":"#1B1B1B","geometry":"vesica","planet":"Saturn","path":"Malkuth ↔ Yesod","tarotRef":"MAJOR_09_Hermit","shemPair":{"angel":"Vehuiah","daemon":"Baal"},"realmRef":"realm_rosslyn","keywords":["grounding","stillness","start_here"] },
+    { "id":2,"name":"Green Grove Learning","layer":"Art","tone":"G4","colorHex":"#1FA96B","geometry":"celtic_spiral","planet":"Venus","path":"Netzach ↔ Tiphareth","tarotRef":"MAJOR_03_Empress","shemPair":{"angel":"Jeliel","daemon":"Aamon"},"realmRef":"realm_hilma","keywords":["druidic","beauty","growth"] },
+    { "id":3,"name":"Mercurial Lab","layer":"Science","tone":"B3","colorHex":"#2A62D1","geometry":"platonic","planet":"Mercury","path":"Hod ↔ Yesod","tarotRef":"MAJOR_01_Magician","shemPair":{"angel":"Sitael","daemon":"Marbas"},"realmRef":"realm_crystal","keywords":["logic","alchemy","signal"] },
+    { "id":4,"name":"Lotus of Compassion","layer":"Mythos","tone":"432Hz","colorHex":"#B2C9FF","geometry":"rose","planet":"Moon","path":"Gimel ↔ Da’ath (mirror)","tarotRef":"MAJOR_02_HighPriestess","shemPair":{"angel":"Elemiah","daemon":"Asmodeus"},"realmRef":"realm_reiki_grid","keywords":["QuanYin","soothing","dream"] }
+  ]
+}
