@@ -62,6 +62,7 @@ Open `index.html` directly in any modern browser. The renderer works fully offli
 ## Customization
 - Edit `data/palette.json` to change colors.
 - Palette loads locally; if missing, safe defaults render.
+- Palette loads from local JSON; if missing, safe defaults are used.
 
 ## Customization
 - Edit `data/palette.json` to change colors.

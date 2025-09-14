@@ -91,6 +91,9 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
   No motion; calm palette and layer order support readability.
 */
 
+  Why: preserves contemplative depth without motion or external libs.
+*/
+
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // Fill background first to avoid flashes
   ctx.fillStyle = palette.bg;
@@ -138,6 +141,7 @@ export function drawVesica(ctx, w, h, color, NUM) {
   ctx.save();
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
+function drawVesica(ctx, w, h, color, NUM) {
   const r = Math.min(w, h) / NUM.THREE;
   const step = r / NUM.NINE;
   const cy = h / 2;
@@ -284,6 +288,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [0,1],[0,2],[1,2],[1,3],[2,4],[3,4],[3,5],[4,5],
     [3,6],[4,7],[5,6],[5,7],[6,7],[6,8],[7,8],
     [6,9],[7,9],[8,9],[5,8],[2,5],[1,5],[0,5]
+    [3,5],[1,2],[6,7],[1,3],[2,5],[4,8],[5,7]
   ]; // 22 paths
 
   ctx.strokeStyle = lineColor;
@@ -425,6 +430,8 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
   }
 // ND-safe: single log spiral, uses the Golden Ratio
 export function drawFibonacci(ctx, w, h, color, NUM) {
+// ND-safe: single log spiral, uses the Golden Ratio
+function drawFibonacci(ctx, w, h, color, NUM) {
   const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
   const steps = NUM.TWENTYTWO;
   const scale = Math.min(w, h) / NUM.ONEFORTYFOUR;
@@ -628,6 +635,11 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     ctx.stroke();
   }
 }
+function drawHelix(ctx, w, h, color1, color2, NUM) {
+  const turns = NUM.NINETYNINE / NUM.NINE; // 11 turns
+  const amplitude = h / 4;
+  const step = w / NUM.ONEFORTYFOUR;
+  ctx.lineWidth = 1.5;
 
 // Layer 4: Double-helix lattice
 // ND-safe: two static strands with cross rungs; no oscillation.
