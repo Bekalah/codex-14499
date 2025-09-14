@@ -4,7 +4,7 @@
 
   Layers:
     1) Vesica field (intersecting circles)
-    2) Tree-of-Life scaffold (10 sephirot + 22 paths; simplified layout)
+    2) Tree-of-Life scaffold (10 sephirot + 22 paths)
     3) Fibonacci curve (log spiral polyline; static)
     4) Double-helix lattice (two phase-shifted strands)
 
@@ -20,6 +20,14 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
   ctx.fillRect(0, 0, width, height);
 
   // Layer order preserves contemplative depth
+  ND-safe choices: no motion, calm palette, layered order preserves depth.
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // Fill background first to avoid flashes.
+  ctx.fillStyle = palette.bg;
+  ctx.fillRect(0, 0, width, height);
+
   drawVesica(ctx, width, height, palette.layers[0], NUM);
   drawTree(ctx, width, height, palette.layers[1], palette.layers[2], NUM);
   drawFibonacci(ctx, width, height, palette.layers[3], NUM);
@@ -28,6 +36,7 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
 
 // Layer 1: Vesica field
 // ND-safe: static intersecting circles, soft lines
+// ND-safe: static intersecting circles, soft lines.
 export function drawVesica(ctx, w, h, color, NUM) {
   const r = Math.min(w, h) / NUM.THREE;
   const offset = r / NUM.THREE;
@@ -45,6 +54,7 @@ export function drawVesica(ctx, w, h, color, NUM) {
 
 // Layer 2: Tree-of-Life scaffold
 // ND-safe: nodes and paths only, no flashing
+// ND-safe: simple nodes and paths only.
 export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const nodes = [
     [w / 2, h * 0.05],
@@ -59,6 +69,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [3,4],[4,5],[3,6],[4,6],[4,7],[5,7],
     [6,8],[7,8],[8,9],
     [1,2],[3,5],[6,7],[1,3],[2,5],[4,8],[5,7]
+    [1,2],[3,5],[4,8],[5,6],[6,7],[3,5],[2,5],[4,7]
   ]; // 22 paths
 
   ctx.strokeStyle = lineColor;
@@ -73,8 +84,11 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   ctx.fillStyle = nodeColor;
   const rNode = Math.min(w, h) / NUM.NINETYNINE * NUM.SEVEN;
   nodes.forEach(([x, y]) => {
+  const r = Math.min(w, h) / NUM.NINETYNINE * NUM.SEVEN;
+  ctx.fillStyle = nodeColor;
+  nodes.forEach(([x,y]) => {
     ctx.beginPath();
-    ctx.arc(x, y, rNode, 0, Math.PI * 2);
+    ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
   });
 }
@@ -87,6 +101,11 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
   const scale = Math.min(w, h) / NUM.ONEFORTYFOUR;
   const cx = w / 2;
   const cy = h / 2;
+// ND-safe: single log spiral; Golden Ratio governs growth.
+export function drawFibonacci(ctx, w, h, color, NUM) {
+  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+  const steps = NUM.NINETYNINE / NUM.THREE; // 33 points
+  const scale = Math.min(w, h) / NUM.ONEFORTYFOUR * NUM.THIRTYTHREE;
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   ctx.beginPath();
@@ -99,6 +118,15 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
     ctx.lineTo(x, y);
     radius *= PHI;
     angle += Math.PI / NUM.SEVEN;
+  let x = w / 2 + radius * Math.cos(angle);
+  let y = h / 2 + radius * Math.sin(angle);
+  ctx.moveTo(x, y);
+  for (let i = 1; i <= steps; i++) {
+    angle += Math.PI / NUM.SEVEN;
+    radius *= PHI;
+    x = w / 2 + radius * Math.cos(angle);
+    y = h / 2 + radius * Math.sin(angle);
+    ctx.lineTo(x, y);
   }
   ctx.stroke();
 }
@@ -134,5 +162,27 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
     ctx.lineTo(x2, y);
     ctx.stroke();
   }
+// ND-safe: two static strands with rungs; no oscillation.
+export function drawHelix(ctx, w, h, color1, color2, NUM) {
+  const turns = NUM.NINETYNINE / NUM.NINE; // 11 turns
+  const amp = h / 4;
+  const step = w / NUM.ONEFORTYFOUR;
+  ctx.lineWidth = 1.5;
+
+  ctx.strokeStyle = color1;
+  ctx.beginPath();
+  for (let x = 0; x <= w; x += step) {
+    const y = h/2 + amp * Math.sin((turns * 2 * Math.PI * x) / w);
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = color2;
+  ctx.beginPath();
+  for (let x = 0; x <= w; x += step) {
+    const y = h/2 + amp * Math.sin((turns * 2 * Math.PI * x) / w + Math.PI);
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
 }
 
