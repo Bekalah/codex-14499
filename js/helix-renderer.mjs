@@ -112,6 +112,18 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
   ctx.fillRect(0, 0, width, height);
 
   // layer order preserves contemplative depth
+
+  ND-safe notes:
+    - No motion or animation.
+    - Calm palette, high readability.
+    - Layer order preserves contemplative depth.
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // Fill background first to avoid flashes.
+  ctx.fillStyle = palette.bg;
+  ctx.fillRect(0, 0, width, height);
+
   drawVesica(ctx, width, height, palette.layers[0], NUM);
   drawTree(ctx, width, height, palette.layers[1], palette.layers[2], NUM);
   drawFibonacci(ctx, width, height, palette.layers[3], NUM);
@@ -221,6 +233,7 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
   ctx.fillStyle = nodeColor;
 
   ctx.save();
+export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const nodes = [
     [w/2, h*0.05],
     [w/4, h*0.2], [w*3/4, h*0.2],
@@ -551,7 +564,7 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
   for (let x = 0; x <= w; x += step) {
     const y = h/2 + amplitude * Math.sin((turns * 2 * Math.PI * x) / w + Math.PI);
     if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
+    }
   ctx.stroke();
 export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
   ctx.save();

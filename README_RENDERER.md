@@ -37,6 +37,7 @@ Open `index.html` directly in any modern browser.
 Open `index.html` directly in any modern browser. The renderer works fully offline.
 - Palette loads from local JSON; if missing, built-in defaults render instead.
 - Palette and constants load from local JSON; if missing, safe defaults are used.
+- Palette loads from local JSON; missing file triggers safe fallback.
 
 ## Customization
 - Edit `data/palette.json` to change colors.
@@ -76,6 +77,7 @@ npm test
 ```
 
 ## Notes
+- Works completely offline.
 - ND-safe: calm contrast, no motion, optional palette override.
 - Works completely offline; open `index.html` directly.
 - Works completely offline; no external requests.
