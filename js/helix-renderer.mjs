@@ -7,6 +7,17 @@
   Layers:
     1) Vesica field (intersecting circles)
     2) Tree-of-Life scaffold (10 sephirot + 22 paths)
+    3) Fibonacci curve (log spiral)
+    4) Double-helix lattice (static strands)
+  Rationale: no motion, soft contrast, numerology constants.
+*/
+
+export function renderHelix(ctx, opts) {
+  const { width, height, palette, NUM } = opts;
+  ctx.fillStyle = palette.bg;
+  ctx.fillRect(0, 0, width, height);
+
+    2) Tree-of-Life scaffold (10 sephirot + 22 paths; simplified layout)
     3) Fibonacci curve (log spiral polyline; static)
     4) Double-helix lattice (two phase-shifted strands)
 
@@ -164,6 +175,12 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
 
   ctx.save();
   const nodes = [
+    [w/2, h*0.08],
+    [w/4, h*0.2], [w*3/4, h*0.2],
+    [w/4, h*0.4], [w/2, h*0.35], [w*3/4, h*0.4],
+    [w/4, h*0.6], [w*3/4, h*0.6],
+    [w/2, h*0.8],
+    [w/2, h*0.95]
     [w / 2, h * 0.08],
     [w / 4, h * 0.2], [w * 3 / 4, h * 0.2],
     [w / 4, h * 0.4], [w / 2, h * 0.35], [w * 3 / 4, h * 0.4],
@@ -198,6 +215,9 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
     [8,9],[1,4],[2,4],[3,5],[6,7],[1,6],[2,7],[4,6],[4,7],[0,4],[4,8]
   ]; // 22 paths
 
+    [6,8],[7,8],[8,9]
+  ]; // 22 paths
+
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = 1.5;
   paths.forEach(([a, b]) => {
@@ -220,6 +240,8 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
     ctx.beginPath();
     ctx.arc(nx * w, ny * h, rNode, 0, Math.PI * 2);
   const rNode = Math.min(w, h) / NUM.NINETYNINE * NUM.SEVEN;
+  ctx.fillStyle = nodeColor;
+  nodes.forEach(([x,y]) => {
   nodes.forEach(([x, y]) => {
     ctx.beginPath();
     ctx.arc(x * w, y * h, r, 0, Math.PI * 2);
@@ -231,6 +253,69 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
 
 // Layer 3: Fibonacci curve
 // ND-safe: single log spiral; uses the Golden Ratio
+// ND-safe: single log spiral; Golden Ratio guides growth
+export function drawFibonacci(ctx, w, h, color, NUM) {
+  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+  const steps = NUM.TWENTYTWO;
+  const scale = Math.min(w, h) / NUM.ONEFORTYFOUR;
+  const cx = w / 2;
+  const cy = h / 2;
+  let angle = 0;
+  let radius = scale;
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+
+  for (let i = 0; i < steps; i++) {
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
+    ctx.lineTo(x, y);
+    radius *= PHI;
+    angle += Math.PI / NUM.SEVEN;
+  }
+  ctx.stroke();
+}
+
+// Layer 4: Double-helix lattice
+// ND-safe: static lattice, no oscillation
+export function drawHelix(ctx, w, h, color1, color2, NUM) {
+  const amplitude = w / NUM.THIRTYTHREE;
+  const steps = NUM.NINETYNINE;
+  ctx.lineWidth = 1.5;
+
+  ctx.strokeStyle = color1;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const x = w / 2 + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI);
+    const y = t * h;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = color2;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const x = w / 2 + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
+    const y = t * h;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = color1;
+  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
+    const t = i / NUM.THIRTYTHREE;
+    const y = t * h;
+    const x1 = w / 2 + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI);
+    const x2 = w / 2 + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
+    ctx.beginPath();
+    ctx.moveTo(x1, y);
+    ctx.lineTo(x2, y);
+    ctx.stroke();
+  }
 // ND-safe: single log spiral, uses the Golden Ratio
 export function drawFibonacci(ctx, w, h, color, NUM) {
   const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
