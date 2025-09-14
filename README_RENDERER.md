@@ -22,7 +22,7 @@ Static offline canvas renderer for layered sacred geometry in Codex 144:99. Doub
 
 ## Customization
 - Edit `data/palette.json` to change colors.
-- Optionally add `data/constants.json` with numerology values to tweak proportions.
+- Optionally add `data/constants.json` with numerology values.
 
 ## Local Use
 Open `index.html` directly in any modern browser.
@@ -35,4 +35,5 @@ npm test
 ```
 
 ## Notes
+- ND-safe: calm contrast, no motion, optional palette override.
 - Works completely offline; open `index.html` directly.
