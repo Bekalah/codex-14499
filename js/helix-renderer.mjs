@@ -111,6 +111,11 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
 
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // Fill background first to avoid flashes
+    4) Double-helix lattice (two phase-shifted strands)
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // ND-safe: fill background first to avoid flashes
   ctx.fillStyle = palette.bg;
   ctx.fillRect(0, 0, width, height);
 
@@ -308,6 +313,9 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
 export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const nodes = [
     [w / 2, h * 0.05],
+export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
+  const nodes = [
+    [w / 2, h * 0.08],
     [w / 4, h * 0.2], [w * 3 / 4, h * 0.2],
     [w / 4, h * 0.4], [w / 2, h * 0.35], [w * 3 / 4, h * 0.4],
     [w / 4, h * 0.6], [w * 3 / 4, h * 0.6],
@@ -331,6 +339,8 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [6,8],[7,8],[8,9],
     [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7],
     [1,2],[3,5],[4,8],[5,6],[6,7],[3,5],[2,5],[4,7]
+    [6,8],[7,8],[8,9],
+    [1,2],[3,5],[1,6],[2,7],[3,7],[5,6],[4,8]
   ]; // 22 paths
 
     [0,1],[0,2],[1,2],
@@ -375,6 +385,9 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     ctx.beginPath();
     ctx.moveTo(nodes[a][0] * w, nodes[a][1] * h);
     ctx.lineTo(nodes[b][0] * w, nodes[b][1] * h);
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
     ctx.stroke();
   });
 
@@ -539,6 +552,7 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
   }
 // ND-safe: single log spiral, uses the Golden Ratio
 // ND-safe: single log spiral; Golden Ratio governs growth.
+// ND-safe: single log spiral, uses the Golden Ratio
 export function drawFibonacci(ctx, w, h, color, NUM) {
 // ND-safe: single log spiral, uses the Golden Ratio
 function drawFibonacci(ctx, w, h, color, NUM) {
