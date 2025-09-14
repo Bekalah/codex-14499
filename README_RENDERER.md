@@ -4,9 +4,10 @@ Per Texturas Numerorum, Spira Loquitur.
 Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser—no server or network calls.
 
 ## Files
-- `index.html` – entry point with 1440×900 canvas and safe palette fallback.
+- `index.html` – entry point with 1440×900 canvas and safe palette/constants fallbacks.
 - `js/helix-renderer.mjs` – ES module with pure drawing functions.
 - `data/palette.json` – optional ND-safe color palette.
+- `data/constants.json` – optional numerology constants.
 
 ## Layers
 1. Vesica field
@@ -22,6 +23,7 @@ Static offline canvas renderer for layered sacred geometry in Codex 144:99. Doub
 
 ## Customization
 - Edit `data/palette.json` to change colors.
+- Edit `data/constants.json` to tweak numerology values.
 
 ## Local Use
 Open `index.html` directly in any modern browser.

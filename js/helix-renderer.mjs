@@ -12,6 +12,8 @@
     - No motion or animation.
     - Geometry uses numerology constants.
     - Golden Ratio used for Fibonacci curve.
+    - All geometry parameterized by numerology constants.
+    - Golden Ratio used in Fibonacci curve.
 */
 
 export function renderHelix(ctx, { width, height, palette, NUM }) {
@@ -63,7 +65,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [0,1],[0,2],[1,3],[1,4],[2,4],[2,5],
     [3,4],[4,5],[3,6],[4,6],[4,7],[5,7],
     [6,8],[7,8],[8,9],
-    [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7]
+    [1,2],[3,5],[6,7],[1,3],[2,5],[4,8],[5,7]
   ]; // 22 paths
 
   ctx.lineWidth = 1.5;
@@ -132,4 +134,25 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     ctx.stroke();
   });
   ctx.restore();
+export function drawHelix(ctx, w, h, color1, color2, NUM) {
+  const turns = NUM.NINETYNINE / NUM.NINE; // 11 turns
+  const amplitude = h / 4;
+  const step = w / NUM.ONEFORTYFOUR;
+  ctx.lineWidth = 1.5;
+
+  ctx.strokeStyle = color1;
+  ctx.beginPath();
+  for (let x = 0; x <= w; x += step) {
+    const y = h / 2 + amplitude * Math.sin((turns * 2 * Math.PI * x) / w);
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = color2;
+  ctx.beginPath();
+  for (let x = 0; x <= w; x += step) {
+    const y = h / 2 + amplitude * Math.sin((turns * 2 * Math.PI * x) / w + Math.PI);
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+  ctx.stroke();
 }
