@@ -35,10 +35,25 @@
 
     async function loadPalette() {
       try {
+        const res = await fetch(path, { cache: "no-store" });
+        if (!res.ok) throw new Error(String(res.status));
+        return await res.json();
+<<<<        const text = await res.text();
+        const cleaned = text
+          .split("\n")
+          .filter(line => !line.trim().startsWith("//"))
+          .join("\n");
+        return JSON.parse(cleaned);
+      } catch (err) {
+      } catch {
         const mod = await import("./data/palette.json", { assert: { type: "json" }});
         return mod.default;
       } catch (_) {
-        return null;
+>>>>>>>+codex/filter-an
+===
+          } catch {
+>>>>>>>+origin/codex/im
+    return null;
       }
     }
 
