@@ -73,6 +73,13 @@ Open `index.html` directly in any modern browser. The renderer works fully offli
 ## Local Use
 Open `index.html` directly in any modern browser. No server, no network.
 Open `index.html` directly in any modern browser.
+- Palette loads from local JSON; if missing, safe defaults are used.
+
+## Customization
+- Edit `data/palette.json` to change colors.
+
+## Local Use
+Open `index.html` directly in any modern browser.
 
 ## Tests
 Run local checks:
@@ -87,3 +94,5 @@ npm test
 - Works completely offline; open `index.html` directly.
 - Works completely offline; no external requests.
 
+- ND-safe: calm contrast, no motion.
+- If `data/palette.json` is missing, a built-in fallback palette renders instead.

@@ -142,6 +142,17 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
   ctx.fillStyle = palette.bg;
   ctx.fillRect(0, 0, width, height);
 
+    3) Fibonacci curve (log spiral polyline; static)
+    4) Double-helix lattice (two phase-shifted strands)
+
+  ND-safe choices: no motion, calm palette, layered order preserves depth.
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // Fill background first to avoid flashes.
+  ctx.fillStyle = palette.bg;
+  ctx.fillRect(0, 0, width, height);
+
   drawVesica(ctx, width, height, palette.layers[0], NUM);
   drawTree(ctx, width, height, palette.layers[1], palette.layers[2], NUM);
   drawFibonacci(ctx, width, height, palette.layers[3], NUM);
@@ -160,6 +171,7 @@ function drawVesica(ctx, width, height, color, NUM) {
   ctx.lineWidth = 2;
   for (let i = -NUM.THREE; i <= NUM.THREE; i++) {
     const cx = width / 2 + i * step * NUM.SEVEN;
+// ND-safe: static intersecting circles, soft lines.
 export function drawVesica(ctx, w, h, color, NUM) {
   ctx.save();
   ctx.strokeStyle = color;
@@ -283,6 +295,7 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
   ctx.fillStyle = nodeColor;
 
   ctx.save();
+// ND-safe: simple nodes and paths only.
 export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const nodes = [
     [w/2, h*0.05],
@@ -317,6 +330,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   paths.forEach(([a,b]) => {
     [6,8],[7,8],[8,9],
     [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7],
+    [1,2],[3,5],[4,8],[5,6],[6,7],[3,5],[2,5],[4,7]
   ]; // 22 paths
 
     [0,1],[0,2],[1,2],
@@ -378,6 +392,8 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     ctx.arc(nx * w, ny * h, rNode, 0, Math.PI * 2);
   const rNode = Math.min(w, h) / NUM.NINETYNINE * NUM.SEVEN;
   ctx.fillStyle = nodeColor;
+  const r = Math.min(w, h) / NUM.NINETYNINE * NUM.SEVEN;
+  ctx.fillStyle = nodeColor;
   nodes.forEach(([x,y]) => {
   nodes.forEach(([x, y]) => {
     ctx.beginPath();
@@ -385,6 +401,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   nodes.forEach(([x, y]) => {
     ctx.beginPath();
     ctx.arc(x * w, y * h, rNode, 0, Math.PI * 2);
+    ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fill();
   });
 
@@ -521,6 +538,7 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
     ctx.stroke();
   }
 // ND-safe: single log spiral, uses the Golden Ratio
+// ND-safe: single log spiral; Golden Ratio governs growth.
 export function drawFibonacci(ctx, w, h, color, NUM) {
 // ND-safe: single log spiral, uses the Golden Ratio
 function drawFibonacci(ctx, w, h, color, NUM) {
@@ -758,8 +776,10 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
   }
 }
 function drawHelix(ctx, w, h, color1, color2, NUM) {
+// ND-safe: two static strands with rungs; no oscillation.
+export function drawHelix(ctx, w, h, color1, color2, NUM) {
   const turns = NUM.NINETYNINE / NUM.NINE; // 11 turns
-  const amplitude = h / 4;
+  const amp = h / 4;
   const step = w / NUM.ONEFORTYFOUR;
   ctx.lineWidth = 1.5;
 
@@ -791,6 +811,11 @@ function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     ctx.moveTo(x1, y);
     ctx.lineTo(x2, y);
     ctx.stroke();
+  ctx.strokeStyle = color1;
+  ctx.beginPath();
+  for (let x = 0; x <= w; x += step) {
+    const y = h/2 + amp * Math.sin((turns * 2 * Math.PI * x) / w);
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   }
   ctx.restore();
 }
@@ -802,6 +827,9 @@ function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     const x = (i / steps) * width;
     const y = height / 2 + Math.sin((i / steps) * NUM.THREE * Math.PI * 2 + Math.PI) * amp;
     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  for (let x = 0; x <= w; x += step) {
+    const y = h/2 + amp * Math.sin((turns * 2 * Math.PI * x) / w + Math.PI);
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   }
   ctx.stroke();
 
