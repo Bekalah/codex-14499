@@ -45,6 +45,7 @@
           .join("\n");
         return JSON.parse(cleaned);
       } catch (err) {
+      } catch {
         const mod = await import("./data/palette.json", { assert: { type: "json" }});
         return mod.default;
       } catch (_) {

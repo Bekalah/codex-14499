@@ -20,6 +20,10 @@ Static offline canvas renderer for layered sacred geometry in Codex 144:99. Doub
 - No motion or autoplay; static canvas only.
 - Calming contrast and soft colors for readability.
 - Geometry uses constants 3, 7, 9, 11, 22, 33, 99, 144.
+- Palette loads from local JSON; if missing, safe defaults render.
+
+## Local Use
+Open `index.html` directly in any modern browser. The renderer works fully offline.
 - Palette and constants load from local JSON; if missing, safe defaults are used.
 
 ## Customization

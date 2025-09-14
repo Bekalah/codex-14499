@@ -9,6 +9,9 @@
     3) Fibonacci curve (log spiral polyline; static)
     4) Double-helix lattice (two phase-shifted strands)
 
+    3) Fibonacci curve (log spiral)
+    4) Double-helix lattice (two phase-shifted strands)
+  ND-safe choices: no motion, calm colors, clear separation.
   Notes:
     - No motion or animation.
     - All geometry parameterized by numerology constants.
@@ -129,6 +132,14 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
   ctx.strokeStyle = pathColor;
   ctx.lineWidth = 1;
   paths.forEach(([a,b]) => {
+    [0,1],[0,2],[1,2],
+    [1,3],[2,4],[3,5],[4,5],
+    [3,6],[4,6],[5,6],
+    [5,7],[6,7],
+    [6,8],[7,8],[8,9]
+  ]; // 22 paths
+
+  ctx.strokeStyle = lineColor;
   ctx.save();
   ctx.strokeStyle = lineColor;
   ctx.fillStyle = nodeColor;
@@ -178,6 +189,9 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
   nodes.forEach(([nx, ny]) => {
     ctx.beginPath();
     ctx.arc(nx * w, ny * h, rNode, 0, Math.PI * 2);
+  const rNode = Math.min(w, h) / NUM.NINETYNINE * NUM.SEVEN;
+  nodes.forEach(([x, y]) => {
+    ctx.beginPath();
     ctx.arc(x * w, y * h, r, 0, Math.PI * 2);
     ctx.fill();
   });
@@ -227,6 +241,26 @@ function drawFibonacci(ctx, w, h, color, NUM) {
     angle += Math.PI / NUM.SEVEN;
 // ND-safe: single log spiral, uses the Golden Ratio
 export function drawFibonacci(ctx, w, h, color, NUM) {
+  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+  const steps = NUM.TWENTYTWO;
+  const scale = Math.min(w, h) / NUM.ONEFORTYFOUR;
+
+  let angle = 0;
+  let radius = scale;
+  const cx = w / 2;
+  const cy = h / 2;
+
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let i = 0; i < steps; i++) {
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    radius *= PHI;
+    angle += Math.PI / NUM.SEVEN;
+  }
+  ctx.stroke();
   ctx.save();
   const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
   const steps = NUM.NINETYNINE / NUM.THREE; // 33 points
