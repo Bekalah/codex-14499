@@ -28,6 +28,10 @@ Static offline canvas renderer for layered sacred geometry in Codex 144:99. Doub
 
 ## Local Use
 Open `index.html` directly in any modern browser.
+- Palette loads from local JSON; if missing, safe defaults render.
+
+## Local Use
+Open `index.html` directly in any modern browser. The renderer works fully offline.
 
 ## Tests
 Run local checks:
