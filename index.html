@@ -120,6 +120,49 @@
         const res = await fetch(path, { cache: "no-store" });
         if (!res.ok) throw new Error(String(res.status));
         return await res.json();
+        const cleaned = text
+          .split("\n")
+          .filter(line => !line.trim().startsWith("//"))
+          .join("\n");
+        return JSON.parse(cleaned);
+>>>>>>>+codex/add-.gita
+===
+>>>>>>> origin/codex/update-codex-144-99-and-related-systems
+      } catch (err) {
+      } catch {
+      } catch (err) {
+        const mod = await import("./data/palette.json", { assert: { type: "json" }});
+        return mod.default;
+      } catch (_) {
+>>>>>>>+codex/filter-an
+===
+          } catch {
+>>>>>>>+origin/codex/im
+    return null;
+      }
+    }
+
+    const defaults = {
+      palette: {
+        bg:"#0b0b12",
+        ink:"#e8e8f0",
+        layers:["#b1c7ff","#89f7fe","#a0ffa1","#ffd27f","#f5a3ff","#d0d0e6"]
+      }
+    };
+
+    const palette = await loadPalette();
+    const active = palette || defaults.palette;
+    elStatus.textContent = palette ? "Palette loaded." : "Palette missing; using safe fallback.";
+
+    // Numerology constants used by geometry routines
+    const NUM = { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 };
+
+    // ND-safe rationale: no motion, high readability, soft colors, layered order
+    renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:active, NUM });
+  </script>
+</body>
+</html>
+        return await res.json();
 <<<<<<<<        const text = await res.text();
         const cleaned = text
           .split("\n")

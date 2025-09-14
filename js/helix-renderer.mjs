@@ -78,6 +78,12 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
   No motion; calm palette and layer order support readability.
 */
 
+    2) Tree-of-Life scaffold (10 sephirot + 22 paths; simplified)
+    3) Fibonacci curve (log spiral polyline)
+    4) Double-helix lattice (two phase-shifted strands)
+  No motion; calm palette and layer order support readability.
+*/
+
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // Fill background first to avoid flashes
   ctx.fillStyle = palette.bg;
@@ -402,6 +408,16 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   ctx.beginPath();
+// ND-safe: single log spiral; static
+export function drawFibonacci(ctx, w, h, color, NUM) {
+  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+  const steps = NUM.THIRTYTHREE; // 33 points
+  const scale = Math.min(w, h) / NUM.ONEFORTYFOUR * NUM.THREE;
+  let angle = 0;
+  let radius = scale;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
   let x = w/2 + radius * Math.cos(angle);
   let y = h/2 + radius * Math.sin(angle);
   ctx.moveTo(x, y);
@@ -464,6 +480,8 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
   const step = w / NUM.ONEFORTYFOUR;
   const amplitude = h / 4;
 
+// ND-safe: static lattice, no oscillation
+export function drawHelix(ctx, w, h, color1, color2, NUM) {
 // ND-safe: static lattice, no oscillation
 export function drawHelix(ctx, w, h, color1, color2, NUM) {
   const turns = NUM.ELEVEN; // 11 turns
