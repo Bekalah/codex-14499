@@ -11,7 +11,7 @@ Static offline canvas renderer for layered sacred geometry in Codex 144:99.
 Double-click `index.html` in any modern browser—no server or network calls.
 
 ## Files
-- `index.html` – entry point with 1440×900 canvas and safe palette fallback.
+- `index.html` – entry point with a 1440×900 canvas and palette fallback.
 - `js/helix-renderer.mjs` – ES module with pure drawing functions.
 - `data/palette.json` – optional ND-safe color palette.
 

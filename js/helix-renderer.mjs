@@ -94,6 +94,12 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
   Why: preserves contemplative depth without motion or external libs.
 */
 
+  ND-safe:
+    - No motion or animation.
+    - Soft palette passed from palette.json or default.
+    - Drawing order preserves contemplative depth.
+*/
+
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // Fill background first to avoid flashes
   ctx.fillStyle = palette.bg;
@@ -144,6 +150,7 @@ export function drawVesica(ctx, w, h, color, NUM) {
 function drawVesica(ctx, w, h, color, NUM) {
   const r = Math.min(w, h) / NUM.THREE;
   const step = r / NUM.NINE;
+  const offset = r / NUM.THREE;
   const cy = h / 2;
 
   ctx.strokeStyle = color;
@@ -246,11 +253,15 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [w/2, h*0.8],
     [w/2, h*0.95]
     [w / 2, h * 0.08],
+export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
+  const nodes = [
+    [w / 2, h * 0.05],
     [w / 4, h * 0.2], [w * 3 / 4, h * 0.2],
     [w / 4, h * 0.4], [w / 2, h * 0.35], [w * 3 / 4, h * 0.4],
     [w / 4, h * 0.6], [w * 3 / 4, h * 0.6],
     [w / 2, h * 0.8],
     [w / 2, h * 0.95]
+    [w / 2, h * 0.95],
   ];
 
   const paths = [
@@ -289,6 +300,9 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [3,6],[4,7],[5,6],[5,7],[6,7],[6,8],[7,8],
     [6,9],[7,9],[8,9],[5,8],[2,5],[1,5],[0,5]
     [3,5],[1,2],[6,7],[1,3],[2,5],[4,8],[5,7]
+  ]; // 22 paths
+
+    [1,2],[3,5],[6,7],[1,3],[2,5],[4,8],[5,7]
   ]; // 22 paths
 
   ctx.strokeStyle = lineColor;
@@ -360,6 +374,18 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   ctx.beginPath();
+// ND-safe: single log spiral, uses the Golden Ratio
+export function drawFibonacci(ctx, w, h, color, NUM) {
+  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+  const steps = NUM.THIRTYTHREE;
+  const scale = Math.min(w, h) / NUM.ONEFORTYFOUR;
+  const cx = w / 2;
+  const cy = h / 2;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  let angle = 0;
+  let radius = scale;
   ctx.moveTo(cx, cy);
 
   for (let i = 0; i < steps; i++) {
@@ -593,6 +619,17 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
       const x = w / 2 + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + phase);
+  const amplitude = w / NUM.THIRTYTHREE;
+  const steps = NUM.NINETYNINE;
+  const cx = w / 2;
+
+  ctx.lineWidth = 1.5;
+  [0, Math.PI].forEach(phase => {
+    ctx.strokeStyle = color1;
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const x = cx + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + phase);
       const y = t * h;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     }
@@ -629,6 +666,12 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     const y = t * h;
     const x1 = w / 2 + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI);
     const x2 = w / 2 + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
+  ctx.strokeStyle = color2;
+  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
+    const t = i / NUM.THIRTYTHREE;
+    const y = t * h;
+    const x1 = cx + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI);
+    const x2 = cx + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
     ctx.beginPath();
     ctx.moveTo(x1, y);
     ctx.lineTo(x2, y);
