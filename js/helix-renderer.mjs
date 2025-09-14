@@ -72,6 +72,12 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
     - Golden Ratio used for Fibonacci curve
 */
 
+    2) Tree-of-Life scaffold (10 sephirot + 22 paths; simplified)
+    3) Fibonacci curve (log spiral polyline)
+    4) Double-helix lattice (two phase-shifted strands)
+  No motion; calm palette and layer order support readability.
+*/
+
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // Fill background first to avoid flashes
   ctx.fillStyle = palette.bg;
@@ -175,7 +181,7 @@ function drawTree(ctx, w, h, pathColor, nodeColor, NUM) {
 
   ctx.save();
   const nodes = [
-    [w/2, h*0.08],
+    [w/2, h*0.05],
     [w/4, h*0.2], [w*3/4, h*0.2],
     [w/4, h*0.4], [w/2, h*0.35], [w*3/4, h*0.4],
     [w/4, h*0.6], [w*3/4, h*0.6],
@@ -353,6 +359,20 @@ function drawFibonacci(ctx, w, h, color, NUM) {
     const y = cy + radius * Math.sin(angle);
     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     radius *= PHI;
+// ND-safe: single log spiral; static
+export function drawFibonacci(ctx, w, h, color, NUM) {
+  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
+  const steps = NUM.THIRTYTHREE; // 33 points
+  const scale = Math.min(w, h) / NUM.ONEFORTYFOUR * NUM.THREE;
+  let angle = 0;
+  let radius = scale;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  let x = w/2 + radius * Math.cos(angle);
+  let y = h/2 + radius * Math.sin(angle);
+  ctx.moveTo(x, y);
+  for (let i = 1; i <= steps; i++) {
     angle += Math.PI / NUM.SEVEN;
 // ND-safe: single log spiral, uses the Golden Ratio
 export function drawFibonacci(ctx, w, h, color, NUM) {
@@ -389,6 +409,8 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
   for (let i = 0; i < steps; i++) {
     const x = w/2 + radius * Math.cos(angle);
     const y = h/2 + radius * Math.sin(angle);
+    x = w/2 + radius * Math.cos(angle);
+    y = h/2 + radius * Math.sin(angle);
     ctx.lineTo(x, y);
     radius *= PHI;
     angle += Math.PI / NUM.SEVEN;
@@ -409,12 +431,17 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
   const step = w / NUM.ONEFORTYFOUR;
   const amplitude = h / 4;
 
+// ND-safe: static lattice, no oscillation
+export function drawHelix(ctx, w, h, color1, color2, NUM) {
+  const turns = NUM.ELEVEN; // 11 turns
+  const amplitude = h / NUM.NINE;
+  const step = w / NUM.NINETYNINE;
   ctx.lineWidth = 1.5;
 
   ctx.strokeStyle = color1;
   ctx.beginPath();
   for (let x = 0; x <= w; x += step) {
-    const y = h / 2 + amplitude * Math.sin((turns * 2 * Math.PI * x) / w);
+    const y = h/2 + amplitude * Math.sin((turns * 2 * Math.PI * x) / w);
     if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   }
   ctx.stroke();
@@ -422,7 +449,7 @@ export function drawHelix(ctx, w, h, color1, color2, NUM) {
   ctx.strokeStyle = color2;
   ctx.beginPath();
   for (let x = 0; x <= w; x += step) {
-    const y = h / 2 + amplitude * Math.sin((turns * 2 * Math.PI * x) / w + Math.PI);
+    const y = h/2 + amplitude * Math.sin((turns * 2 * Math.PI * x) / w + Math.PI);
     if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
   }
   ctx.stroke();
