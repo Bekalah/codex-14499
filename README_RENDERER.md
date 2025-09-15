@@ -31,6 +31,12 @@ Double-click `index.html` in any modern browser—no server or network calls.
 - `index.html` – entry point with a 1440×900 canvas and palette fallback.
 - `js/helix-renderer.mjs` – ES module with pure drawing functions.
 - `data/palette.json` – optional ND-safe color palette.
+Static offline canvas renderer for layered sacred geometry in Codex 144:99.
+
+## Files
+- `index.html` — entry point with 1440×900 canvas and safe palette fallback.
+- `js/helix-renderer.mjs` — ES module drawing the four layers.
+- `data/palette.json` — optional ND-safe color palette.
 
 ## Layers
 1. Vesica field
@@ -39,11 +45,23 @@ Double-click `index.html` in any modern browser—no server or network calls.
 4. Static double-helix lattice
 
 ## ND-safe Design
+- No motion or autoplay.
+- Calm contrast and soft colors for readability.
+- Geometry uses numerology constants 3, 7, 9, 11, 22, 33, 99, 144.
+- Palette loaded locally; missing file triggers a safe fallback notice.
+
+## Local Use
+Open `index.html` directly in any modern browser.
+Open `index.html` directly in a modern browser. No server or network needed.
 - No motion or autoplay; static canvas only.
 - Calming contrast and soft colors for readability.
 - Geometry uses numerology constants 3,7,9,11,22,33,99,144.
 - Palette and constants load from local JSON; if missing, safe defaults are used.
 - Geometry uses constants 3, 7, 9, 11, 22, 33, 99, 144.
+- Palette loads from local JSON; if missing, safe defaults are used.
+
+## Customization
+- Edit `data/palette.json` to change colors.
 - Palette loads from `data/palette.json`; safe defaults if missing.
 
 ## Numerology as Spiral Grammar
@@ -76,6 +94,7 @@ Run local checks:
 
 ```
 npm test
+npm run contrast
 ```
 
 ## Notes
