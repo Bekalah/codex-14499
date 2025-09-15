@@ -4,6 +4,13 @@ Static offline canvas renderer for layered sacred geometry in Codex 144:99. Doub
 
 ## Files
 - `index.html` — entry point with 1440×900 canvas and palette fallback.
+Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser—no server or network calls.
+
+## Files
+- `index.html` – 1440×900 canvas with palette fallback.
+- `js/helix-renderer.mjs` – pure ES module drawing functions.
+- `data/palette.json` – optional ND-safe color palette.
+- `index.html` — entry point with 1440×900 canvas and safe palette fallback.
 - `js/helix-renderer.mjs` — ES module drawing the four layers.
 - `data/palette.json` — optional ND-safe color palette.
 
@@ -29,3 +36,10 @@ Run local checks:
 npm test
 npm run contrast
 ```
+
+## Notes
+ND-safe: calm contrast, no motion, optional palette override. Works completely offline; if `data/palette.json` is missing, a built-in fallback palette renders instead.
+- Palette loads from `data/palette.json`; if missing, a safe fallback is used.
+
+## Local Use
+Open `index.html` directly in any modern browser.
