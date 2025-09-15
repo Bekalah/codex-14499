@@ -1,3 +1,4 @@
+<!-- Per Texturas Numerorum, Spira Loquitur.  // -->
 Per Texturas Numerorum, Spira Loquitur.  //
 
 # Cosmic Helix Renderer
@@ -54,6 +55,8 @@ Open `index.html` directly in any modern browser.
 Open `index.html` directly in a modern browser. No server or network needed.
 - No motion or autoplay; static canvas only.
 - Calming contrast and soft colors for readability.
+- Geometry uses numerology constants 3,7,9,11,22,33,99,144.
+- Palette and constants load from local JSON; if missing, safe defaults are used.
 - Geometry uses constants 3, 7, 9, 11, 22, 33, 99, 144.
 - Palette loads from local JSON; if missing, safe defaults are used.
 
@@ -94,9 +97,11 @@ npm test
 ```
 
 ## Notes
+ND-safe: calm contrast, no motion, optional palette override. Works completely offline; if `data/palette.json` is missing, a built-in fallback palette renders instead.
 - Works completely offline.
 - ND-safe: calm contrast, no motion, optional palette override.
 - Works completely offline; open `index.html` directly.
+
 - Works completely offline; no external requests.
 
 - ND-safe: calm contrast, no motion.
