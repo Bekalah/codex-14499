@@ -149,6 +149,12 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
 
 export function renderHelix(ctx, { width, height, palette, NUM }) {
   // ND-safe: fill background before drawing to avoid flashes
+
+  All geometry uses numerology constants: 3,7,9,11,22,33,99,144.
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // ND-safe: fill background first to avoid flashes
   ctx.fillStyle = palette.bg;
   ctx.fillRect(0, 0, width, height);
 
@@ -933,6 +939,16 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
       const x = cx + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + phase);
+  const steps = NUM.NINETYNINE;
+  ctx.lineWidth = 1.5;
+
+  // two strands
+  [0, Math.PI].forEach(phase => {
+    ctx.strokeStyle = strandColor;
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      const x = w / 2 + amp * Math.sin(NUM.ELEVEN * t * Math.PI + phase);
       const y = t * h;
       if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     }
@@ -992,6 +1008,11 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     const y = t * h;
     const x1 = cx + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI);
     const x2 = cx + amplitude * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
+  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
+    const t = i / NUM.THIRTYTHREE;
+    const y = t * h;
+    const x1 = w / 2 + amp * Math.sin(NUM.ELEVEN * t * Math.PI);
+    const x2 = w / 2 + amp * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
     ctx.beginPath();
     ctx.moveTo(x1, y);
     ctx.lineTo(x2, y);
