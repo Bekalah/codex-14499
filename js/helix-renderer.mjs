@@ -230,6 +230,8 @@ export function renderHelix(ctx, { width, height, palette, NUM }) {
 function drawVesica(ctx, w, h, color, NUM) {
   ctx.save();
 // Layer 1: Vesica field
+// ND-safe: static intersecting circles, soft lines
+// ND-safe: static intersecting circles, soft lines.
 // ND-safe: static intersecting circles
 function drawVesica(ctx, w, h, color, NUM) {
 // ND-safe: static intersecting circles, soft lines
@@ -331,6 +333,7 @@ function drawTree(ctx, { width, height, palette, NUM }) {
   ctx.strokeStyle = palette.layers[1];
   ctx.fillStyle = palette.layers[2];
   const rNode = Math.min(width, height) / NUM.NINETYNINE * NUM.SEVEN;
+// ND-safe: simple nodes and paths only.
 
 // ND-safe: simple nodes and paths only.
 function drawTree(ctx, width, height, pathColor, nodeColor, NUM) {
@@ -515,6 +518,8 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
     [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7],
     [1,2],[3,5],[4,8],[5,6],[6,7],[3,5],[2,5],[4,7]
     [6,8],[7,8],[8,9],
+    [1,2],[3,5],[6,7],[1,3],[2,5],[4,8],[5,7]
+    [1,2],[3,5],[4,8],[5,6],[6,7],[3,5],[2,5],[4,7]
     [1,2],[3,5],[1,6],[2,7],[3,7],[5,6],[4,8]
     [3,5],[1,2],[6,7],[1,3],[2,5],[3,5],[4,8],[5,7],
   ]; // 22 paths
@@ -609,6 +614,8 @@ function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   });
 
   ctx.fillStyle = nodeColor;
+  const rNode = Math.min(w, h) / NUM.NINETYNINE * NUM.SEVEN;
+  nodes.forEach(([x, y]) => {
   const r = Math.min(w, h) / NUM.NINETYNINE * NUM.SEVEN;
   nodes.forEach(([x,y]) => {
 
@@ -896,6 +903,7 @@ function drawFibonacci(ctx, w, h, color, NUM) {
     const y = cy + radius * Math.sin(angle);
     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     radius *= PHI;
+    angle += Math.PI / NUM.SEVEN;
 // ND-safe: single log spiral; static
 export function drawFibonacci(ctx, w, h, color, NUM) {
   const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio

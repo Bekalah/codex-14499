@@ -99,6 +99,9 @@ npm run contrast
 ```
 
 ## Notes
+- ND-safe: calm contrast, no motion, optional palette override.
+- Works completely offline; open `index.html` directly.
+
 ND-safe: calm contrast, no motion, optional palette override. Works completely offline; if `data/palette.json` is missing, a built-in fallback palette renders instead.
 - Works completely offline.
 - ND-safe: calm contrast, no motion, optional palette override.
