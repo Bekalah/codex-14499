@@ -1,5 +1,9 @@
 # Cosmic Helix Renderer
 
+Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser; no server or network calls.
+
+## Files
+- `index.html` — entry point with 1440×900 canvas and palette fallback.
 Static offline canvas renderer for layered sacred geometry in Codex 144:99. Double-click `index.html` in any modern browser—no server or network calls.
 
 ## Files
