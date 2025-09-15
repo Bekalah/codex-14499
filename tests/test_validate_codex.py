@@ -1,8 +1,8 @@
+import importlib.util
+from pathlib import Path
 import json
 import subprocess
 import sys
-from pathlib import Path
-import importlib.util
 
 # Load the validator module without requiring package imports
 SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "validate_codex.py"
@@ -20,12 +20,10 @@ def _write_nodes(tmp_path, nodes):
 
 def _run_validator(tmp_path):
     """Execute the script as a standalone process."""
-    return subprocess.run(
-        [sys.executable, str(SCRIPT)],
-        cwd=tmp_path,
-        capture_output=True,
-        text=True,
-    )
+    return subprocess.run([
+        sys.executable,
+        str(SCRIPT)
+    ], cwd=tmp_path, capture_output=True, text=True)
 
 
 def _base_node():

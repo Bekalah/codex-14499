@@ -1,11 +1,14 @@
-import sys
+
 from pathlib import Path
+import sys
+
 
 def load():
     root = Path(__file__).resolve().parents[1]
     sys.path.append(str(root / 'scripts'))
     from dedup import dedup_file
     return dedup_file
+
 
 def test_dedup_file(tmp_path):
     dedup_file = load()
