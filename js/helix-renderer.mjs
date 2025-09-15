@@ -3,6 +3,7 @@
 /*
   helix-renderer.mjs
   ND-safe static renderer for layered sacred geometry.
+  No motion, no external dependencies.
 
   Layers:
     1) Vesica field
@@ -41,6 +42,12 @@ export function renderHelix(ctx, opts) {
     2) Tree-of-Life scaffold (10 sephirot + 22 paths; simplified layout)
     3) Fibonacci curve (log spiral polyline; static)
     4) Double-helix lattice (two phase-shifted strands)
+
+  All geometry uses numerology constants: 3,7,9,11,22,33,99,144.
+*/
+
+export function renderHelix(ctx, { width, height, palette, NUM }) {
+  // ND-safe: fill background first to avoid flashes
 
     3) Fibonacci curve (log spiral)
     4) Double-helix lattice (two phase-shifted strands)
@@ -218,8 +225,8 @@ function drawVesica(ctx, w, h, color, NUM) {
     const cx = width / 2 + i * step * NUM.SEVEN;
 // ND-safe: static intersecting circles, soft lines.
 =====
->>>>>>> origin/codex/update-json-files-for-atelier-modes-tvbc0t
 // ND-safe: static intersecting circles, soft lines.
+>>>>>>> main
 export function drawVesica(ctx, w, h, color, NUM) {
   ctx.save();
   ctx.strokeStyle = color;
@@ -286,7 +293,6 @@ function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
 <<<<function drawTree(ctx, width, height, pathColor, nodeColor, NUM) {
   const r = width / NUM.NINETYNINE;
 ===
->>>>>>> origin/codex/update-json-files-for-atelier-modes-tvbc0t
 export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const nodes = [
     [w / 2, h * 0.08],
@@ -374,6 +380,7 @@ export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
 
   ctx.save();
 // ND-safe: simple nodes and paths only.
+>>>>>>> main
 export function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
 function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
   const nodes = [
@@ -603,6 +610,13 @@ export function drawFibonacci(ctx, w, h, color, NUM) {
   const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
   const steps = NUM.TWENTYTWO;
   const scale = Math.min(w, h) / NUM.ONEFORTYFOUR;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  let angle = 0;
+  let radius = scale;
+  const cx = w / 2;
+  const cy = h / 2;
   const cx = w / 2;
   const cy = h / 2;
   let angle = 0;
@@ -839,6 +853,12 @@ function drawHelix(ctx, width, height, colorA, colorB, NUM) {
     const y = height / 2 + Math.sin((i / steps) * NUM.THREE * Math.PI * 2) * amp;
     if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
 // ND-safe: static lattice without oscillation
+export function drawHelix(ctx, w, h, strandColor, rungColor, NUM) {
+  const amp = w / NUM.THIRTYTHREE;
+  const steps = NUM.NINETYNINE;
+  ctx.lineWidth = 1.5;
+
+  // two strands
 function drawHelix(ctx, w, h, strandColor, rungColor, NUM) {
   const turns = NUM.ELEVEN;
 export function drawHelix(ctx, w, h, color1, color2, NUM) {
@@ -893,6 +913,7 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     ctx.beginPath();
     for (let i = 0; i <= steps; i++) {
       const t = i / steps;
+      const x = w / 2 + amp * Math.sin(NUM.ELEVEN * t * Math.PI + phase);
       const x = w / 2 + amplitude * Math.sin(turns * 2 * Math.PI * t + phase);
   [0, Math.PI].forEach((phase, idx) => {
     ctx.strokeStyle = idx === 0 ? color1 : color2;
@@ -918,6 +939,13 @@ export function drawHelix(ctx, w, h, colorA, colorB, NUM) {
     ctx.stroke();
   });
 
+  // rungs
+  ctx.strokeStyle = rungColor;
+  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
+    const t = i / NUM.THIRTYTHREE;
+    const y = t * h;
+    const x1 = w / 2 + amp * Math.sin(NUM.ELEVEN * t * Math.PI);
+    const x2 = w / 2 + amp * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
   // connecting rungs
   ctx.strokeStyle = color2;
   for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
