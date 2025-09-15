@@ -76,6 +76,7 @@ Run local checks:
 
 ```
 npm test
+npm run contrast
 ```
 
 ## Notes

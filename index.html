@@ -32,6 +32,7 @@
     const canvas = document.getElementById("stage");
     const ctx = canvas.getContext("2d");
 
+    // Local JSON loader; returns null if file missing
     async function loadJSON(path) {
       try {
         const res = await fetch(path, { cache: "no-store" });
