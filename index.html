@@ -37,13 +37,6 @@
       try {
         const res = await fetch(path, { cache: "no-store" });
         if (!res.ok) throw new Error(String(res.status));
-        const text = await res.text();
-        const cleaned = text
-          .split("\n")
-          .filter(line => !line.trim().startsWith("//"))
-          .join("\n");
-        return JSON.parse(cleaned);
-      } catch (err) {
         return await res.json();
       } catch {
         return null;
