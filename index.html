@@ -38,10 +38,13 @@
         if (!res.ok) throw new Error(String(res.status));
         return await res.json();
       } catch (err) {
+        // Local fetch can fail under file://. Returning null enables the
+        // fallback palette so offline double-click remains stress-free.
         return null;
       }
     }
 
+    // Fallback palette avoids blank screens if palette.json is absent.
     const defaults = {
       palette: {
         bg:"#0b0b12",
@@ -57,7 +60,7 @@
     // Numerology constants used by geometry routines
     const NUM = { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 };
 
-    // ND-safe rationale: no motion, high readability, soft colors, layer order
+    // ND-safe rationale: no motion, high readability, soft colors, steady layer order
     renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:active, NUM });
   </script>
 </body>
