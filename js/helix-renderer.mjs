@@ -1,571 +1,181 @@
 /*
   helix-renderer.mjs
   ND-safe static renderer for layered sacred geometry.
-  Each layer draws once; no motion or external dependencies.
+  Why: the project forbids motion and demands layered depth, so every
+  drawing step is idempotent, pure, and self-contained.
 */
 
-// Draw intersecting circles forming a vesica grid
-export function drawVesica(ctx, width, height, color, NUM) {
-  const r = Math.min(width, height) / NUM.THREE;
-  const step = r;
-  const cx = width / 2;
-  const cy = height / 2;
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  for (let ix = -1; ix <= 1; ix++) {
-    for (let iy = -1; iy <= 1; iy++) {
-      ctx.beginPath();
-      ctx.arc(cx + ix * step, cy + iy * step, r, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-  }
+const DEFAULT_PALETTE = {
+  bg: "#0b0b12",
+  ink: "#e8e8f0",
+  layers: ["#b1c7ff", "#89f7fe", "#a0ffa1", "#ffd27f", "#f5a3ff", "#d0d0e6"]
+};
+
+// Exported entry point. Small pure function that orchestrates the four layers.
+export function renderHelix(ctx, opts) {
+  const { width, height, palette, NUM } = opts;
+  const safePalette = ensurePalette(palette);
+
+  ctx.save();
+  ctx.fillStyle = safePalette.bg;
+  ctx.fillRect(0, 0, width, height);
+  ctx.restore();
+
+  drawVesicaField(ctx, width, height, safePalette.layers[0], NUM);
+  drawTreeOfLife(ctx, width, height, safePalette.layers[1], safePalette.layers[2], NUM);
+  drawFibonacciCurve(ctx, width, height, safePalette.layers[3], NUM);
+  drawHelixLattice(ctx, width, height, safePalette.layers[4], safePalette.layers[5], safePalette.ink, NUM);
 }
 
-// Draw simplified Tree-of-Life nodes and paths
-export function drawTree(ctx, width, height, color, NUM) {
-  const cx = width / 2;
-  const nodes = [
-    { x: cx, y: height * 0.08 },
-    { x: cx + width * 0.15, y: height * 0.20 },
-    { x: cx - width * 0.15, y: height * 0.20 },
-    { x: cx + width * 0.25, y: height * 0.35 },
-    { x: cx - width * 0.25, y: height * 0.35 },
-    { x: cx, y: height * 0.50 },
-    { x: cx + width * 0.20, y: height * 0.65 },
-    { x: cx - width * 0.20, y: height * 0.65 },
-    { x: cx, y: height * 0.75 },
-    { x: cx, y: height * 0.90 }
-  ];
-  const edges = [
-    [0,1],[0,2],[1,2],[1,3],[1,5],[2,4],[2,5],
-    [3,4],[3,5],[4,5],[3,6],[4,7],[5,6],[5,7],
-    [6,7],[6,8],[7,8],[6,9],[7,9],[8,9],[2,3],[1,4]
-  ];
+// Validate palette input so missing data never breaks offline rendering.
+function ensurePalette(palette) {
+  if (!palette) return DEFAULT_PALETTE;
+  if (!Array.isArray(palette.layers) || palette.layers.length < 6) {
+    return DEFAULT_PALETTE;
+  }
+  return {
+    bg: palette.bg || DEFAULT_PALETTE.bg,
+    ink: palette.ink || DEFAULT_PALETTE.ink,
+    layers: palette.layers.slice(0, 6)
+  };
+}
+
+// Layer 1 - Vesica field. Calm grid of intersecting circles, no motion.
+function drawVesicaField(ctx, width, height, color, NUM) {
+  ctx.save();
   ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  const radius = Math.min(width, height) / NUM.NINE;
+  const stepX = radius;
+  const stepY = radius / NUM.SEVEN * NUM.THREE; // vertical compression keeps harmony
+  const centerX = width / 2;
+  const centerY = height / 2;
+  for (let row = -1; row <= 1; row++) {
+    for (let col = -1; col <= 1; col++) {
+      const cx = centerX + col * stepX;
+      const cy = centerY + row * stepY;
+      drawVesicaPair(ctx, cx, cy, radius);
+    }
+  }
+  ctx.restore();
+}
+
+function drawVesicaPair(ctx, cx, cy, radius) {
+  ctx.beginPath();
+  ctx.arc(cx - radius / 2, cy, radius, 0, Math.PI * 2);
+  ctx.arc(cx + radius / 2, cy, radius, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+// Layer 2 - Tree-of-Life scaffold. Nodes and paths stay static, high contrast.
+function drawTreeOfLife(ctx, width, height, edgeColor, nodeColor, NUM) {
+  const baseY = height / NUM.ONEFORTYFOUR;
+  const centerX = width / 2;
+  const horizontal = width / NUM.ELEVEN; // gentle spread, avoids overstimulation
+  const nodes = [
+    { x: centerX, y: baseY * 9 },   // Kether
+    { x: centerX + horizontal, y: baseY * 22 }, // Chokmah
+    { x: centerX - horizontal, y: baseY * 22 }, // Binah
+    { x: centerX + horizontal * 1.4, y: baseY * 44 }, // Chesed
+    { x: centerX - horizontal * 1.4, y: baseY * 44 }, // Geburah
+    { x: centerX, y: baseY * 55 },  // Tiphareth
+    { x: centerX + horizontal, y: baseY * 77 }, // Netzach
+    { x: centerX - horizontal, y: baseY * 77 }, // Hod
+    { x: centerX, y: baseY * 99 },  // Yesod
+    { x: centerX, y: baseY * 126 }  // Malkuth (99 + 27)
+  ];
+
+  // 22 paths honour the numerology requirement and classical configuration.
+  const paths = [
+    [0,1],[0,2],[1,2],
+    [1,3],[2,4],[3,4],
+    [3,5],[4,5],[1,5],[2,5],
+    [3,6],[4,7],[5,6],[5,7],
+    [6,7],[6,8],[7,8],
+    [6,9],[7,9],[8,9],
+    [2,3],[1,4]
+  ];
+
+  ctx.save();
+  ctx.strokeStyle = edgeColor;
   ctx.lineWidth = 2;
-  edges.forEach(([a,b]) => {
+  paths.forEach(([a,b]) => {
     ctx.beginPath();
     ctx.moveTo(nodes[a].x, nodes[a].y);
     ctx.lineTo(nodes[b].x, nodes[b].y);
     ctx.stroke();
   });
-  ctx.fillStyle = color;
-  nodes.forEach(n => {
+
+  ctx.fillStyle = nodeColor;
+  const nodeRadius = Math.max(3, width / NUM.NINETYNINE);
+  nodes.forEach(node => {
     ctx.beginPath();
-    ctx.arc(n.x, n.y, NUM.THREE, 0, Math.PI * 2);
+    ctx.arc(node.x, node.y, nodeRadius, 0, Math.PI * 2);
     ctx.fill();
   });
+  ctx.restore();
 }
 
-// Draw logarithmic spiral approximating the Fibonacci curve
-export function drawFibonacci(ctx, width, height, color, NUM) {
-  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
-  const center = { x: width * 0.75, y: height * 0.55 };
-  const points = [];
-  const turns = NUM.THREE;
-  const scale = Math.min(width, height) / NUM.NINETYNINE;
-  for (let t = 0; t < Math.PI * 2 * turns; t += 0.02) {
-    const r = scale * Math.pow(PHI, t / (Math.PI / 2));
-    points.push({ x: center.x + r * Math.cos(t), y: center.y + r * Math.sin(t) });
-  }
+// Layer 3 - Fibonacci curve. Static golden spiral, sampling tuned with constant 33.
+function drawFibonacciCurve(ctx, width, height, color, NUM) {
+  ctx.save();
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
+  const golden = (1 + Math.sqrt(5)) / 2;
+  const center = { x: width / NUM.THREE * 2, y: height / NUM.THREE };
+  const scale = Math.min(width, height) / NUM.NINETYNINE;
+  const maxTheta = Math.PI * NUM.SEVEN; // seven turns keep density calm
+  const thetaStep = Math.PI / NUM.THIRTYTHREE; // smooth without motion
+
   ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (const p of points) ctx.lineTo(p.x, p.y);
+  for (let theta = 0; theta <= maxTheta; theta += thetaStep) {
+    const radius = scale * Math.pow(golden, theta / (Math.PI / 2));
+    const x = center.x + radius * Math.cos(theta);
+    const y = center.y + radius * Math.sin(theta);
+    if (theta === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+// Layer 4 - Static double-helix lattice. Two strands plus crossbars, zero animation.
+function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
+  ctx.save();
+  const steps = NUM.TWENTYTWO;
+  const amplitude = height / NUM.THIRTYTHREE;
+  const frequency = (Math.PI * NUM.ELEVEN) / width; // eleven resonant waves
+  const baseline = height * 0.65; // sits beneath spiral to preserve depth
+
+  ctx.lineWidth = 1.5;
+
+  drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, 0, strandColorA);
+  drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, Math.PI, strandColorB);
+  drawHelixRungs(ctx, width, steps, amplitude, frequency, baseline, rungColor);
+
+  ctx.restore();
+}
+
+function drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, phase, color) {
+  ctx.strokeStyle = color;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i++) {
+    const x = (width / steps) * i;
+    const y = baseline + amplitude * Math.sin(frequency * x + phase);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
   ctx.stroke();
 }
 
-// Draw static double-helix lattice
-export function drawHelix(ctx, width, height, colorA, colorB, rung, NUM) {
-  const steps = NUM.TWENTYTWO;
-  const amp = height / NUM.THIRTYTHREE;
-  const freq = (Math.PI * 2) / width * NUM.ELEVEN;
-  ctx.lineWidth = 1.5;
-  // first strand
-  ctx.strokeStyle = colorA;
-  ctx.beginPath();
-  for (let x = 0; x <= width; x += width / (steps - 1)) {
-    const y = height / 2 + amp * Math.sin(freq * x);
-    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-  // second strand
-  ctx.strokeStyle = colorB;
-  ctx.beginPath();
-  for (let x = 0; x <= width; x += width / (steps - 1)) {
-    const y = height / 2 + amp * Math.sin(freq * x + Math.PI);
-    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-  // rungs linking strands
-  ctx.strokeStyle = rung;
-  for (let x = 0; x <= width; x += width / (steps - 1)) {
-    const y1 = height / 2 + amp * Math.sin(freq * x);
-    const y2 = height / 2 + amp * Math.sin(freq * x + Math.PI);
+function drawHelixRungs(ctx, width, steps, amplitude, frequency, baseline, color) {
+  ctx.strokeStyle = color;
+  for (let i = 0; i <= steps; i++) {
+    const x = (width / steps) * i;
+    const y1 = baseline + amplitude * Math.sin(frequency * x);
+    const y2 = baseline + amplitude * Math.sin(frequency * x + Math.PI);
+    // Static crossbars anchor the strands; light tone keeps depth without glare.
     ctx.beginPath();
     ctx.moveTo(x, y1);
     ctx.lineTo(x, y2);
     ctx.stroke();
   }
-
-  Layers:
-    1) Vesica field (intersecting circles)
-    2) Tree-of-Life scaffold (10 sephirot + 22 paths; simplified layout)
-    2) Tree-of-Life scaffold (10 sephirot + 22 paths)
-    3) Fibonacci curve (log spiral polyline)
-    4) Static double-helix lattice (two phase-shifted strands with rungs)
-
-  Why: no motion, calm contrast, small pure functions.
-*/
-
-export function renderHelix(ctx, opts) {
-  const { width, height, palette, NUM } = opts;
-  // Fill background first to avoid flashes.
-  ctx.fillStyle = palette.bg;
-  ctx.fillRect(0, 0, width, height);
-
-  drawVesica(ctx, opts);
-  drawTree(ctx, opts);
-  drawFibonacci(ctx, opts);
-  drawHelix(ctx, opts);
-}
-
-// Layer 1: Vesica field grid
-function drawVesica(ctx, { width, height, palette, NUM }) {
-  ctx.strokeStyle = palette.layers[0];
-  ctx.lineWidth = 2;
-  const r = Math.min(width, height) / NUM.THREE;
-  const cx = width / 2;
-  const cy = height / 2;
-  const offsetX = r / 2;
-  const offsetY = r / NUM.SEVEN;
-  for (let y = -1; y <= 1; y++) {
-    for (let x = -1; x <= 1; x += 2) {
-      ctx.beginPath();
-      ctx.arc(cx + x * offsetX, cy + y * offsetY, r, 0, Math.PI * 2);
-    3) Fibonacci curve (log spiral polyline; static)
-    4) Double-helix lattice (two phase-shifted strands with crossbars)
-*/
-
-export function renderHelix(ctx, opts) {
-  const { width, height, palette, NUM } = opts;
-  ctx.fillStyle = palette.bg;
-  ctx.fillRect(0, 0, width, height);
-  drawVesica(ctx, { width, height, palette, NUM });
-  drawTree(ctx, { width, height, palette, NUM });
-  drawFibonacci(ctx, { width, height, palette, NUM });
-  drawHelix(ctx, { width, height, palette, NUM });
-}
-
-// Layer 1: Vesica field
-// ND-safe: subtle grid of overlapping circles, no motion
-function drawVesica(ctx, { width, height, palette, NUM }) {
-  ctx.save();
-  ctx.strokeStyle = palette.layers[0];
-  const r = Math.min(width, height) / NUM.NINE;
-  const step = r;
-  for (let y = r; y < height + r; y += step) {
-    for (let x = r; x < width + r; x += step) {
-      ctx.beginPath();
-      ctx.arc(x - r / 2, y, r, 0, Math.PI * 2);
-      ctx.arc(x + r / 2, y, r, 0, Math.PI * 2);
-function drawVesica(ctx, w, h, color, NUM) {
-  // ND-safe: simple repeated Vesica Piscis shapes, no motion
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  const r = Math.min(w, h) / NUM.THREE;
-  const offsets = [-1, 0, 1];
-  offsets.forEach(ix => {
-    offsets.forEach(iy => {
-      const cx = w / 2 + ix * r;
-      const cy = h / 2 + iy * r;
-      ctx.beginPath();
-      ctx.arc(cx - r / 2, cy, r, 0, Math.PI * 2);
-      ctx.arc(cx + r / 2, cy, r, 0, Math.PI * 2);
-      ctx.stroke();
-    });
-  });
-
-  ND-safe: no motion, calm contrast, small pure functions.
-*/
-
-function drawVesica(ctx, w, h, color, NUM) {
-  // ND-safe: simple vesica grid, low contrast lines
-  ctx.save();
-  ctx.strokeStyle = color;
-  const r = Math.min(w, h) / NUM.NINE;
-  const step = r;
-  const startX = w / 2 - step;
-  const startY = h / 2 - step;
-  for (let i = 0; i < NUM.THREE; i++) {
-    for (let j = 0; j < NUM.THREE; j++) {
-      const cx = startX + i * step;
-      const cy = startY + j * step;
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.arc(cx + step, cy, r, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-  }
-}
-
-// Layer 2: Tree-of-Life scaffold (nodes and paths)
-function drawTree(ctx, { width, height, palette, NUM }) {
-  ctx.strokeStyle = palette.layers[1];
-  ctx.fillStyle = palette.layers[1];
-  const hGap = width / NUM.ELEVEN;
-  const vGap = (height / NUM.ONEFORTYFOUR) * NUM.THIRTYTHREE;
-  const nodes = [
-    { x: width / 2, y: vGap * 1 },
-    { x: width / 2 - hGap, y: vGap * 3 },
-    { x: width / 2 + hGap, y: vGap * 3 },
-    { x: width / 2 - hGap, y: vGap * 5 },
-    { x: width / 2 + hGap, y: vGap * 5 },
-    { x: width / 2, y: vGap * 7 },
-    { x: width / 2 - hGap, y: vGap * 9 },
-    { x: width / 2 + hGap, y: vGap * 9 },
-    { x: width / 2 - hGap, y: vGap * 11 },
-    { x: width / 2 + hGap, y: vGap * 11 }
-  ];
-  const paths = [
-    [0, 1], [0, 2], [1, 3], [2, 4], [3, 5],
-    [4, 5], [5, 6], [5, 7], [6, 8], [7, 9]
-  ];
-  ctx.lineWidth = 1;
-  for (const [a, b] of paths) {
-    ctx.beginPath();
-    ctx.moveTo(nodes[a].x, nodes[a].y);
-    ctx.lineTo(nodes[b].x, nodes[b].y);
-    ctx.stroke();
-  }
-  const r = (hGap / NUM.TWENTYTWO) * NUM.SEVEN;
-  for (const n of nodes) {
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-// Layer 3: Fibonacci curve as polyline
-function drawFibonacci(ctx, { width, height, palette, NUM }) {
-  ctx.strokeStyle = palette.layers[2];
-  ctx.lineWidth = 2;
-  const centerX = width / NUM.THREE;
-  const centerY = height / NUM.THREE;
-  // Golden Ratio guides the spiral growth.
-  const phi = (1 + Math.sqrt(5)) / 2;
-  let r = (width / NUM.NINETYNINE) * NUM.NINE;
-  ctx.beginPath();
-  for (let i = 0; i < NUM.NINETYNINE; i++) {
-    const angle = (i / NUM.ELEVEN) * Math.PI * 2;
-    const x = centerX + r * Math.cos(angle);
-    const y = centerY + r * Math.sin(angle);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    r *= phi / (phi - 1);
-    if (r > width * 2) break;
-  }
-  ctx.stroke();
-}
-
-// Layer 4: Static double-helix lattice
-function drawHelix(ctx, { width, height, palette, NUM }) {
-  const steps = NUM.NINETYNINE;
-  const amp = width / NUM.NINE;
-  const freq = NUM.THREE;
-  const center = width / 2;
-  ctx.lineWidth = 1;
-
-  // Left strand
-  ctx.strokeStyle = palette.layers[3];
-  ctx.beginPath();
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const y = t * height;
-    const x = center - amp * Math.sin(freq * 2 * Math.PI * t);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-
-  // Right strand
-  ctx.strokeStyle = palette.layers[4];
-  ctx.beginPath();
-  for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const y = t * height;
-    const x = center + amp * Math.sin(freq * 2 * Math.PI * t);
-    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-
-  // Rungs
-  ctx.strokeStyle = palette.layers[5];
-  for (let i = 0; i <= NUM.TWENTYTWO; i++) {
-    const t = i / NUM.TWENTYTWO;
-    const y = t * height;
-    const x1 = center - amp * Math.sin(freq * 2 * Math.PI * t);
-    const x2 = center + amp * Math.sin(freq * 2 * Math.PI * t);
-// Layer 2: Tree-of-Life scaffold
-// ND-safe: simple nodes and 22 paths, no animation
-function drawTree(ctx, { width, height, palette, NUM }) {
-  ctx.save();
-  const lineColor = palette.layers[1];
-  const nodeColor = palette.layers[2];
-  ctx.strokeStyle = lineColor;
-  ctx.fillStyle = nodeColor;
-
-  const nodes = [
-    [0.5, 0.08],
-    [0.25, 0.2], [0.75, 0.2],
-    [0.25, 0.4], [0.5, 0.35], [0.75, 0.4],
-    [0.25, 0.6], [0.75, 0.6],
-    [0.5, 0.8],
-    [0.5, 0.95]
-  ];
-
-  const paths = [
-    [0,1],[0,2],[1,2],
-    [1,3],[2,4],[3,4],
-    [3,5],[4,5],
-    [3,6],[4,7],[5,6],[5,7],[6,7],
-    [6,8],[7,8],
-    [8,9],
-    [3,8],[4,8],[5,8],
-    [5,9],[6,9],[7,9]
-  ]; // 22 paths
-
-function drawTree(ctx, w, h, lineColor, nodeColor, NUM) {
-  // ND-safe: nodes and straight paths only
-  ctx.save();
-  const nodes = [
-    [w / 2, h * 0.08],
-  // ND-safe: static nodes and paths only
-  ctx.save();
-  ctx.strokeStyle = lineColor;
-  ctx.fillStyle = nodeColor;
-  const nodes = [
-    [w / 2, h * 0.05],
-    [w / 4, h * 0.2], [w * 3 / 4, h * 0.2],
-    [w / 4, h * 0.4], [w / 2, h * 0.35], [w * 3 / 4, h * 0.4],
-    [w / 4, h * 0.6], [w * 3 / 4, h * 0.6],
-    [w / 2, h * 0.8],
-    [w / 2, h * 0.95]
-  ];
-  const paths = [
-    [0,1],[0,2],[1,2],
-    [1,3],[1,4],[2,4],[2,5],
-    [3,4],[4,5],
-    [3,6],[4,6],[4,7],[5,7],
-    [6,7],
-    [6,8],[7,8],
-    [8,9],
-    [3,5],[1,5],[2,3],[0,4],[6,9]
-  ]; // 22 paths
-
-  ctx.strokeStyle = lineColor;
-  ctx.lineWidth = 1;
-  paths.forEach(([a,b]) => {
-    const [x1,y1] = nodes[a];
-    const [x2,y2] = nodes[b];
-    ctx.beginPath();
-    ctx.moveTo(x1 * width, y1 * height);
-    ctx.lineTo(x2 * width, y2 * height);
-    ctx.stroke();
-  });
-
-  const r = Math.min(width, height) / NUM.THIRTYTHREE;
-  nodes.forEach(([x,y]) => {
-    ctx.beginPath();
-    ctx.arc(x * width, y * height, r, 0, Math.PI * 2);
-    ctx.fill();
-  });
-
-  ctx.restore();
-}
-
-// Layer 3: Fibonacci curve
-// ND-safe: single logarithmic spiral; no motion, uses the Golden Ratio
-function drawFibonacci(ctx, { width, height, palette, NUM }) {
-  ctx.save();
-  ctx.strokeStyle = palette.layers[3];
-  ctx.lineWidth = 2;
-  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
-  const steps = NUM.TWENTYTWO;
-  const scale = Math.min(width, height) / NUM.ONEFORTYFOUR * NUM.THIRTYTHREE;
-  let angle = 0;
-  let radius = scale;
-  const cx = width / 2;
-  const cy = height / 2;
-    ctx.moveTo(x1, y1);
-    ctx.lineTo(x2, y2);
-    ctx.stroke();
-  });
-
-  ctx.fillStyle = nodeColor;
-  const r = w / NUM.NINETYNINE;
-    [1,3],[2,5],[3,4],[4,5],
-    [3,6],[4,6],[5,6],
-    [5,7],[6,7],
-    [6,8],[7,8],[8,9],
-    [1,4],[2,4],[4,7],
-    [5,8],[2,3],[4,8],[3,5]
-  ]; // 22 paths
-  ctx.lineWidth = 1;
-  paths.forEach(([a,b]) => {
-    ctx.beginPath();
-    ctx.moveTo(nodes[a][0], nodes[a][1]);
-    ctx.lineTo(nodes[b][0], nodes[b][1]);
-    ctx.stroke();
-  });
-  const r = Math.min(w, h) / NUM.ONEFORTYFOUR * NUM.THREE;
-  nodes.forEach(([x,y]) => {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-  });
-  ctx.restore();
-}
-
-function drawFibonacci(ctx, w, h, palette, NUM) {
-  // ND-safe: static logarithmic spiral
-function drawFibonacci(ctx, w, h, color, NUM) {
-  // ND-safe: static logarithmic spiral, Golden Ratio governs growth
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  const PHI = (1 + Math.sqrt(5)) / 2; // Golden Ratio
-  const steps = NUM.TWENTYTWO;
-  const scale = Math.min(w, h) / NUM.ONEFORTYFOUR * NUM.THIRTYTHREE;
-  let angle = 0;
-  let radius = scale;
-  const cx = w / 2;
-  const cy = h / 2;
-  ctx.beginPath();
-  ctx.moveTo(cx, cy);
-  for (let i = 0; i < steps; i++) {
-    const x = cx + radius * Math.cos(angle);
-    const y = cy + radius * Math.sin(angle);
-    ctx.lineTo(x, y);
-    radius *= PHI;
-    angle += Math.PI / NUM.SEVEN;
-  }
-  ctx.stroke();
-  ctx.restore();
-}
-
-// Layer 4: Double-helix lattice
-// ND-safe: static phase-shifted strands with crossbars, no oscillation
-function drawHelix(ctx, { width, height, palette, NUM }) {
-  ctx.save();
-  const strandColor = palette.layers[4];
-  const rungColor = palette.layers[5];
-  const amp = width / NUM.THIRTYTHREE;
-  const steps = NUM.NINETYNINE;
-  const cx = width / 2;
-  ctx.lineWidth = 1;
-
-  const strands = [0, Math.PI].map(phase => {
-    const pts = [];
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const x = cx + amp * Math.sin(NUM.ELEVEN * t * Math.PI + phase);
-      const y = t * height;
-      pts.push([x, y]);
-    }
-    return pts;
-  });
-
-  ctx.strokeStyle = strandColor;
-  strands.forEach(pts => {
-    ctx.beginPath();
-    pts.forEach(([x,y], i) => {
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-  });
-
-  ctx.strokeStyle = rungColor;
-  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
-    const t = i / NUM.THIRTYTHREE;
-    const y = t * height;
-function drawHelix(ctx, w, h, strandColor, rungColor, NUM) {
-  // ND-safe: two static strands with crossbars
-  ctx.save();
-  ctx.lineWidth = 1;
-  const amp = w / NUM.THIRTYTHREE;
-  const steps = NUM.NINETYNINE;
-  const cx = w / 2;
-
-  // ND-safe: static double-helix lattice, no oscillation
-  ctx.save();
-  const amp = w / NUM.THIRTYTHREE;
-  const steps = NUM.NINETYNINE;
-  const cx = w / 2;
-  ctx.lineWidth = 1.5;
-  [0, Math.PI].forEach(phase => {
-    ctx.strokeStyle = strandColor;
-    ctx.beginPath();
-    for (let i = 0; i <= steps; i++) {
-      const t = i / steps;
-      const x = cx + amp * Math.sin(NUM.ELEVEN * t * Math.PI + phase);
-      const y = t * h;
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  });
-
-  ctx.strokeStyle = rungColor;
-  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
-    const t = i / NUM.THIRTYTHREE;
-    const y = t * h;
-    const x1 = cx + amp * Math.sin(NUM.ELEVEN * t * Math.PI);
-    const x2 = cx + amp * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
-    ctx.beginPath();
-    ctx.moveTo(x1, y);
-    ctx.lineTo(x2, y);
-    ctx.stroke();
-    ctx.stroke();
-  });
-  ctx.strokeStyle = rungColor;
-  for (let i = 0; i <= NUM.THIRTYTHREE; i++) {
-    const t = i / NUM.THIRTYTHREE;
-    const y = t * h;
-    const x1 = cx + amp * Math.sin(NUM.ELEVEN * t * Math.PI);
-    const x2 = cx + amp * Math.sin(NUM.ELEVEN * t * Math.PI + Math.PI);
-    ctx.beginPath();
-    ctx.moveTo(x1, y);
-    ctx.lineTo(x2, y);
-    ctx.stroke();
-  }
-
-  ctx.restore();
-  ctx.restore();
-}
-
-export function renderHelix(ctx, { width, height, palette, NUM }) {
-  ctx.fillStyle = palette.bg;
-  ctx.fillRect(0, 0, width, height);
-
-  drawVesica(ctx, width, height, palette.layers[0], NUM);
-  drawTree(ctx, width, height, palette.layers[1], palette.layers[2], NUM);
-  drawFibonacci(ctx, width, height, palette, NUM);
-  // ND-safe: layers rendered in fixed order, no motion
-  ctx.clearRect(0, 0, width, height);
-  drawVesica(ctx, width, height, palette.layers[0], NUM);
-  drawTree(ctx, width, height, palette.layers[1], palette.layers[2], NUM);
-  drawFibonacci(ctx, width, height, palette.layers[3], NUM);
-  drawHelix(ctx, width, height, palette.layers[4], palette.layers[5], NUM);
-}
-
-// Main entry: paint background then all four layers
-export function renderHelix(ctx, { width, height, palette, NUM }) {
-  ctx.fillStyle = palette.bg;
-  ctx.fillRect(0, 0, width, height);
-  drawVesica(ctx, width, height, palette.layers[0], NUM);
-  drawTree(ctx, width, height, palette.layers[1], NUM);
-  drawFibonacci(ctx, width, height, palette.layers[2], NUM);
-  drawHelix(ctx, width, height, palette.layers[3], palette.layers[4], palette.layers[5], NUM);
 }
