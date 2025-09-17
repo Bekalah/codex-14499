@@ -18,12 +18,13 @@
 </head>
 <body>
   <header>
-    <div><strong>Cosmic Helix Renderer</strong> - layered sacred geometry (offline, ND-safe)</div>
+    <div><strong>Cosmic Helix Renderer</strong> &mdash; layered sacred geometry (offline, ND-safe)</div>
     <div class="status" id="status">Loading palette...</div>
   </header>
 
   <canvas id="stage" width="1440" height="900" aria-label="Layered sacred geometry canvas"></canvas>
   <p class="note">This static renderer encodes the Vesica field, Tree-of-Life scaffold, Fibonacci curve, and a static double-helix lattice. No animation, no autoplay, no external libraries. Open this file directly.</p>
+  <p class="note">This static renderer encodes Vesica, Tree-of-Life, Fibonacci, and a static double-helix lattice for Codex 144:99. No animation, no autoplay, no external libs. Open this file directly.</p>
 
   <script type="module">
     import { renderHelix } from "./js/helix-renderer.mjs";
@@ -40,6 +41,7 @@
       } catch (err) {
         // Local fetch can fail under the file protocol; returning null enables the
         // fallback palette so offline double-click stays calm and predictable.
+        // Offline-first ND-safety: browsers may block file:// fetch. Returning null triggers the fallback palette.
         return null;
       }
     }
@@ -61,6 +63,14 @@
 
     // ND-safe rationale: no motion, high readability, calm palette, steady layer order.
     renderHelix(ctx, { width: canvas.width, height: canvas.height, palette: active, NUM });
+    const activePalette = palette || defaults.palette;
+    statusEl.textContent = palette ? "Palette loaded." : "Palette missing; using safe fallback.";
+
+    // Numerology constants used by geometry routines.
+    const NUM = { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 };
+
+    // ND-safe rationale: one synchronous render, calm tones, layered order preserved.
+    renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:activePalette, NUM });
   </script>
 </body>
 </html>
