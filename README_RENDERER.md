@@ -61,6 +61,11 @@ All geometry code is heavily commented so future integrations can extend the lat
 - `data/palette.json` — optional ND-safe palette override (background, ink, and six layer hues).
 
 ## Rendered Layers
+- `index.html` — entry document with a 1440x900 canvas, palette loader, and fallback notice.
+- `js/helix-renderer.mjs` — ES module exposing `renderHelix` plus pure helpers for each layer.
+- `data/palette.json` — optional ND-safe palette override (background, ink, and six layer hues).
+
+## Rendered Layers
 1. **Vesica field** — intersecting circles establish the base grid and depth.
 2. **Tree-of-Life scaffold** — ten sephirot and twenty-two paths mapped to numerology constants.
 3. **Fibonacci curve** — static Golden Ratio spiral sampled gently for calm focus.
