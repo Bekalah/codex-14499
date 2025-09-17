@@ -30,6 +30,9 @@ This renderer is intentionally lightweight: no bundlers, no workflows, and no ex
 Static offline canvas renderer for layered sacred geometry in Codex 144:99. Open `index.html` directly in any modern browser; no server, workflow, or network call is required.
 
 ## Files
+Static offline canvas renderer for layered sacred geometry in Codex 144:99. Open `index.html` directly in any modern browser; no server, workflow, or network call is required.
+
+## Files
 - `index.html` - Entry point with 1440x900 canvas, status notice, and palette fallback logic.
 - `js/helix-renderer.mjs` - ES module that draws the four layers using small pure helpers.
 - `data/palette.json` - Optional ND-safe palette override (background, ink, and six layer hues).

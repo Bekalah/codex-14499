@@ -19,6 +19,13 @@
     4. Double-helix lattice (paired strands with steady rungs)
 
   ND-safe rationale:
+  Layer order (rendered back-to-front):
+    1. Vesica field (grounding grid)
+    2. Tree-of-Life scaffold (ten nodes, twenty-two connective paths)
+    3. Fibonacci curve (logarithmic spiral sampled calmly)
+    4. Double-helix lattice (paired strands with steady rungs)
+
+  ND-safe rationale:
     - No animation or timed updates; everything paints once per call.
     - Calm palette and line weights prevent harsh contrast or flicker.
     - Small pure helpers keep intent transparent, protecting the lore.
@@ -103,6 +110,19 @@ function fillBackground(ctx, width, height, color) {
 }
 
 // Layer 1: Vesica field. Gentle grid keeps depth without motion.
+// Ensure numerology constants are available even if callers omit some keys.
+function ensureNumbers(NUM) {
+  const safe = { ...DEFAULT_NUM };
+  if (NUM) {
+    for (const key of Object.keys(DEFAULT_NUM)) {
+      if (Number.isFinite(NUM[key])) safe[key] = NUM[key];
+    }
+  }
+  return safe;
+}
+
+}
+
 // Ensure numerology constants are available even if callers omit some keys.
 function ensureNumbers(NUM) {
   const safe = { ...DEFAULT_NUM };
