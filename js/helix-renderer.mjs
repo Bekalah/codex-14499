@@ -1,66 +1,23 @@
 /*
   helix-renderer.mjs
-  Static offline renderer for layered sacred geometry in Codex 144:99.
+  ND-safe static renderer for the layered cosmology in Codex 144:99.
 
-  Layer order (furthest to nearest):
-    1. Vesica field (repeating vesica piscis grid)
-    2. Tree-of-Life scaffold (ten sephirot, twenty-two paths)
-    3. Fibonacci curve (static golden spiral polyline)
-    4. Double-helix lattice (two strands with steady crossbars)
+  Layer order (back to front):
+    1. Vesica field — repeating intersecting circles anchor the space.
+    2. Tree-of-Life scaffold — ten sephirot nodes with twenty-two arcana paths.
+    3. Fibonacci curve — calm golden spiral sampled once.
+    4. Double-helix lattice — two strands with steady rungs, no motion.
 
-  ND-safe commitments:
-    - No animation or timers; every layer renders once.
-    - Calm contrast pulled from an ND-safe palette.
-    - Small, pure helpers so the geometry remains transparent to audit.
-    1. Vesica field
-    2. Tree-of-Life scaffold
-    3. Fibonacci curve
-    4. Double-helix lattice
-
-  ND-safe rationale:
-    - No animation; geometry renders once with calm contrast.
-    - Pure helper functions keep the symbolic layers easy to audit.
-    - Palette fallback avoids harsh failure states when data is absent.
-  Layer order (rendered back-to-front):
-    1. Vesica field (grounding grid)
-    2. Tree-of-Life scaffold (ten nodes, twenty-two connective paths)
-    3. Fibonacci curve (logarithmic spiral sampled calmly)
-    4. Double-helix lattice (paired strands with steady rungs)
-
-  ND-safe rationale:
-  Layer order (rendered back-to-front):
-    1. Vesica field (grounding grid)
-    2. Tree-of-Life scaffold (ten nodes, twenty-two connective paths)
-    3. Fibonacci curve (logarithmic spiral sampled calmly)
-    4. Double-helix lattice (paired strands with steady rungs)
-
-  ND-safe rationale:
-    - No animation or timed updates; everything paints once per call.
-    - Calm palette and line weights prevent harsh contrast or flicker.
-    - Small pure helpers keep intent transparent, protecting the lore.
-  Layers (furthest to nearest):
-    1. Vesica field (intersecting circles forming the grid)
-    2. Tree-of-Life scaffold (ten nodes, twenty-two connective paths)
-    3. Fibonacci curve (Golden Ratio spiral rendered once)
-    4. Double-helix lattice (twin strands with steady crossbars)
-
-  ND-safe rationale:
-  Layers (furthest to nearest):
-    1. Vesica field (intersecting circles forming the grid)
-    2. Tree-of-Life scaffold (ten nodes, twenty-two connective paths)
-    3. Fibonacci curve (Golden Ratio spiral rendered once)
-    4. Double-helix lattice (twin strands with steady crossbars)
-
-  ND-safe rationale:
-    - No animation or flashing; every function runs once per invocation.
-    - Calm contrast controlled by palette values so sensory load stays gentle.
-    - Pure helper functions make adaptation easy without breaking lore.
+  Every helper is a small pure function; comments document why choices support
+  ND-safe, trauma-informed rendering (no animation, calm contrast, offline-first).
 */
 
+const DEFAULT_DIMENSIONS = { width: 1440, height: 900 };
+
 const DEFAULT_PALETTE = {
-  bg: "#0b0b12",
-  ink: "#e8e8f0",
-  layers: ["#b1c7ff", "#89f7fe", "#a0ffa1", "#ffd27f", "#f5a3ff", "#d0d0e6"]
+  bg: '#0b0b12',
+  ink: '#e8e8f0',
+  layers: ['#b1c7ff', '#89f7fe', '#a0ffa1', '#ffd27f', '#f5a3ff', '#d0d0e6']
 };
 
 const DEFAULT_NUM = {
@@ -74,163 +31,126 @@ const DEFAULT_NUM = {
   ONEFORTYFOUR: 144
 };
 
-// Exported entry point. Accepts a 2d context, dimensions, palette, and numerology constants.
-export function renderHelix(ctx, opts = {}) {
+const GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2;
+
+/*
+  The lore arrays below preserve the canon provided in the request. Keeping the
+  text intact avoids overwriting lineage knowledge while giving the renderer a
+  structured source for numerology and naming.
+*/
+const MAJOR_ARCANA = [
+  { name: 'The Fool', numerology: 0, lore: 'Pure potential, leap into the abyss, Aleph breath of beginning', lab: 'respawn-meditation' },
+  { name: 'The Magician', numerology: 1, lore: "Will manifested, Mercury's messenger, tools of transformation", lab: 'beth-house-ritual' },
+  { name: 'High Priestess', numerology: 2, lore: 'Veiled wisdom, lunar mysteries, guardian of thresholds', lab: 'gimel-camel-path' },
+  { name: 'The Empress', numerology: 3, lore: "Venus fertile, creative abundance, nature's sovereignty" },
+  { name: 'The Emperor', numerology: 4, lore: "Cubic throne, Mars authority, structure and order" },
+  { name: 'Hierophant', numerology: 5, lore: 'Taurus teaching, bridge between worlds, sacred tradition' },
+  { name: 'The Lovers', numerology: 6, lore: 'Zayin sword divides, conscious choice, sacred union' },
+  { name: 'The Chariot', numerology: 7, lore: "Cancer's shell, sphinx guardians, triumphant will" },
+  { name: 'Strength', numerology: 8, lore: "Serpent power, Leo's courage, infinite lemniscate" },
+  { name: 'Hermit', numerology: 9, lore: "Virgo's lamp, Yod hand of God, inner guidance" },
+  { name: 'Wheel of Fortune', numerology: 10, lore: "Jupiter's expansion, karma cycles, sphinx wisdom" },
+  { name: 'Justice', numerology: 11, lore: "Libra's balance, Lamed ox-goad, karmic adjustment" },
+  { name: 'Hanged Man', numerology: 12, lore: "Neptune's water, suspended mind, reversal wisdom" },
+  { name: 'Death', numerology: 13, lore: 'Scorpio transformation, Nun fish, ego dissolution', lab: 'death-rebirth' },
+  { name: 'Temperance', numerology: 14, lore: "Sagittarius arrow, alchemical mixture, middle path" },
+  { name: 'Devil', numerology: 15, lore: "Capricorn matter, Ayin eye opens, shadow integration" },
+  { name: 'Tower', numerology: 16, lore: "Mars lightning, false crown falls, liberation shock", lab: 'tower-catalyst' },
+  { name: 'Star', numerology: 17, lore: "Aquarius pours, seven chakras, cosmic consciousness" },
+  { name: 'Moon', numerology: 18, lore: "Pisces dreams, Qoph back of head, astral journey", lab: 'moon-veil' },
+  { name: 'Sun', numerology: 19, lore: 'Solar child, Resh head renewal, conscious joy' },
+  { name: 'Judgement', numerology: 20, lore: "Pluto rises, Shin tooth/fire, eternal calling" },
+  { name: 'World', numerology: 21, lore: "Saturn completes, Tau cross manifest, cosmic dance" }
+];
+
+const SEPHIROT = [
+  { key: 'kether', name: 'Kether', numerology: 1, lore: 'Crown unity, source point, pure will undifferentiated', yUnits: 9, xShift: 0 },
+  { key: 'chokmah', name: 'Chokmah', numerology: 2, lore: 'Wisdom force, Zodiac sphere, active principle', yUnits: 22, xShift: 1.2 },
+  { key: 'binah', name: 'Binah', numerology: 3, lore: "Understanding form, Saturn's restriction, divine mother", yUnits: 22, xShift: -1.2 },
+  { key: 'chesed', name: 'Chesed', numerology: 4, lore: 'Jupiter mercy, building power, benevolent king', yUnits: 44, xShift: 1.45 },
+  { key: 'geburah', name: 'Geburah', numerology: 5, lore: 'Mars severity, destroying force, necessary restriction', yUnits: 44, xShift: -1.45 },
+  { key: 'tiphareth', name: 'Tiphareth', numerology: 6, lore: 'Solar beauty, Christ center, harmonious balance', yUnits: 55, xShift: 0 },
+  { key: 'netzach', name: 'Netzach', numerology: 7, lore: 'Venus victory, desire nature, creative force', yUnits: 77, xShift: 1.1 },
+  { key: 'hod', name: 'Hod', numerology: 8, lore: 'Mercury splendor, mental forms, magical image', yUnits: 77, xShift: -1.1 },
+  { key: 'yesod', name: 'Yesod', numerology: 9, lore: 'Lunar foundation, astral light, subconscious machinery', yUnits: 99, xShift: 0 },
+  { key: 'malkuth', name: 'Malkuth', numerology: 10, lore: 'Kingdom manifest, four elements, physical completion', yUnits: 126, xShift: 0 }
+];
+
+const TREE_PATH_DEFINITIONS = [
+  { from: 'kether', to: 'chokmah', arcanaIndex: 0 },
+  { from: 'kether', to: 'binah', arcanaIndex: 1 },
+  { from: 'kether', to: 'tiphareth', arcanaIndex: 2 },
+  { from: 'chokmah', to: 'binah', arcanaIndex: 3 },
+  { from: 'chokmah', to: 'tiphareth', arcanaIndex: 4 },
+  { from: 'chokmah', to: 'chesed', arcanaIndex: 5 },
+  { from: 'binah', to: 'tiphareth', arcanaIndex: 6 },
+  { from: 'binah', to: 'geburah', arcanaIndex: 7 },
+  { from: 'chesed', to: 'geburah', arcanaIndex: 8 },
+  { from: 'chesed', to: 'tiphareth', arcanaIndex: 9 },
+  { from: 'chesed', to: 'netzach', arcanaIndex: 10 },
+  { from: 'geburah', to: 'tiphareth', arcanaIndex: 11 },
+  { from: 'geburah', to: 'hod', arcanaIndex: 12 },
+  { from: 'tiphareth', to: 'netzach', arcanaIndex: 13 },
+  { from: 'tiphareth', to: 'yesod', arcanaIndex: 14 },
+  { from: 'tiphareth', to: 'hod', arcanaIndex: 15 },
+  { from: 'netzach', to: 'hod', arcanaIndex: 16 },
+  { from: 'netzach', to: 'yesod', arcanaIndex: 17 },
+  { from: 'netzach', to: 'malkuth', arcanaIndex: 18 },
+  { from: 'hod', to: 'yesod', arcanaIndex: 19 },
+  { from: 'hod', to: 'malkuth', arcanaIndex: 20 },
+  { from: 'yesod', to: 'malkuth', arcanaIndex: 21 }
+];
+
+export function renderHelix(ctx, options = {}) {
   if (!ctx) return;
 
-  const width = Number(opts.width) || 1440;
-  const height = Number(opts.height) || 900;
-  const safePalette = ensurePalette(opts.palette);
-  const safeNUM = ensureNumerology(opts.NUM);
-
-  fillBackground(ctx, width, height, safePalette.bg);
-  drawVesicaField(ctx, width, height, safePalette.layers[0], safeNUM);
-  drawTreeOfLife(ctx, width, height, safePalette.layers[1], safePalette.layers[2], safeNUM);
-  drawFibonacciCurve(ctx, width, height, safePalette.layers[3], safeNUM);
-  drawHelixLattice(ctx, width, height, safePalette.layers[4], safePalette.layers[5], safePalette.ink, safeNUM);
-}
-
-function ensurePalette(palette) {
-  if (!palette) return { ...DEFAULT_PALETTE };
-  const layers = Array.isArray(palette.layers) ? palette.layers.slice(0, 6) : [];
-  while (layers.length < 6) layers.push(DEFAULT_PALETTE.layers[layers.length]);
-
-// Exported entry point. Small pure function that orchestrates the four layers.
-export function renderHelix(ctx, options) {
-  if (!ctx || !options) return;
   const settings = normalizeOptions(options);
   const { width, height, palette, NUM } = settings;
-// Exported entry point. One pure orchestration pass maintains layer order.
-export function renderHelix(ctx, opts = {}) {
-  if (!ctx) return;
-  const width = opts.width || 1440;
-  const height = opts.height || 900;
-  const palette = ensurePalette(opts.palette);
-  const NUM = ensureNumbers(opts.NUM);
 
   fillBackground(ctx, width, height, palette.bg);
   drawVesicaField(ctx, width, height, palette.layers[0], NUM);
-  drawTreeOfLife(ctx, width, height, palette.layers[1], palette.layers[2], NUM);
-  drawFibonacciCurve(ctx, width, height, palette.layers[3], NUM);
+  drawTreeOfLife(ctx, width, height, palette.layers[1], palette.layers[2], palette.ink, NUM);
+  drawFibonacciCurve(ctx, width, height, palette.layers[3], palette.ink, NUM);
   drawHelixLattice(ctx, width, height, palette.layers[4], palette.layers[5], palette.ink, NUM);
 }
 
-function normalizeOptions(options) {
-  const width = typeof options.width === "number" ? options.width : 1440;
-  const height = typeof options.height === "number" ? options.height : 900;
+function normalizeOptions(options = {}) {
+  const width = Number.isFinite(options.width) ? options.width : DEFAULT_DIMENSIONS.width;
+  const height = Number.isFinite(options.height) ? options.height : DEFAULT_DIMENSIONS.height;
   const palette = ensurePalette(options.palette);
-  const NUM = { ...DEFAULT_NUM, ...(options.NUM || {}) };
+  const NUM = ensureNumerology(options.NUM);
   return { width, height, palette, NUM };
 }
 
-// Validate palette input so missing data never breaks offline rendering.
-function ensurePalette(palette) {
-  if (!palette) return { ...DEFAULT_PALETTE };
-  const layers = Array.isArray(palette.layers) ? palette.layers.slice(0, 6) : [];
-  while (layers.length < 6) {
-    layers.push(DEFAULT_PALETTE.layers[layers.length]);
-  }
-function fillBackground(ctx, width, height, color) {
-  ctx.save();
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, width, height);
-  ctx.restore();
-}
-
-// Validate palette input so missing data never disrupts offline rendering.
-function ensurePalette(palette) {
-  if (!palette) return DEFAULT_PALETTE;
-  const layers = Array.isArray(palette.layers) ? palette.layers.slice(0, 6) : [];
-  if (layers.length < 6) return DEFAULT_PALETTE;
-  return {
-    bg: palette.bg || DEFAULT_PALETTE.bg,
-    ink: palette.ink || DEFAULT_PALETTE.ink,
-    layers
+function ensurePalette(input) {
+  const base = {
+    bg: DEFAULT_PALETTE.bg,
+    ink: DEFAULT_PALETTE.ink,
+    layers: [...DEFAULT_PALETTE.layers]
   };
-}
-
-function fillBackground(ctx, width, height, color) {
-  ctx.save();
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, width, height);
-  ctx.restore();
-}
-
-// Layer 1: Vesica field. Gentle grid keeps depth without motion.
-// Ensure numerology constants are available even if callers omit some keys.
-function ensureNumbers(NUM) {
-  const safe = { ...DEFAULT_NUM };
-  if (NUM) {
-    for (const key of Object.keys(DEFAULT_NUM)) {
-      if (Number.isFinite(NUM[key])) safe[key] = NUM[key];
-    }
+  if (!input) return base;
+  if (typeof input.bg === 'string') base.bg = input.bg;
+  if (typeof input.ink === 'string') base.ink = input.ink;
+  if (Array.isArray(input.layers)) {
+    input.layers.forEach((color, index) => {
+      if (typeof color === 'string' && color.trim()) {
+        base.layers[index] = color;
+      }
+    });
   }
-  return safe;
+  return base;
 }
 
-}
-
-// Ensure numerology constants are available even if callers omit some keys.
-function ensureNumbers(NUM) {
-  const safe = { ...DEFAULT_NUM };
-  if (NUM) {
-    for (const key of Object.keys(DEFAULT_NUM)) {
-      if (Number.isFinite(NUM[key])) safe[key] = NUM[key];
-    }
-  }
-  return safe;
-}
-
-// Layer 1: Vesica field. Static intersecting circles provide gentle grounding.
-function drawVesicaField(ctx, width, height, color, NUM) {
-
-// Entry point: orchestrates the four layers in the requested order.
-export function renderHelix(ctx, opts = {}) {
-  if (!ctx) return;
-  const width = opts.width || 1440;
-  const height = opts.height || 900;
-  const palette = ensurePalette(opts.palette);
-  const NUM = ensureNumerology(opts.NUM);
-
-
-// Entry point: orchestrates the four layers in the requested order.
-export function renderHelix(ctx, opts = {}) {
-  if (!ctx) return;
-  const width = opts.width || 1440;
-  const height = opts.height || 900;
-  const palette = ensurePalette(opts.palette);
-  const NUM = ensureNumerology(opts.NUM);
-
-  fillBackground(ctx, width, height, palette.bg);
-  drawVesica(ctx, width, height, palette.layers[0], NUM);
-  drawTree(ctx, width, height, palette.layers[1], palette.layers[2], NUM);
-  drawFibonacci(ctx, width, height, palette.layers[3], NUM);
-  drawHelix(ctx, width, height, palette.layers[4], palette.layers[5], palette.ink, NUM);
-}
-
-function ensurePalette(palette) {
-  if (!palette) return DEFAULT_PALETTE;
-  const layers = Array.isArray(palette.layers) ? palette.layers.slice(0, 6) : [];
-  if (layers.length < 6) return DEFAULT_PALETTE;
-  return {
-    bg: palette.bg || DEFAULT_PALETTE.bg,
-    ink: palette.ink || DEFAULT_PALETTE.ink,
-    layers
-  };
-}
-
-function ensureNumerology(num) {
-  const safe = { ...DEFAULT_NUM };
-  if (!num) return safe;
-  for (const key of Object.keys(safe)) {
-    const value = Number(num[key]);
-    if (Number.isFinite(value) && value !== 0) {
-      safe[key] = value;
-    }
-  }
-  return safe;
 function ensureNumerology(input) {
-  return { ...DEFAULT_NUM, ...(input || {}) };
+  const base = { ...DEFAULT_NUM };
+  if (!input) return base;
+  for (const key of Object.keys(base)) {
+    const value = Number(input[key]);
+    if (Number.isFinite(value) && value !== 0) {
+      base[key] = value;
+    }
+  }
+  return base;
 }
 
 function fillBackground(ctx, width, height, color) {
@@ -240,72 +160,38 @@ function fillBackground(ctx, width, height, color) {
   ctx.restore();
 }
 
-// Layer 1: Vesica field. Calm repetition anchors the scene without motion.
+// Layer 1: Vesica field. Calm, repeating intersections establish depth with no motion.
 function drawVesicaField(ctx, width, height, color, NUM) {
-// Layer 1: Vesica field — repeating circles for layered depth with no motion.
-export function drawVesica(ctx, width, height, color, NUM) {
+  const columns = NUM.NINE;
+  const rows = NUM.SEVEN;
+  const marginX = width / NUM.ELEVEN;
+  const marginY = height / NUM.ELEVEN;
+  const availableWidth = width - marginX * 2;
+  const availableHeight = height - marginY * 2;
+  const spacingX = availableWidth / (columns - 1);
+  const spacingY = availableHeight / (rows - 1);
+  const radius = Math.min(spacingX, spacingY) * 0.6;
+  const offset = radius / NUM.THREE;
+
   ctx.save();
+  ctx.lineWidth = Math.max(1, width / NUM.ONEFORTYFOUR);
   ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
+  ctx.globalAlpha = 0.35;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
 
-  const radius = Math.min(width, height) / NUM.NINE;
-  const horizontalStep = radius;
-  const verticalStep = radius * (NUM.NINE / NUM.ELEVEN);
-  const offset = radius / NUM.THREE;
-  const columns = NUM.SEVEN;
-  const offset = radius / NUM.THREE;
-<<  const columns = NUM.SEVEN;
-  const rows = NUM.NINE;
-
-  const startCol = -Math.floor(columns / 2);
-  const endCol = Math.floor(columns / 2);
-  const startRow = -Math.floor(rows / 2);
-  const endRow = Math.floor(rows / 2);
-
-  for (let row = startRow; row <= endRow; row++) {
-    for (let col = startCol; col <= endCol; col++) {
-      const cx = width / 2 + col * horizontalStep;
-      const cy = height / 2 + row * verticalStep;
-      drawVesicaPair(ctx, cx, cy, radius, offset);
-
-      ctx.beginPath();
-      ctx.arc(cx - offset, cy, radius, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(cx + offset, cy, radius, 0, Math.PI * 2);
-      ctx.stroke();
-=====
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  const horizontalStep = radius;
-  const verticalStep = radius * (NUM.SEVEN / NUM.NINE);
-  const columns = NUM.SEVEN;
-  const rows = NUM.NINE;
-
-  for (let r = -Math.floor(rows / 2); r <= Math.floor(rows / 2); r++) {
-    for (let c = -Math.floor(columns / 2); c <= Math.floor(columns / 2); c++) {
-      const cx = width / 2 + c * horizontalStep;
-      const cy = height / 2 + r * verticalStep;
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < columns; col += 1) {
+      const cx = marginX + col * spacingX;
+      const cy = marginY + row * spacingY;
       drawCirclePair(ctx, cx, cy, radius, offset);
->>>>>>> main
     }
   }
 
   ctx.restore();
 }
 
-function drawVesicaPair(ctx, cx, cy, radius, offset) {
-<<// Layer 2: Tree-of-Life scaffold. Symmetric layout, no flashing.
-function drawTreeOfLife(ctx, width, height, edgeColor, nodeColor, NUM) {
-  const nodes = createTreeNodes(width, height, NUM);
-  const paths = createTreePaths();
-
-// Layer 2: Tree-of-Life scaffold with ten sephirot and twenty-two connective paths.
-function drawTreeOfLife(ctx, width, height, pathColor, nodeColor, NUM) {
-=====
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
 function drawCirclePair(ctx, cx, cy, radius, offset) {
->>>>>>> main
   ctx.beginPath();
   ctx.arc(cx - offset, cy, radius, 0, Math.PI * 2);
   ctx.stroke();
@@ -314,550 +200,223 @@ function drawCirclePair(ctx, cx, cy, radius, offset) {
   ctx.stroke();
 }
 
-// Layer 2: Tree-of-Life scaffold. Nodes glow softly; paths keep steady width.
-function drawTreeOfLife(ctx, width, height, pathColor, nodeColor, NUM) {
-  const verticalUnit = height / NUM.ONEFORTYFOUR;
-  const horizontalUnit = width / NUM.ELEVEN;
-  const centerX = width / 2;
-
-  const nodes = [
-    { x: centerX, y: verticalUnit * 9 },
-    { x: centerX + horizontalUnit, y: verticalUnit * 22 },
-    { x: centerX - horizontalUnit, y: verticalUnit * 22 },
-    { x: centerX + horizontalUnit * 1.4, y: verticalUnit * 44 },
-    { x: centerX - horizontalUnit * 1.4, y: verticalUnit * 44 },
-    { x: centerX, y: verticalUnit * 55 },
-    { x: centerX + horizontalUnit, y: verticalUnit * 77 },
-    { x: centerX - horizontalUnit, y: verticalUnit * 77 },
-    { x: centerX, y: verticalUnit * 99 },
-    { x: centerX, y: verticalUnit * 126 }
-
-// Layer 2: Tree-of-Life scaffold — static nodes and calm paths.
-export function drawTree(ctx, width, height, edgeColor, nodeColor, NUM) {
-  ctx.save();
-  ctx.strokeStyle = edgeColor;
-  ctx.lineWidth = 2;
-  paths.forEach(([a, b]) => {
-
-<<<<  const columnSpacing = width / NUM.THIRTYTHREE;
-  const rowSpacing = (height / NUM.NINETYNINE) * NUM.NINE;
-===
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  const baseY = height / NUM.ONEFORTYFOUR;
-  const centerX = width / 2;
-  const spread = width / NUM.ELEVEN;
-
-  const nodes = [
-    { x: centerX, y: baseY * 9 },
-    { x: centerX + spread, y: baseY * 22 },
-    { x: centerX - spread, y: baseY * 22 },
-    { x: centerX + spread * 1.4, y: baseY * 44 },
-    { x: centerX - spread * 1.4, y: baseY * 44 },
-    { x: centerX, y: baseY * 55 },
-    { x: centerX + spread, y: baseY * 77 },
-    { x: centerX - spread, y: baseY * 77 },
-    { x: centerX, y: baseY * 99 },
-    { x: centerX, y: baseY * 126 }
->>>>>>> main
-  ];
-
-  const paths = [
-    [0, 1], [0, 2], [1, 2],
-    [1, 3], [2, 4], [3, 4],
-    [3, 5], [4, 5], [1, 5], [2, 5],
-    [3, 6], [4, 7], [5, 6], [5, 7],
-    [6, 7], [6, 8], [7, 8],
-    [6, 9], [7, 9], [8, 9],
-    [2, 3], [1, 4]
-  ];
+// Layer 2: Tree-of-Life scaffold. Static lines and nodes preserve sacred ordering without animation.
+function drawTreeOfLife(ctx, width, height, pathColor, nodeColor, inkColor, NUM) {
+  const nodes = createTreeNodes(width, height, NUM);
+  const nodeMap = Object.create(null);
+  nodes.forEach(node => {
+    nodeMap[node.key] = node;
+  });
 
   ctx.save();
   ctx.strokeStyle = pathColor;
-  ctx.lineWidth = 2;
-  paths.forEach(([a, b]) => {
-    ctx.beginPath();
-    ctx.moveTo(nodes[a].x, nodes[a].y);
-    ctx.lineTo(nodes[b].x, nodes[b].y);
-    ctx.stroke();
-  });
+  ctx.lineWidth = Math.max(1.5, width / NUM.ONEFORTYFOUR);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
 
+  TREE_PATH_DEFINITIONS.forEach(path => {
+    const from = nodeMap[path.from];
+    const to = nodeMap[path.to];
+    const card = MAJOR_ARCANA[path.arcanaIndex];
+    if (!from || !to || !card) return;
+
+    const alphaBoost = (card.numerology + NUM.THREE) / (NUM.TWENTYTWO * 1.5);
+    ctx.globalAlpha = 0.35 + alphaBoost;
+
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(to.x, to.y);
+    ctx.stroke();
+
+    const labelX = (from.x + to.x) / 2;
+    const labelY = (from.y + to.y) / 2;
+    drawPathLabel(ctx, card.name, labelX, labelY, inkColor, width, NUM);
+  });
+  ctx.restore();
+
+  ctx.save();
+  ctx.globalAlpha = 0.95;
   ctx.fillStyle = nodeColor;
-<<<<  const nodeRadius = Math.max(3, width / NUM.NINETYNINE);
-===
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  const radius = Math.max(3, width / NUM.NINETYNINE);
+  ctx.strokeStyle = inkColor;
+  ctx.lineWidth = Math.max(1, width / NUM.ONEFORTYFOUR);
+
   nodes.forEach(node => {
+    const radius = computeNodeRadius(node, width, NUM);
     ctx.beginPath();
     ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
     ctx.fill();
+    ctx.stroke();
+    drawNodeLabel(ctx, node, radius, inkColor, width, NUM);
   });
 
   ctx.restore();
 }
 
-<<<<function createTreeNodes(width, height, NUM) {
-  const baseY = height / NUM.ONEFORTYFOUR;
-  const centerX = width / 2;
-  const horizontal = width / NUM.ELEVEN;
-  return [
-    { x: centerX, y: baseY * 9 },
-    { x: centerX + horizontal, y: baseY * 22 },
-    { x: centerX - horizontal, y: baseY * 22 },
-    { x: centerX + horizontal * 1.4, y: baseY * 44 },
-    { x: centerX - horizontal * 1.4, y: baseY * 44 },
-    { x: centerX, y: baseY * 55 },
-    { x: centerX + horizontal, y: baseY * 77 },
-    { x: centerX - horizontal, y: baseY * 77 },
-    { x: centerX, y: baseY * 99 },
-    { x: centerX, y: baseY * 126 }
-  ];
-}
-
-function createTreePaths() {
-  return [
-    [0, 1], [0, 2], [1, 2],
-    [1, 3], [2, 4], [3, 4],
-    [3, 5], [4, 5], [1, 5], [2, 5],
-    [3, 6], [4, 7], [5, 6], [5, 7],
-    [6, 7], [6, 8], [7, 8],
-    [6, 9], [7, 9], [8, 9],
-    [2, 3], [1, 4]
-  ];
-}
-
-// Layer 3: Fibonacci curve. Static golden spiral with gentle sampling.
-// Layer 3: Fibonacci curve. Static spiral honours the Golden Ratio without motion.
-function drawFibonacciCurve(ctx, width, height, color, NUM) {
->>>>>>>+codex/add-codeb
-===
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-// Layer 3: Fibonacci curve — Golden Ratio spiral rendered once for calm focus.
-export function drawFibonacci(ctx, width, height, color, NUM) {
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-
-<<<<<<  // Golden Ratio constant keeps the spiral grounded in sacred proportion.
-  const golden = (1 + Math.sqrt(5)) / 2;
-  const center = { x: (width / NUM.THREE) * 2, y: height / NUM.THREE };
->>>>>>>+codex/add-codeb
-=
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  const goldenRatio = (1 + Math.sqrt(5)) / 2; // Golden Ratio keeps sacred proportion stable.
-  const centerX = width / NUM.THREE * 2;
-  const centerY = height / NUM.THREE;
-  const scale = Math.min(width, height) / NUM.NINETYNINE;
-  const maxTheta = Math.PI * NUM.SEVEN;
-  const thetaStep = Math.PI / NUM.THIRTYTHREE;
-
-  ctx.beginPath();
-  for (let theta = 0; theta <= maxTheta; theta += thetaStep) {
-<<<<<<    const radius = scale * Math.pow(golden, theta / (Math.PI / 2));
-  const goldenRatio = (1 + Math.sqrt(5)) / 2; // Golden Ratio constant keeps the growth soothing.
-  const center = {
-    x: (width / NUM.THREE) * 2,
-    y: height / NUM.THREE
-  };
-  const turns = NUM.THREE;
-  const scale = (Math.min(width, height) / NUM.NINETYNINE) * NUM.SEVEN;
-  const step = Math.PI / NUM.TWENTYTWO;
-
-  ctx.beginPath();
-  for (let theta = 0; theta <= Math.PI * 2 * turns; theta += step) {
-    const radius = scale * Math.pow(goldenRatio, theta / (Math.PI / 2));
-    const x = center.x + radius * Math.cos(theta);
-    const y = center.y + radius * Math.sin(theta);
-    if (theta === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
->>>>>>>+codex/add-codeb
-=
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-    const radius = scale * Math.pow(goldenRatio, theta / (Math.PI / 2));
-    const x = centerX + radius * Math.cos(theta);
-    const y = centerY + radius * Math.sin(theta);
-    if (theta === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-<<<<<<// Layer 4: Double-helix lattice. Static strands avoid motion triggers.
-// Layer 4: Double-helix lattice with calm strands and steady crossbars.
-function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
->>>>>>>+codex/add-codeb
-=
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-// Layer 4: Double-helix lattice — static strands with crossbars, zero motion.
-export function drawHelix(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
-  ctx.save();
-
-  const steps = NUM.TWENTYTWO;
-  const amplitude = height / NUM.THIRTYTHREE;
-  const frequency = (Math.PI * NUM.ELEVEN) / width;
-  const baseline = height * 0.65;
-
-  drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, 0, strandColorA);
-  drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, Math.PI, strandColorB || strandColorA);
->>>>>>>+codex/add-codeb
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  drawHelixRungs(ctx, width, steps, amplitude, frequency, baseline, rungColor);
-
-  ctx.restore();
-}
-
-function drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, phase, color) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  for (let i = 0; i <= steps; i++) {
-    const x = (width / steps) * i;
-    const y = baseline + amplitude * Math.sin(frequency * x + phase);
-    if (i === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
-  }
-  ctx.stroke();
-}
-
-function drawHelixRungs(ctx, width, steps, amplitude, frequency, baseline, color) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= steps; i++) {
-    const x = (width / steps) * i;
-    const y2 = baseline + amplitude * Math.sin(frequency * x + Math.PI);
-    // Static crossbars maintain the double-helix lattice without introducing motion.
->>>>>>>+codex/add-codeb
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-    const yA = baseline + amplitude * Math.sin(frequency * x);
-    const yB = baseline + amplitude * Math.sin(frequency * x + Math.PI);
-    ctx.beginPath();
-    ctx.moveTo(x, yA);
-    ctx.lineTo(x, yB);
-    ctx.stroke();
-  }
-}
-  fillBackground(ctx, width, height, palette.bg);
-  drawVesica(ctx, width, height, palette.layers[0], NUM);
-  drawTree(ctx, width, height, palette.layers[1], palette.layers[2], NUM);
-  drawFibonacci(ctx, width, height, palette.layers[3], NUM);
-  drawHelix(ctx, width, height, palette.layers[4], palette.layers[5], palette.ink, NUM);
-}
-
-function ensurePalette(palette) {
-  if (!palette) return DEFAULT_PALETTE;
-  const layers = Array.isArray(palette.layers) ? palette.layers.slice(0, 6) : [];
-  if (layers.length < 6) return DEFAULT_PALETTE;
-  return {
-    bg: palette.bg || DEFAULT_PALETTE.bg,
-    ink: palette.ink || DEFAULT_PALETTE.ink,
-    layers
-  };
-}
-
-function ensureNumerology(input) {
-  return { ...DEFAULT_NUM, ...(input || {}) };
-}
-
-function fillBackground(ctx, width, height, color) {
-  ctx.save();
-  ctx.fillStyle = color;
-  ctx.fillRect(0, 0, width, height);
-  ctx.restore();
-}
-
-// Layer 1: Vesica field — repeating circles for layered depth with no motion.
-export function drawVesica(ctx, width, height, color, NUM) {
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-
-  const radius = Math.min(width, height) / NUM.NINE;
-  const offset = radius / NUM.THREE;
-<<  const columns = NUM.SEVEN;
-  const rows = NUM.NINE;
-
-  for (let row = -Math.floor(rows / 2); row <= Math.floor(rows / 2); row++) {
-    for (let col = -Math.floor(columns / 2); col <= Math.floor(columns / 2); col++) {
-      const cx = width / 2 + col * horizontalStep;
-      const cy = height / 2 + row * verticalStep;
-
-      ctx.beginPath();
-      ctx.arc(cx - offset, cy, radius, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.arc(cx + offset, cy, radius, 0, Math.PI * 2);
-      ctx.stroke();
->>>>>>>+codex/add-codeb
-=====
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  const horizontalStep = radius;
-  const verticalStep = radius * (NUM.SEVEN / NUM.NINE);
-  const columns = NUM.SEVEN;
-  const rows = NUM.NINE;
-
-  for (let r = -Math.floor(rows / 2); r <= Math.floor(rows / 2); r++) {
-    for (let c = -Math.floor(columns / 2); c <= Math.floor(columns / 2); c++) {
-      const cx = width / 2 + c * horizontalStep;
-      const cy = height / 2 + r * verticalStep;
-      drawCirclePair(ctx, cx, cy, radius, offset);
-    }
-  }
-
-  ctx.restore();
-}
-
-<<// Layer 2: Tree-of-Life scaffold. Symmetric layout, no flashing.
-function drawTreeOfLife(ctx, width, height, edgeColor, nodeColor, NUM) {
-  const nodes = createTreeNodes(width, height, NUM);
-  const paths = createTreePaths();
-
-// Layer 2: Tree-of-Life scaffold with ten sephirot and twenty-two connective paths.
-function drawTreeOfLife(ctx, width, height, pathColor, nodeColor, NUM) {
->>>>>>>+codex/add-codeb
-=====
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-function drawCirclePair(ctx, cx, cy, radius, offset) {
-  ctx.beginPath();
-  ctx.arc(cx - offset, cy, radius, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(cx + offset, cy, radius, 0, Math.PI * 2);
-  ctx.stroke();
-}
-
-// Layer 2: Tree-of-Life scaffold — static nodes and calm paths.
-export function drawTree(ctx, width, height, edgeColor, nodeColor, NUM) {
-  ctx.save();
-  ctx.strokeStyle = edgeColor;
-  ctx.lineWidth = 2;
-  paths.forEach(([a, b]) => {
-
-<<<<  const columnSpacing = width / NUM.THIRTYTHREE;
-  const rowSpacing = (height / NUM.NINETYNINE) * NUM.NINE;
->>>>>>>+codex/add-codeb
-===
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  const baseY = height / NUM.ONEFORTYFOUR;
-  const centerX = width / 2;
+function createTreeNodes(width, height, NUM) {
+  const verticalUnit = height / NUM.ONEFORTYFOUR;
   const spread = width / NUM.ELEVEN;
-
-  const nodes = [
-    { x: centerX, y: baseY * 9 },
-    { x: centerX + spread, y: baseY * 22 },
-    { x: centerX - spread, y: baseY * 22 },
-    { x: centerX + spread * 1.4, y: baseY * 44 },
-    { x: centerX - spread * 1.4, y: baseY * 44 },
-    { x: centerX, y: baseY * 55 },
-    { x: centerX + spread, y: baseY * 77 },
-    { x: centerX - spread, y: baseY * 77 },
-    { x: centerX, y: baseY * 99 },
-    { x: centerX, y: baseY * 126 }
-  ];
-
-  const paths = [
-    [0, 1], [0, 2], [1, 2],
-    [1, 3], [2, 4], [3, 4],
-    [3, 5], [4, 5], [1, 5], [2, 5],
-    [3, 6], [4, 7], [5, 6], [5, 7],
-    [6, 7], [6, 8], [7, 8],
-    [6, 9], [7, 9], [8, 9],
-    [2, 3], [1, 4]
-  ];
-
->>>>>>> main
-  paths.forEach(([a, b]) => {
-    ctx.beginPath();
-    ctx.moveTo(nodes[a].x, nodes[a].y);
-    ctx.lineTo(nodes[b].x, nodes[b].y);
-    ctx.stroke();
-  });
-
-  ctx.fillStyle = nodeColor;
-<<<<  const nodeRadius = Math.max(3, width / NUM.NINETYNINE);
->>>>>>>+codex/add-codeb
-===
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  const radius = Math.max(3, width / NUM.NINETYNINE);
-  nodes.forEach(node => {
-    ctx.beginPath();
-    ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
-    ctx.fill();
-  });
-
-  ctx.restore();
-}
-
-<<<<<<< codex/update-registry-for-numbers-0-144
-// Layer 3: Fibonacci curve. Static golden spiral expresses growth without motion.
-<<<<function createTreeNodes(width, height, NUM) {
-  const baseY = height / NUM.ONEFORTYFOUR;
   const centerX = width / 2;
-  const horizontal = width / NUM.ELEVEN;
-  return [
-    { x: centerX, y: baseY * 9 },
-    { x: centerX + horizontal, y: baseY * 22 },
-    { x: centerX - horizontal, y: baseY * 22 },
-    { x: centerX + horizontal * 1.4, y: baseY * 44 },
-    { x: centerX - horizontal * 1.4, y: baseY * 44 },
-    { x: centerX, y: baseY * 55 },
-    { x: centerX + horizontal, y: baseY * 77 },
-    { x: centerX - horizontal, y: baseY * 77 },
-    { x: centerX, y: baseY * 99 },
-    { x: centerX, y: baseY * 126 }
-  ];
+
+  return SEPHIROT.map(node => ({
+    key: node.key,
+    name: node.name,
+    numerology: node.numerology,
+    lore: node.lore,
+    x: centerX + spread * node.xShift,
+    y: verticalUnit * node.yUnits
+  }));
 }
 
-function createTreePaths() {
-  return [
-    [0, 1], [0, 2], [1, 2],
-    [1, 3], [2, 4], [3, 4],
-    [3, 5], [4, 5], [1, 5], [2, 5],
-    [3, 6], [4, 7], [5, 6], [5, 7],
-    [6, 7], [6, 8], [7, 8],
-    [6, 9], [7, 9], [8, 9],
-    [2, 3], [1, 4]
-  ];
+function computeNodeRadius(node, width, NUM) {
+  const base = width / NUM.NINETYNINE;
+  return base * (1 + node.numerology / NUM.TWENTYTWO);
 }
 
-// Layer 3: Fibonacci curve. Static golden spiral with gentle sampling.
-// Layer 3: Fibonacci curve. Static spiral honours the Golden Ratio without motion.
-function drawFibonacciCurve(ctx, width, height, color, NUM) {
->>>>>>>+codex/add-codeb
-===
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-// Layer 3: Fibonacci curve — Golden Ratio spiral rendered once for calm focus.
-export function drawFibonacci(ctx, width, height, color, NUM) {
+function drawNodeLabel(ctx, node, radius, inkColor, width, NUM) {
   ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
+  ctx.fillStyle = inkColor;
+  ctx.globalAlpha = 0.85;
+  const fontSize = Math.max(11, (width / NUM.ONEFORTYFOUR) * 1.1);
+  ctx.font = `${fontSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillText(`${node.name} · ${node.numerology}`, node.x, node.y + radius + 4);
+  ctx.restore();
+}
 
-  // Golden Ratio ensures the spiral honours lineage growth while remaining static.
-  const golden = (1 + Math.sqrt(5)) / 2;
-  const center = { x: (width / NUM.THREE) * 2, y: height / NUM.THREE };
-  const baseScale = Math.min(width, height) / NUM.NINETYNINE * NUM.SEVEN;
-<<<<<<  // Golden Ratio constant keeps the spiral grounded in sacred proportion.
-  const golden = (1 + Math.sqrt(5)) / 2;
-  const center = { x: (width / NUM.THREE) * 2, y: height / NUM.THREE };
-=
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-  const goldenRatio = (1 + Math.sqrt(5)) / 2; // Golden Ratio keeps sacred proportion stable.
-  const centerX = width / NUM.THREE * 2;
-  const centerY = height / NUM.THREE;
-  const scale = Math.min(width, height) / NUM.NINETYNINE;
->>>>>>> main
-  const maxTheta = Math.PI * NUM.SEVEN;
-  const thetaStep = Math.PI / NUM.THIRTYTHREE;
+function drawPathLabel(ctx, text, x, y, inkColor, width, NUM) {
+  ctx.save();
+  ctx.fillStyle = inkColor;
+  ctx.globalAlpha = 0.6;
+  const fontSize = Math.max(9, width / (NUM.ONEFORTYFOUR * 1.2));
+  ctx.font = `${fontSize}px system-ui, -apple-system, "Segoe UI", sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x, y);
+  ctx.restore();
+}
 
-  ctx.beginPath();
-  for (let theta = 0; theta <= maxTheta; theta += thetaStep) {
-    const radius = baseScale * Math.pow(golden, theta / (Math.PI / 2));
-    const x = center.x + radius * Math.cos(theta);
-    const y = center.y + radius * Math.sin(theta);
-    if (theta === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-<<<<<<    const radius = scale * Math.pow(golden, theta / (Math.PI / 2));
-  const goldenRatio = (1 + Math.sqrt(5)) / 2; // Golden Ratio constant keeps the growth soothing.
-  const center = {
-    x: (width / NUM.THREE) * 2,
-    y: height / NUM.THREE
-  };
+// Layer 3: Fibonacci curve. One static sampling of a golden spiral keeps the motion implied but still.
+function drawFibonacciCurve(ctx, width, height, color, inkColor, NUM) {
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const startRadius = Math.min(width, height) / NUM.ONEFORTYFOUR * NUM.SEVEN;
+  const maxRadius = Math.min(width, height) / NUM.THREE;
+  const angleStep = (Math.PI * 2) / NUM.THIRTYTHREE;
   const turns = NUM.THREE;
-  const scale = (Math.min(width, height) / NUM.NINETYNINE) * NUM.SEVEN;
-  const step = Math.PI / NUM.TWENTYTWO;
 
-  ctx.beginPath();
-  for (let theta = 0; theta <= Math.PI * 2 * turns; theta += step) {
-    const radius = scale * Math.pow(goldenRatio, theta / (Math.PI / 2));
-    const x = center.x + radius * Math.cos(theta);
-    const y = center.y + radius * Math.sin(theta);
-    if (theta === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
-=
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-    const radius = scale * Math.pow(goldenRatio, theta / (Math.PI / 2));
-    const x = centerX + radius * Math.cos(theta);
-    const y = centerY + radius * Math.sin(theta);
-    if (theta === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
->>>>>>> main
-  }
-  ctx.stroke();
+  const points = createGoldenSpiralPoints(centerX, centerY, startRadius, maxRadius, angleStep, turns);
+  if (points.length < 2) return;
 
-  ctx.restore();
-}
-
-// Layer 4: Double-helix lattice. Static strands echo DNA symbolism without animation.
-<<<<<<// Layer 4: Double-helix lattice. Static strands avoid motion triggers.
-// Layer 4: Double-helix lattice with calm strands and steady crossbars.
-function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
->>>>>>>+codex/add-codeb
-=
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-// Layer 4: Double-helix lattice — static strands with crossbars, zero motion.
-export function drawHelix(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
   ctx.save();
-
-  const steps = NUM.TWENTYTWO;
-  const amplitude = height / NUM.THIRTYTHREE;
-  const frequency = (Math.PI * NUM.ELEVEN) / width;
-  const baseline = height * 0.65;
-
-  drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, 0, strandColorA);
-  drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, Math.PI, strandColorB || strandColorA);
-<<<<<<<   drawHelixRungs(ctx, width, steps, amplitude, frequency, baseline, rungColor || strandColorA);
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
->>>>>>> main
-  drawHelixRungs(ctx, width, steps, amplitude, frequency, baseline, rungColor);
-
-  ctx.restore();
-}
-
-function drawHelixStrand(ctx, width, steps, amplitude, frequency, baseline, phase, color) {
-  ctx.save();
+  ctx.globalAlpha = 0.9;
   ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  for (let i = 0; i <= steps; i++) {
-    const x = (width / steps) * i;
-    const y = baseline + amplitude * Math.sin(frequency * x + phase);
-    if (i === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
-    if (i === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
-  }
-  ctx.stroke();
+  ctx.lineWidth = Math.max(1.5, width / NUM.ONEFORTYFOUR);
+  drawPolyline(ctx, points);
   ctx.restore();
-}
 
-function drawHelixRungs(ctx, width, steps, amplitude, frequency, baseline, color) {
+  // Gentle markers reveal sample points without introducing motion.
   ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  for (let i = 0; i <= steps; i++) {
-    const x = (width / steps) * i;
-    const y2 = baseline + amplitude * Math.sin(frequency * x + Math.PI);
-<<<<<<< codex/update-registry-for-numbers-0-144
-    // Static crossbars maintain the double-helix lattice without introducing motion.
->>>>>>> origin/codex/architect-one-complete-laboratory-node-e6l88d
-    const yA = baseline + amplitude * Math.sin(frequency * x);
-    const yB = baseline + amplitude * Math.sin(frequency * x + Math.PI);
->>>>>>> main
+  ctx.fillStyle = inkColor;
+  ctx.globalAlpha = 0.55;
+  const markerRadius = Math.max(2, width / NUM.ONEFORTYFOUR);
+  const markerStep = Math.max(1, Math.floor(points.length / (NUM.THREE * NUM.ELEVEN)));
+  for (let index = 0; index < points.length; index += markerStep) {
+    const pt = points[index];
     ctx.beginPath();
-    ctx.moveTo(x, yA);
-    ctx.lineTo(x, yB);
-    ctx.stroke();
+    ctx.arc(pt.x, pt.y, markerRadius, 0, Math.PI * 2);
+    ctx.fill();
   }
   ctx.restore();
+}
+
+function createGoldenSpiralPoints(centerX, centerY, startRadius, maxRadius, angleStep, turns) {
+  const points = [];
+  const quarterTurn = Math.PI / 2;
+  const maxAngle = Math.PI * 2 * turns;
+  for (let angle = 0; angle <= maxAngle; angle += angleStep) {
+    const radius = startRadius * Math.pow(GOLDEN_RATIO, angle / quarterTurn);
+    if (radius > maxRadius) break;
+    points.push({
+      x: centerX + Math.cos(angle) * radius,
+      y: centerY + Math.sin(angle) * radius
+    });
+  }
+  return points;
+}
+
+function drawPolyline(ctx, points) {
+  if (points.length < 2) return;
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let index = 1; index < points.length; index += 1) {
+    ctx.lineTo(points[index].x, points[index].y);
+  }
+  ctx.stroke();
+}
+
+// Layer 4: Double-helix lattice. Static strands with crossbars create depth without animation.
+function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
+  const marginY = height / NUM.ELEVEN;
+  const verticalSpan = height - marginY * 2;
+  const centerX = width / 2;
+  const amplitude = width / NUM.NINE;
+  const steps = NUM.NINETYNINE;
+  const turns = NUM.THREE;
+
+  const strandA = createHelixStrandPoints(centerX, marginY, verticalSpan, amplitude, steps, turns, 0);
+  const strandB = createHelixStrandPoints(centerX, marginY, verticalSpan, amplitude, steps, turns, Math.PI);
+  if (strandA.length < 2 || strandB.length < 2) return;
+
+  ctx.save();
+  ctx.lineWidth = Math.max(1.5, width / NUM.ONEFORTYFOUR);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  ctx.globalAlpha = 0.85;
+  ctx.strokeStyle = strandColorA;
+  drawPolyline(ctx, strandA);
+
+  ctx.strokeStyle = strandColorB;
+  drawPolyline(ctx, strandB);
+
+  ctx.strokeStyle = rungColor;
+  ctx.globalAlpha = 0.6;
+  const rungCount = NUM.ELEVEN;
+  for (let rung = 0; rung <= rungCount; rung += 1) {
+    const t = rung / rungCount;
+    const index = Math.floor(t * (strandA.length - 1));
+    const a = strandA[index];
+    const b = strandB[index];
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+
+    const markerRadius = Math.max(2, width / NUM.ONEFORTYFOUR);
+    ctx.beginPath();
+    ctx.arc(a.x, a.y, markerRadius, 0, Math.PI * 2);
+    ctx.fillStyle = strandColorA;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, markerRadius, 0, Math.PI * 2);
+    ctx.fillStyle = strandColorB;
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function createHelixStrandPoints(centerX, topY, verticalSpan, amplitude, steps, turns, phase) {
+  const points = [];
+  for (let step = 0; step <= steps; step += 1) {
+    const ratio = step / steps;
+    const angle = ratio * turns * Math.PI * 2 + phase;
+    const radial = Math.sin(angle);
+    const lateral = Math.cos(angle);
+    const x = centerX + radial * amplitude * 0.5 + lateral * amplitude * 0.1;
+    const y = topY + ratio * verticalSpan;
+    points.push({ x, y });
+  }
+  return points;
 }
