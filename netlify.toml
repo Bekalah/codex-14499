@@ -1,5 +1,5 @@
 [build]
-  publish = "site"
+  publish = "."
   command = ""
   [build.environment]
     GIT_LFS_ENABLED = "true"

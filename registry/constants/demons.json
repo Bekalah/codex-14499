@@ -1,0 +1,143 @@
+{
+  "$schema": "../schemas/correspondence.schema.json",
+  "version": "2024.06",
+  "domain": "chthonic-allies",
+  "updated": "2024-05-07",
+  "entries": [
+    {
+      "id": "daemon-01-naamah",
+      "label": "Naamah",
+      "ordinal": 1,
+      "numerology": 3,
+      "alignments": {
+        "tree": "malkuth",
+        "element": "earth",
+        "daemon": "Naamah",
+        "spine": "coccyx"
+      },
+      "lore": "Keeper of night lullabies who soothes restless dreamers at the gateway to embodiment.",
+      "keywords": ["soothing", "dreams", "threshold"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "daemon-02-agares",
+      "label": "Agares",
+      "ordinal": 2,
+      "numerology": 6,
+      "alignments": {
+        "tree": "yesod",
+        "element": "air",
+        "daemon": "Agares",
+        "spine": "axis-l3"
+      },
+      "lore": "Grounds language and translation, slowing words until they land with care.",
+      "keywords": ["language", "translation", "patience"],
+      "sources": ["Cosmogenesis field notes"]
+    },
+    {
+      "id": "daemon-03-bathin",
+      "label": "Bathin",
+      "ordinal": 3,
+      "numerology": 7,
+      "alignments": {
+        "tree": "netzach",
+        "element": "herbal",
+        "daemon": "Bathin",
+        "spine": "axis-t6"
+      },
+      "lore": "Herbal cartographer who maps plant allies for the helix apothecary.",
+      "keywords": ["herbs", "mapping", "journey"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "daemon-04-marax",
+      "label": "Marax",
+      "ordinal": 4,
+      "numerology": 8,
+      "alignments": {
+        "tree": "geburah",
+        "element": "iron",
+        "daemon": "Marax",
+        "spine": "axis-t3"
+      },
+      "lore": "Engineer of tempered armor, teaching how to wield strength without harm.",
+      "keywords": ["engineering", "strength", "discipline"],
+      "sources": ["Circuitum99 transmissions"]
+    },
+    {
+      "id": "daemon-05-vassago",
+      "label": "Vassago",
+      "ordinal": 5,
+      "numerology": 9,
+      "alignments": {
+        "tree": "chesed",
+        "element": "water",
+        "daemon": "Vassago",
+        "spine": "axis-c5"
+      },
+      "lore": "Gentle seer who recovers lost objects and memories without destabilizing travelers.",
+      "keywords": ["recovery", "memory", "gentle"],
+      "sources": ["Cosmogenesis practice log"]
+    },
+    {
+      "id": "daemon-06-barbatos",
+      "label": "Barbatos",
+      "ordinal": 6,
+      "numerology": 11,
+      "alignments": {
+        "tree": "tiphereth",
+        "element": "wood",
+        "daemon": "Barbatos",
+        "spine": "axis-t2"
+      },
+      "lore": "Forest mediator who teaches the language of animals for mutual safety.",
+      "keywords": ["animals", "mediation", "forest"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "daemon-07-phenex",
+      "label": "Phenex",
+      "ordinal": 7,
+      "numerology": 22,
+      "alignments": {
+        "tree": "hod",
+        "element": "fire",
+        "daemon": "Phenex",
+        "spine": "axis-t8"
+      },
+      "lore": "Songful phoenix who converts traumatic residue into art for collective healing.",
+      "keywords": ["song", "alchemy", "healing"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "daemon-08-seere",
+      "label": "Seere",
+      "ordinal": 8,
+      "numerology": 33,
+      "alignments": {
+        "tree": "yesod",
+        "element": "lightning",
+        "daemon": "Seere",
+        "spine": "axis-l1"
+      },
+      "lore": "Swift envoy delivering urgent messages with respect for sensory limits.",
+      "keywords": ["messages", "speed", "care"],
+      "sources": ["Cosmogenesis field notes"]
+    },
+    {
+      "id": "daemon-09-belial",
+      "label": "Belial",
+      "ordinal": 9,
+      "numerology": 144,
+      "alignments": {
+        "tree": "malkuth",
+        "element": "stone",
+        "daemon": "Belial",
+        "spine": "axis-sacrum"
+      },
+      "lore": "Foundation architect teaching sovereignty and grounded consent within the temple walls.",
+      "keywords": ["sovereignty", "foundation", "consent"],
+      "sources": ["Circuitum99 transmissions"]
+    }
+  ]
+}

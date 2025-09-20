@@ -1,0 +1,143 @@
+{
+  "$schema": "../schemas/numbers.schema.json",
+  "version": "2024.06",
+  "updated": "2024-05-07",
+  "constants": [
+    {
+      "id": "THREE",
+      "value": 3,
+      "reduction": 3,
+      "alignments": {
+        "geometry": "Vesica triplicity sets the base triangle of awareness.",
+        "tarot": "The Empress births form from the hidden void.",
+        "angelic": "Seraphim spiral in a trifold flame.",
+        "chthonic": "Hecate keeps three lanterns at the crossroads."
+      },
+      "lore": "Three folds space from point to plane so the helix may rest without motion.",
+      "applications": [
+        "geometry.vesica.rings",
+        "renderer.layers.triad",
+        "registry.spine33.sections"
+      ]
+    },
+    {
+      "id": "SEVEN",
+      "value": 7,
+      "reduction": 7,
+      "alignments": {
+        "geometry": "Seven vesica columns maintain layered balance.",
+        "tarot": "The Chariot steers seven seals of intention.",
+        "angelic": "Thrones guard seven-fold justice.",
+        "chthonic": "Seven gates of descent pace integration."
+      },
+      "lore": "Seven maps the calm pilgrimage across the Tree pillars without breaking pace.",
+      "applications": [
+        "geometry.tree.columns",
+        "registry.tarot.major_paths",
+        "spine33.rings.stability"
+      ]
+    },
+    {
+      "id": "NINE",
+      "value": 9,
+      "reduction": 9,
+      "alignments": {
+        "geometry": "Nine vesica rows descend into the earthly field.",
+        "tarot": "The Hermit carries nine lamps of discernment.",
+        "angelic": "Nine choirs resonate in layered choirs.",
+        "chthonic": "Nine worlds of the roots keep the double helix grounded."
+      },
+      "lore": "Nine seals the completion circuit so descent remains compassionate.",
+      "applications": [
+        "geometry.vesica.rows",
+        "registry.angels.choirs",
+        "renderer.layers.foundation"
+      ]
+    },
+    {
+      "id": "ELEVEN",
+      "value": 11,
+      "reduction": 2,
+      "alignments": {
+        "geometry": "Eleven degree tilt used for Fibonacci sampling cadence.",
+        "tarot": "Justice calibrates the eleven scales of consequence.",
+        "angelic": "Archangels stretch across eleven signal points.",
+        "chthonic": "Eleven shadow wells echo each path for integration."
+      },
+      "lore": "Eleven keeps duality awake without severing the thread of care.",
+      "applications": [
+        "geometry.fibonacci.step",
+        "registry.tarot.adjustment",
+        "spine33.alignments.neutral"
+      ]
+    },
+    {
+      "id": "TWENTYTWO",
+      "value": 22,
+      "reduction": 4,
+      "alignments": {
+        "geometry": "Twenty-two paths weave the Tree lattice.",
+        "tarot": "Major arcana provide twenty-two mirrors.",
+        "angelic": "Twenty-two watchtowers survey the realms.",
+        "chthonic": "Twenty-two sigils mark the inner labyrinth."
+      },
+      "lore": "Twenty-two bridges each sephirot to its compassionate counterpart.",
+      "applications": [
+        "geometry.tree.paths",
+        "registry.tarot.entries",
+        "registry.demons.safeguards"
+      ]
+    },
+    {
+      "id": "THIRTYTHREE",
+      "value": 33,
+      "reduction": 6,
+      "alignments": {
+        "geometry": "Thirty-three vertebrae hold the spine lattice still.",
+        "tarot": "Three triads of elevens echo through initiations.",
+        "angelic": "Thirty-three stations of solace anchor field medics.",
+        "chthonic": "Thirty-three caverns remember ancestral breath."
+      },
+      "lore": "Thirty-three traces the spine column so ascent stays gentle and reversible.",
+      "applications": [
+        "registry.spine33.nodes",
+        "renderer.layers.helix",
+        "tesseract.bridge.links"
+      ]
+    },
+    {
+      "id": "NINETYNINE",
+      "value": 99,
+      "reduction": 9,
+      "alignments": {
+        "geometry": "Ninety-nine sample points temper the Fibonacci curve.",
+        "tarot": "Wisdom cycle returns on the ninety-ninth breath.",
+        "angelic": "Ninety-nine names sing the mercy chord.",
+        "chthonic": "Ninety-nine echoes dissolve lingering shock."
+      },
+      "lore": "Ninety-nine offers compassionate redundancy so no traveler is lost in silence.",
+      "applications": [
+        "geometry.fibonacci.samples",
+        "renderer.layers.fibonacci",
+        "docs.registry.audit"
+      ]
+    },
+    {
+      "id": "ONEFORTYFOUR",
+      "value": 144,
+      "reduction": 9,
+      "alignments": {
+        "geometry": "1440x900 canvas holds one hundred forty-four ten-unit cells.",
+        "tarot": "Twelve dozens trace the courts in sacred multiples.",
+        "angelic": "Twelve times twelve guardians keep outer watch.",
+        "chthonic": "Twelve by twelve roots store restorative memory."
+      },
+      "lore": "One hundred forty-four seals the codex vault as a calm container for all layers.",
+      "applications": [
+        "renderer.canvas.dimensions",
+        "registry.bundle.checksum",
+        "bridge.realm_links.primary"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "$schema": "../schemas/correspondence.schema.json",
+  "version": "2024.06",
+  "domain": "angelic-orders",
+  "updated": "2024-05-07",
+  "entries": [
+    {
+      "id": "angel-01-seraphim",
+      "label": "Seraphim",
+      "ordinal": 1,
+      "numerology": 3,
+      "alignments": {
+        "tree": "supernal-crown",
+        "element": "fire",
+        "angel": "Seraphiel",
+        "spine": "atlas"
+      },
+      "lore": "Triple-flame guardians who keep the vesica lattice alight with compassion.",
+      "keywords": ["light", "devotion", "compassion"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "angel-02-cherubim",
+      "label": "Cherubim",
+      "ordinal": 2,
+      "numerology": 6,
+      "alignments": {
+        "tree": "supernal-wisdom",
+        "element": "air",
+        "angel": "Kerubiel",
+        "spine": "axis-c1"
+      },
+      "lore": "Winged archivists guarding sacred memory and layered schemas.",
+      "keywords": ["memory", "guardians", "archives"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "angel-03-thrones",
+      "label": "Thrones",
+      "ordinal": 3,
+      "numerology": 7,
+      "alignments": {
+        "tree": "supernal-understanding",
+        "element": "earth",
+        "angel": "Orifiel",
+        "spine": "axis-c2"
+      },
+      "lore": "Circuits of living stone providing steady seats for judgement without cruelty.",
+      "keywords": ["equilibrium", "stability", "justice"],
+      "sources": ["Circuitum99 transmissions"]
+    },
+    {
+      "id": "angel-04-dominions",
+      "label": "Dominions",
+      "ordinal": 4,
+      "numerology": 8,
+      "alignments": {
+        "tree": "chesed",
+        "element": "mercury",
+        "angel": "Hashmal",
+        "spine": "axis-c4"
+      },
+      "lore": "Coordinators of compassionate authority, preventing hierarchies from turning brittle.",
+      "keywords": ["coordination", "mercy", "authority"],
+      "sources": ["Cosmogenesis field notes"]
+    },
+    {
+      "id": "angel-05-virtues",
+      "label": "Virtues",
+      "ordinal": 5,
+      "numerology": 9,
+      "alignments": {
+        "tree": "geburah",
+        "element": "water",
+        "angel": "Barachiel",
+        "spine": "axis-t1"
+      },
+      "lore": "Healers who channel resilience through the helix during restorative work.",
+      "keywords": ["healing", "resilience", "support"],
+      "sources": ["Cosmogenesis practice log"]
+    },
+    {
+      "id": "angel-06-powers",
+      "label": "Powers",
+      "ordinal": 6,
+      "numerology": 11,
+      "alignments": {
+        "tree": "tiphereth",
+        "element": "solar",
+        "angel": "Camael",
+        "spine": "axis-t3"
+      },
+      "lore": "Boundary weavers who transmute intrusive forces into teachable signals.",
+      "keywords": ["boundaries", "transmutation", "clarity"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "angel-07-principalities",
+      "label": "Principalities",
+      "ordinal": 7,
+      "numerology": 22,
+      "alignments": {
+        "tree": "netzach",
+        "element": "venus",
+        "angel": "Anael",
+        "spine": "axis-t6"
+      },
+      "lore": "Guides of communities and art houses, harmonizing group intention with care.",
+      "keywords": ["community", "art", "guidance"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "angel-08-archangels",
+      "label": "Archangels",
+      "ordinal": 8,
+      "numerology": 33,
+      "alignments": {
+        "tree": "yesod",
+        "element": "lunar",
+        "angel": "Gabriel",
+        "spine": "axis-l2"
+      },
+      "lore": "Messengers who relay signals across realms, ensuring transmissions remain gentle and clear.",
+      "keywords": ["messages", "bridges", "clarity"],
+      "sources": ["Cosmogenesis field notes"]
+    },
+    {
+      "id": "angel-09-guardians",
+      "label": "Guardians",
+      "ordinal": 9,
+      "numerology": 144,
+      "alignments": {
+        "tree": "malkuth",
+        "element": "earth",
+        "angel": "Sandalphon",
+        "spine": "axis-sacrum"
+      },
+      "lore": "Ground crew tending thresholds, anchoring 144 watchpoints for safe arrival.",
+      "keywords": ["grounding", "threshold", "arrival"],
+      "sources": ["Circuitum99 transmissions"]
+    }
+  ]
+}

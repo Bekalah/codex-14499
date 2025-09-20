@@ -1,0 +1,575 @@
+{
+  "$schema": "../schemas/node.schema.json",
+  "version": "2024.06",
+  "grid": {
+    "system": "double-helix-lattice",
+    "dimension": [
+      3,
+      11
+    ],
+    "notes": "Axis indexes (0 left, 1 center, 2 right); layer increments follow anatomical regions."
+  },
+  "nodes": [
+    {
+      "id": "spine-c1-atlas",
+      "label": "Atlas (C1)",
+      "ordinal": 1,
+      "coordinates": {
+        "axis": 1,
+        "layer": 1,
+        "height": 33
+      },
+      "alignments": {
+        "chakra": "crown",
+        "numerology": 33,
+        "angel": "Seraphiel",
+        "daemon": "Naamah"
+      },
+      "lore": "Balances the head atop the helix; keeps cosmic signals gentle."
+    },
+    {
+      "id": "spine-c2-axis",
+      "label": "Axis (C2)",
+      "ordinal": 2,
+      "coordinates": {
+        "axis": 1,
+        "layer": 1,
+        "height": 32
+      },
+      "alignments": {
+        "chakra": "crown",
+        "numerology": 22,
+        "angel": "Kerubiel",
+        "daemon": "Agares"
+      },
+      "lore": "Allows mindful rotation so watchers can scan without strain."
+    },
+    {
+      "id": "spine-c3",
+      "label": "Cervical C3",
+      "ordinal": 3,
+      "coordinates": {
+        "axis": 1,
+        "layer": 1,
+        "height": 31
+      },
+      "alignments": {
+        "chakra": "third-eye",
+        "numerology": 11,
+        "angel": "Orifiel",
+        "daemon": "Bathin"
+      },
+      "lore": "Channels intuition into breath-aligned posture."
+    },
+    {
+      "id": "spine-c4",
+      "label": "Cervical C4",
+      "ordinal": 4,
+      "coordinates": {
+        "axis": 0,
+        "layer": 1,
+        "height": 30
+      },
+      "alignments": {
+        "chakra": "throat",
+        "numerology": 9,
+        "angel": "Hashmal",
+        "daemon": "Marax"
+      },
+      "lore": "Supports vocal cords with calm engineering."
+    },
+    {
+      "id": "spine-c5",
+      "label": "Cervical C5",
+      "ordinal": 5,
+      "coordinates": {
+        "axis": 2,
+        "layer": 1,
+        "height": 29
+      },
+      "alignments": {
+        "chakra": "throat",
+        "numerology": 7,
+        "angel": "Barachiel",
+        "daemon": "Vassago"
+      },
+      "lore": "Guards expressive pathways for trauma-informed speech."
+    },
+    {
+      "id": "spine-c6",
+      "label": "Cervical C6",
+      "ordinal": 6,
+      "coordinates": {
+        "axis": 0,
+        "layer": 1,
+        "height": 28
+      },
+      "alignments": {
+        "chakra": "throat",
+        "numerology": 3,
+        "angel": "Camael",
+        "daemon": "Barbatos"
+      },
+      "lore": "Stabilizes shoulders so burdens rest evenly."
+    },
+    {
+      "id": "spine-c7",
+      "label": "Cervical C7",
+      "ordinal": 7,
+      "coordinates": {
+        "axis": 2,
+        "layer": 1,
+        "height": 27
+      },
+      "alignments": {
+        "chakra": "throat",
+        "numerology": 11,
+        "angel": "Anael",
+        "daemon": "Phenex"
+      },
+      "lore": "Bridges neck and torso, closing the vesica arch."
+    },
+    {
+      "id": "spine-t1",
+      "label": "Thoracic T1",
+      "ordinal": 8,
+      "coordinates": {
+        "axis": 0,
+        "layer": 2,
+        "height": 26
+      },
+      "alignments": {
+        "chakra": "heart",
+        "numerology": 22,
+        "angel": "Verchiel",
+        "daemon": "Seere"
+      },
+      "lore": "Anchors the upper ribs for protective embrace."
+    },
+    {
+      "id": "spine-t2",
+      "label": "Thoracic T2",
+      "ordinal": 9,
+      "coordinates": {
+        "axis": 2,
+        "layer": 2,
+        "height": 25
+      },
+      "alignments": {
+        "chakra": "heart",
+        "numerology": 9,
+        "angel": "Hamaliel",
+        "daemon": "Naamah"
+      },
+      "lore": "Circulates calm breath along the vesica rows."
+    },
+    {
+      "id": "spine-t3",
+      "label": "Thoracic T3",
+      "ordinal": 10,
+      "coordinates": {
+        "axis": 0,
+        "layer": 2,
+        "height": 24
+      },
+      "alignments": {
+        "chakra": "heart",
+        "numerology": 7,
+        "angel": "Sachiel",
+        "daemon": "Agares"
+      },
+      "lore": "Keeps rhythm steady for chariot pacing."
+    },
+    {
+      "id": "spine-t4",
+      "label": "Thoracic T4",
+      "ordinal": 11,
+      "coordinates": {
+        "axis": 2,
+        "layer": 2,
+        "height": 23
+      },
+      "alignments": {
+        "chakra": "heart",
+        "numerology": 3,
+        "angel": "Anael",
+        "daemon": "Bathin"
+      },
+      "lore": "Softens armor into compassionate presence."
+    },
+    {
+      "id": "spine-t5",
+      "label": "Thoracic T5",
+      "ordinal": 12,
+      "coordinates": {
+        "axis": 0,
+        "layer": 2,
+        "height": 22
+      },
+      "alignments": {
+        "chakra": "solar-plexus",
+        "numerology": 11,
+        "angel": "Asariel",
+        "daemon": "Marax"
+      },
+      "lore": "Steadies inverted perspectives during pauses."
+    },
+    {
+      "id": "spine-t6",
+      "label": "Thoracic T6",
+      "ordinal": 13,
+      "coordinates": {
+        "axis": 2,
+        "layer": 2,
+        "height": 21
+      },
+      "alignments": {
+        "chakra": "solar-plexus",
+        "numerology": 22,
+        "angel": "Azrael",
+        "daemon": "Vassago"
+      },
+      "lore": "Holds space for grief alchemy."
+    },
+    {
+      "id": "spine-t7",
+      "label": "Thoracic T7",
+      "ordinal": 14,
+      "coordinates": {
+        "axis": 0,
+        "layer": 2,
+        "height": 20
+      },
+      "alignments": {
+        "chakra": "solar-plexus",
+        "numerology": 9,
+        "angel": "Sachiel",
+        "daemon": "Barbatos"
+      },
+      "lore": "Blends dual currents into tempered motion."
+    },
+    {
+      "id": "spine-t8",
+      "label": "Thoracic T8",
+      "ordinal": 15,
+      "coordinates": {
+        "axis": 2,
+        "layer": 2,
+        "height": 19
+      },
+      "alignments": {
+        "chakra": "solar-plexus",
+        "numerology": 7,
+        "angel": "Cassiel",
+        "daemon": "Phenex"
+      },
+      "lore": "Keeps shadow-work grounded in consent."
+    },
+    {
+      "id": "spine-t9",
+      "label": "Thoracic T9",
+      "ordinal": 16,
+      "coordinates": {
+        "axis": 0,
+        "layer": 2,
+        "height": 18
+      },
+      "alignments": {
+        "chakra": "heart",
+        "numerology": 3,
+        "angel": "Samael",
+        "daemon": "Seere"
+      },
+      "lore": "Releases brittle towers with aftercare."
+    },
+    {
+      "id": "spine-t10",
+      "label": "Thoracic T10",
+      "ordinal": 17,
+      "coordinates": {
+        "axis": 2,
+        "layer": 2,
+        "height": 17
+      },
+      "alignments": {
+        "chakra": "heart",
+        "numerology": 11,
+        "angel": "Uriel",
+        "daemon": "Belial"
+      },
+      "lore": "Radiates hope across the lattice."
+    },
+    {
+      "id": "spine-t11",
+      "label": "Thoracic T11",
+      "ordinal": 18,
+      "coordinates": {
+        "axis": 0,
+        "layer": 2,
+        "height": 16
+      },
+      "alignments": {
+        "chakra": "heart",
+        "numerology": 22,
+        "angel": "Zadkiel",
+        "daemon": "Naamah"
+      },
+      "lore": "Guides moonlit journeys safely."
+    },
+    {
+      "id": "spine-t12",
+      "label": "Thoracic T12",
+      "ordinal": 19,
+      "coordinates": {
+        "axis": 2,
+        "layer": 2,
+        "height": 15
+      },
+      "alignments": {
+        "chakra": "heart",
+        "numerology": 33,
+        "angel": "Michael",
+        "daemon": "Agares"
+      },
+      "lore": "Invites joyful warmth into the rib temple."
+    },
+    {
+      "id": "spine-l1",
+      "label": "Lumbar L1",
+      "ordinal": 20,
+      "coordinates": {
+        "axis": 1,
+        "layer": 3,
+        "height": 14
+      },
+      "alignments": {
+        "chakra": "solar-plexus",
+        "numerology": 9,
+        "angel": "Sandalphon",
+        "daemon": "Bathin"
+      },
+      "lore": "Sounds the clarion of renewal through the low back."
+    },
+    {
+      "id": "spine-l2",
+      "label": "Lumbar L2",
+      "ordinal": 21,
+      "coordinates": {
+        "axis": 0,
+        "layer": 3,
+        "height": 13
+      },
+      "alignments": {
+        "chakra": "sacral",
+        "numerology": 7,
+        "angel": "Gabriel",
+        "daemon": "Marax"
+      },
+      "lore": "Supports dreamwork muscles during lunar tides."
+    },
+    {
+      "id": "spine-l3",
+      "label": "Lumbar L3",
+      "ordinal": 22,
+      "coordinates": {
+        "axis": 2,
+        "layer": 3,
+        "height": 12
+      },
+      "alignments": {
+        "chakra": "sacral",
+        "numerology": 3,
+        "angel": "Michael",
+        "daemon": "Vassago"
+      },
+      "lore": "Warms the pelvis with inclusive vitality."
+    },
+    {
+      "id": "spine-l4",
+      "label": "Lumbar L4",
+      "ordinal": 23,
+      "coordinates": {
+        "axis": 0,
+        "layer": 3,
+        "height": 11
+      },
+      "alignments": {
+        "chakra": "sacral",
+        "numerology": 11,
+        "angel": "Sandalphon",
+        "daemon": "Barbatos"
+      },
+      "lore": "Calls bodies back into community after rest."
+    },
+    {
+      "id": "spine-l5",
+      "label": "Lumbar L5",
+      "ordinal": 24,
+      "coordinates": {
+        "axis": 2,
+        "layer": 3,
+        "height": 10
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 22,
+        "angel": "Phanuel",
+        "daemon": "Phenex"
+      },
+      "lore": "Braces the sacral bridge for celebration."
+    },
+    {
+      "id": "spine-s1",
+      "label": "Sacral S1",
+      "ordinal": 25,
+      "coordinates": {
+        "axis": 1,
+        "layer": 4,
+        "height": 9
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 7,
+        "angel": "Guardian Choir",
+        "daemon": "Seere"
+      },
+      "lore": "Fuses upper and lower helix strands into stable sanctuary."
+    },
+    {
+      "id": "spine-s2",
+      "label": "Sacral S2",
+      "ordinal": 26,
+      "coordinates": {
+        "axis": 0,
+        "layer": 4,
+        "height": 8
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 3,
+        "angel": "Guardian Choir",
+        "daemon": "Belial"
+      },
+      "lore": "Stores restorative waters for grounded consent."
+    },
+    {
+      "id": "spine-s3",
+      "label": "Sacral S3",
+      "ordinal": 27,
+      "coordinates": {
+        "axis": 2,
+        "layer": 4,
+        "height": 7
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 9,
+        "angel": "Guardian Choir",
+        "daemon": "Naamah"
+      },
+      "lore": "Echoes ancestral pulse with kindness."
+    },
+    {
+      "id": "spine-s4",
+      "label": "Sacral S4",
+      "ordinal": 28,
+      "coordinates": {
+        "axis": 0,
+        "layer": 4,
+        "height": 6
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 11,
+        "angel": "Guardian Choir",
+        "daemon": "Agares"
+      },
+      "lore": "Maintains portal rituals without shock."
+    },
+    {
+      "id": "spine-s5",
+      "label": "Sacral S5",
+      "ordinal": 29,
+      "coordinates": {
+        "axis": 2,
+        "layer": 4,
+        "height": 5
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 22,
+        "angel": "Guardian Choir",
+        "daemon": "Bathin"
+      },
+      "lore": "Binds the sacrum plates through compassion."
+    },
+    {
+      "id": "spine-co1",
+      "label": "Coccyx Co1",
+      "ordinal": 30,
+      "coordinates": {
+        "axis": 1,
+        "layer": 5,
+        "height": 4
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 3,
+        "angel": "Guardian Choir",
+        "daemon": "Marax"
+      },
+      "lore": "Serves as grounding keystone for the helix."
+    },
+    {
+      "id": "spine-co2",
+      "label": "Coccyx Co2",
+      "ordinal": 31,
+      "coordinates": {
+        "axis": 1,
+        "layer": 5,
+        "height": 3
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 7,
+        "angel": "Guardian Choir",
+        "daemon": "Vassago"
+      },
+      "lore": "Tethers lineage memory gently to earth."
+    },
+    {
+      "id": "spine-co3",
+      "label": "Coccyx Co3",
+      "ordinal": 32,
+      "coordinates": {
+        "axis": 1,
+        "layer": 5,
+        "height": 2
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 9,
+        "angel": "Guardian Choir",
+        "daemon": "Barbatos"
+      },
+      "lore": "Stores emergency calm for survival responses."
+    },
+    {
+      "id": "spine-co4",
+      "label": "Coccyx Co4",
+      "ordinal": 33,
+      "coordinates": {
+        "axis": 1,
+        "layer": 5,
+        "height": 1
+      },
+      "alignments": {
+        "chakra": "root",
+        "numerology": 11,
+        "angel": "Guardian Choir",
+        "daemon": "Phenex"
+      },
+      "lore": "Completes the 33-step ladder with quiet fire."
+    }
+  ]
+}

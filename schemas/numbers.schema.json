@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex-14499.local/schemas/numbers.schema.json",
+  "title": "Codex Numerology Constants",
+  "type": "object",
+  "required": ["version", "updated", "constants"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Semantic or calendrical version tag for the constant set."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO-8601 date the dataset was last curated."
+    },
+    "constants": {
+      "type": "array",
+      "description": "Ordered numerology constants used throughout the codex.",
+      "items": {
+        "type": "object",
+        "required": ["id", "value", "reduction", "alignments", "lore"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_]+$",
+            "description": "Uppercase handle for cross-repo references."
+          },
+          "value": {
+            "type": "number",
+            "description": "Canonical numeric value."
+          },
+          "reduction": {
+            "type": "integer",
+            "description": "Digit sum (theosophic reduction) maintaining numerology audit trails."
+          },
+          "alignments": {
+            "type": "object",
+            "description": "Key lore alignments for geometry, tarot, angels, or anatomical ladders.",
+            "properties": {
+              "geometry": { "type": "string" },
+              "tarot": { "type": "string" },
+              "angelic": { "type": "string" },
+              "chthonic": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "lore": {
+            "type": "string",
+            "description": "Narrative context explaining why the number is sacred."
+          },
+          "applications": {
+            "type": "array",
+            "description": "Where the number is consumed inside the codex.",
+            "items": { "type": "string" }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

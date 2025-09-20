@@ -1,0 +1,13 @@
+{
+  "version": "2024.06",
+  "updated": "2024-05-07",
+  "realms": [
+    {
+      "id": "codex-14499",
+      "label": "Oracle of Constants",
+      "bundle": "https://codex-14499.netlify.app/dist/codex.min.json",
+      "health": "https://codex-14499.netlify.app/core/health-check.html",
+      "notes": "Read-only constants bundle for numerology, tarot, angels, demons, and spine lattice."
+    }
+  ]
+}

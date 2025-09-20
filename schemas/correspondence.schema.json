@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex-14499.local/schemas/correspondence.schema.json",
+  "title": "Cross-Realm Correspondence Record",
+  "type": "object",
+  "required": ["version", "domain", "entries"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Dataset tag for synchronized releases."
+    },
+    "domain": {
+      "type": "string",
+      "description": "Category of the correspondence set (tarot, angelic, chthonic, etc.)."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "ordinal", "alignments", "lore"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9\-]+$",
+            "description": "Lowercase slug for stable lookups."
+          },
+          "label": {
+            "type": "string"
+          },
+          "ordinal": {
+            "type": "integer",
+            "description": "Position within the ordered set (0 indexed accepted)."
+          },
+          "numerology": {
+            "type": "integer",
+            "description": "Primary numerological anchor when applicable."
+          },
+          "alignments": {
+            "type": "object",
+            "description": "Key relational hooks into other registries.",
+            "properties": {
+              "tree": { "type": "string" },
+              "path": { "type": "string" },
+              "element": { "type": "string" },
+              "angel": { "type": "string" },
+              "daemon": { "type": "string" },
+              "spine": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "lore": {
+            "type": "string",
+            "description": "ND-safe descriptive note supporting trauma-informed context."
+          },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "sources": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

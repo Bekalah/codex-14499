@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://codex-14499.local/schemas/node.schema.json",
+  "title": "Layered Node Definition",
+  "type": "object",
+  "required": ["version", "grid", "nodes"],
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "grid": {
+      "type": "object",
+      "required": ["system", "dimension"],
+      "properties": {
+        "system": { "type": "string" },
+        "dimension": { "type": "array", "items": { "type": "integer" }, "minItems": 2, "maxItems": 3 },
+        "notes": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "ordinal", "coordinates", "lore"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9\-]+$"
+          },
+          "label": { "type": "string" },
+          "ordinal": { "type": "integer" },
+          "coordinates": {
+            "type": "object",
+            "required": ["axis", "layer"],
+            "properties": {
+              "axis": { "type": "integer" },
+              "layer": { "type": "integer" },
+              "height": { "type": "integer" }
+            },
+            "additionalProperties": false
+          },
+          "alignments": {
+            "type": "object",
+            "properties": {
+              "chakra": { "type": "string" },
+              "numerology": { "type": "integer" },
+              "angel": { "type": "string" },
+              "daemon": { "type": "string" }
+            },
+            "additionalProperties": false
+          },
+          "lore": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
