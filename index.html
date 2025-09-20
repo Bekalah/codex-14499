@@ -79,6 +79,7 @@
   <canvas id="stage" width="1440" height="900" aria-label="Layered sacred geometry canvas"></canvas>
   <p class="note">Static renderer for Vesica field, Tree-of-Life scaffold, Fibonacci curve, and double-helix lattice. No animation, no autoplay, no external libraries. Open this file directly.</p>
   <p class="note">This static renderer encodes the Vesica field, Tree-of-Life scaffold, Fibonacci curve, and a static double-helix lattice. No animation, no autoplay, no external libraries. Open this file directly.</p>
+  <p class="note">This static renderer encodes the Vesica grid, Tree-of-Life scaffold, Fibonacci curve, and a static double-helix lattice. No animation, no autoplay, no external libraries. Open this file directly.</p>
 
   <script type="module">
     import { renderHelix } from "./js/helix-renderer.mjs";
@@ -102,6 +103,8 @@
         // Offline-first ND-safety: browsers may block file:// fetch. Returning null triggers the fallback palette.
         // Offline-first: browsers may deny file:// fetches. Returning null triggers the safe palette fallback.
         // Offline-first ND safety: browsers may block file:// fetch. Returning null uses the fallback palette.
+        // Offline-first ND safety: browsers often block file:// fetch.
+        // Returning null triggers the calm fallback palette instead of failing noisily.
         return null;
       }
     }
@@ -171,6 +174,14 @@
     } else {
       statusEl.textContent = "Canvas unavailable; geometry not rendered.";
     }
+    const activePalette = palette || defaults.palette;
+    statusEl.textContent = palette ? "Palette loaded." : "Palette missing; using safe fallback.";
+
+    // Numerology constants keep each geometry layer tethered to the requested canon.
+    const NUM = { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 };
+
+    // ND-safe rationale: single synchronous render, calm palette, consistent layer order.
+    renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:activePalette, NUM });
   </script>
 </body>
 </html>
