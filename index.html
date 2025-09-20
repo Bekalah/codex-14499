@@ -20,6 +20,42 @@
     #stage { display:block; margin:16px auto; box-shadow:0 0 0 1px #1d1d2a; }
     .note { max-width:900px; margin:0 auto 16px; color:var(--muted); }
     code { background:#11111a; padding:2px 4px; border-radius:3px; }
+    /* ND-safe: calm contrast, no motion, layered hierarchy */
+    :root {
+      --bg: #0b0b12;
+      --ink: #e8e8f0;
+      --muted: #a6a6c1;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    header {
+      padding: 12px 16px;
+      border-bottom: 1px solid #1d1d2a;
+    }
+    .status {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    #stage {
+      display: block;
+      margin: 16px auto;
+      box-shadow: 0 0 0 1px #1d1d2a;
+    }
+    .note {
+      max-width: 900px;
+      margin: 0 auto 16px;
+      color: var(--muted);
+    }
+    code {
+      background: #11111a;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
   </style>
 </head>
 <body>
@@ -32,6 +68,12 @@
   <p class="note">This static renderer encodes the Vesica field, Tree-of-Life scaffold, Fibonacci curve, and a static double-helix lattice. No animation, no autoplay, and no external libraries. Open this file directly.</p>
   <p class="note">This static renderer encodes Vesica, Tree-of-Life, Fibonacci, and a static double-helix lattice. No animation, no autoplay, no external libraries. Open this file directly.</p>
   <p class="note">This static renderer encodes the Vesica field, Tree-of-Life scaffold, Fibonacci curve, and a static double-helix lattice for Codex 144:99. No animation, no autoplay, no external libraries. Open this file directly.</p>
+    <div><strong>Cosmic Helix Renderer</strong> — layered sacred geometry (offline, ND-safe)</div>
+    <div class="status" id="status">Loading palette…</div>
+  </header>
+
+  <canvas id="stage" width="1440" height="900" aria-label="Layered sacred geometry canvas"></canvas>
+  <p class="note">Static renderer for Vesica field, Tree-of-Life scaffold, Fibonacci curve, and double-helix lattice. No animation, no autoplay, no external libraries. Open this file directly.</p>
 
   <script type="module">
     import { renderHelix } from "./js/helix-renderer.mjs";
@@ -53,6 +95,7 @@
       } catch (error) {
         // Offline-first: browsers may block file:// fetch. Returning null triggers the fallback palette.
         // Offline-first ND-safety: browsers may block file:// fetch. Returning null triggers the fallback palette.
+        // Offline-first: browsers may deny file:// fetches. Returning null triggers the safe palette fallback.
         return null;
       }
     }
@@ -81,6 +124,31 @@
     const NUM = { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 };
 
     // ND-safe rationale: one synchronous render, calm tones, layered depth preserved.
+    const FALLBACK = {
+      palette: {
+        bg: "#0b0b12",
+        ink: "#e8e8f0",
+        layers: ["#b1c7ff", "#89f7fe", "#a0ffa1", "#ffd27f", "#f5a3ff", "#d0d0e6"]
+      }
+    };
+
+    const palette = await loadJSON("./data/palette.json");
+    const activePalette = palette ?? FALLBACK.palette;
+    statusEl.textContent = palette ? "Palette loaded." : "Palette missing; using safe fallback palette.";
+
+    // Numerology constants inform every geometric helper.
+    const NUM = Object.freeze({
+      THREE: 3,
+      SEVEN: 7,
+      NINE: 9,
+      ELEVEN: 11,
+      TWENTYTWO: 22,
+      THIRTYTHREE: 33,
+      NINETYNINE: 99,
+      ONEFORTYFOUR: 144
+    });
+
+    // ND-safe rationale: one synchronous render, no motion, layered geometry preserved.
     renderHelix(ctx, { width: canvas.width, height: canvas.height, palette: activePalette, NUM });
   </script>
 </body>
