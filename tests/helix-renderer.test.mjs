@@ -1,3 +1,4 @@
+// Test framework: uses the repository's configured JS test runner (e.g., Jest/Vitest) with ESM (.mjs) tests.
 // Note on framework: Jest-style assertions (expect/describe/test) with ESM test files.
 // If repository uses Vitest, these tests also run unmodified (vi is not required here).
 
@@ -48,7 +49,7 @@ describe('helix-renderer.mjs core helpers', () => {
   });
 
   test('ensurePalette: pads/truncates layers and defaults bg/ink', () => {
-    if (!(mod?.ensurePalette)) return; // skip if not exported
+    if (!(mod && mod.ensurePalette)) return; // skip if not exported
     const partial = { layers: ['#111', '#222'], bg: 123, ink: null };
     const pal = mod.ensurePalette(partial);
     expect(pal.bg).toBeDefined();
@@ -60,7 +61,7 @@ describe('helix-renderer.mjs core helpers', () => {
   });
 
   test('ensurePalette: uses defaults when input invalid', () => {
-    if (!(mod?.ensurePalette)) return;
+    if (!(mod && mod.ensurePalette)) return;
     const pal = mod.ensurePalette(null);
     expect(pal).toHaveProperty('bg');
     expect(pal).toHaveProperty('ink');
@@ -68,7 +69,7 @@ describe('helix-renderer.mjs core helpers', () => {
   });
 
   test('ensureNumerology: accepts finite non-zero values; falls back otherwise', () => {
-    if (!(mod?.ensureNumerology)) return;
+    if (!(mod && mod.ensureNumerology)) return;
     const custom = { THREE: 4, SEVEN: 0, ELEVEN: 'not-a-number' };
     const num = mod.ensureNumerology(custom);
     expect(num.THREE).toBe(4);
@@ -79,7 +80,7 @@ describe('helix-renderer.mjs core helpers', () => {
   });
 
   test('helixPoint: returns expected coordinates for t=0 and t=1', () => {
-    if (!(mod?.helixPoint)) return;
+    if (!(mod && mod.helixPoint)) return;
     const width = 1000;
     const verticalMargin = 10;
     const usableHeight = 500;
@@ -138,7 +139,7 @@ describe('renderHelix integration with mocked 2D context', () => {
 describe('drawCircle primitive', () => {
   test('drawCircle: stroke only when fill=false', async () => {
     const mod = await loadModule();
-    if (!(mod?.drawCircle)) return; // skip if not exported
+    if (!(mod && mod.drawCircle)) return; // skip if not exported
     const { ctx, calls } = createCtxSpy();
     mod.drawCircle(ctx, 10, 20, 5, false);
     const names = calls.map(c => c.name);
@@ -149,7 +150,7 @@ describe('drawCircle primitive', () => {
 
   test('drawCircle: fill then stroke when fill=true', async () => {
     const mod = await loadModule();
-    if (!(mod?.drawCircle)) return; // skip if not exported
+    if (!(mod && mod.drawCircle)) return; // skip if not exported
     const { ctx, calls } = createCtxSpy();
     mod.drawCircle(ctx, 10, 20, 5, true);
     const names = calls.map(c => c.name);
@@ -162,3 +163,4 @@ describe('drawCircle primitive', () => {
     expect(strokeIndex).toBeGreaterThan(fillIndex);
   });
 });
+// Notes: This suite is compatible with Jest or Vitest in ESM mode. It avoids framework-specific matchers beyond expect/describe/test.
