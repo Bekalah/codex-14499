@@ -12,6 +12,15 @@
     - No animation or timers; render runs once per call to avoid sensory overload.
     - Calm palette handled via normalized options and comments explaining layer order.
     - Small pure helpers make numerology-driven geometry easy to audit offline.
+    1. Vesica field - intersecting circles ground the space.
+    2. Tree-of-Life scaffold - ten sephirot with twenty-two connective paths.
+    3. Fibonacci curve - static golden spiral polyline for gentle motion memory.
+    4. Double-helix lattice - paired strands with steady crossbars for depth.
+
+  ND-safe commitments:
+    - No animation or timers; everything renders once per invocation.
+    - Calm palette with readable contrast; comments explain sensory choices.
+    - Small, pure helpers keep cosmology parameters auditable and lore-safe.
 */
 
 // Golden Ratio constant keeps the Fibonacci layer gentle and lore-aligned.
@@ -28,7 +37,7 @@ const DEFAULT_PALETTE = {
   layers: ['#2b4b7c', '#3f6aa6', '#8ba9d6', '#e7c46f', '#d9984a', '#c7d7f5']
 };
 
-const DEFAULT_NUM = {
+const DEFAULT_NUM = Object.freeze({
   THREE: 3,
   SEVEN: 7,
   NINE: 9,
@@ -37,7 +46,32 @@ const DEFAULT_NUM = {
   THIRTYTHREE: 33,
   NINETYNINE: 99,
   ONEFORTYFOUR: 144
-};
+});
+
+const TREE_PATHS = [
+  { from: 'kether', to: 'chokmah' },
+  { from: 'kether', to: 'binah' },
+  { from: 'kether', to: 'tiphareth' },
+  { from: 'chokmah', to: 'binah' },
+  { from: 'chokmah', to: 'tiphareth' },
+  { from: 'chokmah', to: 'chesed' },
+  { from: 'binah', to: 'tiphareth' },
+  { from: 'binah', to: 'geburah' },
+  { from: 'chesed', to: 'geburah' },
+  { from: 'chesed', to: 'tiphareth' },
+  { from: 'chesed', to: 'netzach' },
+  { from: 'geburah', to: 'tiphareth' },
+  { from: 'geburah', to: 'hod' },
+  { from: 'tiphareth', to: 'netzach' },
+  { from: 'tiphareth', to: 'yesod' },
+  { from: 'tiphareth', to: 'hod' },
+  { from: 'netzach', to: 'hod' },
+  { from: 'netzach', to: 'yesod' },
+  { from: 'netzach', to: 'malkuth' },
+  { from: 'hod', to: 'yesod' },
+  { from: 'hod', to: 'malkuth' },
+  { from: 'yesod', to: 'malkuth' }
+];
 
 /*
   Lore tables preserve the cosmology vocabulary. Keeping them inline avoids
@@ -119,6 +153,23 @@ const TREE_PATHS = [
  * @param {CanvasRenderingContext2D} ctx - Canvas 2D rendering context to draw into.
  * @param {Object} [opts] - Optional rendering options forwarded to `normalizeOptions`. Use to override width, height,
  *   palette, or numerology (NUM). Only values documented by `normalizeOptions` are supported.
+/**
+ * Render a calm, layered helix scene onto a Canvas 2D context.
+ *
+ * Renders a static composition in a single pass (back-to-front): a vesica field,
+ * a Tree of Life scaffold, a Fibonacci (golden) curve, and a double-helix lattice.
+ * If `ctx` is falsy the function returns immediately and draws nothing.
+ *
+ * @param {CanvasRenderingContext2D} ctx - Destination 2D drawing context to paint into.
+ * @param {object} [opts] - Optional configuration overrides.
+ *   Recognized keys:
+ *     - width {number}: canvas width in pixels (falls back to DEFAULT_DIMENSIONS.width).
+ *     - height {number}: canvas height in pixels (falls back to DEFAULT_DIMENSIONS.height).
+ *     - palette {object}: color overrides; expected shape `{ bg, ink, layers }`.
+ *         `bg` and `ink` are background and outline colors; `layers` is an array of
+ *         layer colors used in rendering (vesica, tree path, tree nodes, curve, strands, etc.).
+ *     - NUM {object}: numerology overrides for sizing/spacing; values are merged with DEFAULT_NUM
+ *         (only finite, non-zero numeric entries replace defaults).
  */
 export function renderHelix(ctx, opts = {}) {
   if (!ctx) return;
@@ -153,6 +204,22 @@ export function renderHelix(ctx, opts = {}) {
 function normalizeOptions(opts) {
   const width = typeof opts.width === 'number' && opts.width > 0 ? opts.width : DEFAULT_DIMENSIONS.width;
   const height = typeof opts.height === 'number' && opts.height > 0 ? opts.height : DEFAULT_DIMENSIONS.height;
+/**
+ * Normalize renderer options, applying defaults and sanitization.
+ *
+ * Produces a settled options object with numeric canvas dimensions, a validated
+ * palette, and a safe numerology object.
+ *
+ * @param {Object} [opts] - Optional settings.
+ * @param {number} [opts.width] - Canvas width in pixels; falls back to DEFAULT_DIMENSIONS.width if not finite.
+ * @param {number} [opts.height] - Canvas height in pixels; falls back to DEFAULT_DIMENSIONS.height if not finite.
+ * @param {Object} [opts.palette] - Palette override passed to ensurePalette.
+ * @param {Object} [opts.NUM] - Numerology overrides passed to ensureNumerology.
+ * @return {{width:number, height:number, palette:Object, NUM:Object}} Normalized options ready for rendering.
+ */
+function normalizeOptions(opts = {}) {
+  const width = Number.isFinite(opts.width) ? opts.width : DEFAULT_DIMENSIONS.width;
+  const height = Number.isFinite(opts.height) ? opts.height : DEFAULT_DIMENSIONS.height;
   const palette = ensurePalette(opts.palette);
   const NUM = ensureNumerology(opts.NUM);
   return { width, height, palette, NUM };
@@ -171,6 +238,38 @@ function normalizeOptions(opts) {
 function ensurePalette(input) {
   if (!input || typeof input !== 'object') {
     return { ...DEFAULT_PALETTE };
+ * Validate and normalize a palette object, returning a safe palette with defaults filled.
+ *
+ * If `input` is falsy or not an object, returns a copy of the DEFAULT_PALETTE. Otherwise,
+ * `bg` and `ink` are taken from `input` when they are strings; `layers` is constructed by
+ * taking string entries from `input.layers` and falling back to DEFAULT_PALETTE.layers for
+ * missing or non-string entries. The returned `layers` array has the same length as the
+ * default layers array.
+ *
+ * @param {object|undefined} input - Optional palette overrides: may contain `bg` (string),
+ *   `ink` (string), and `layers` (array of strings). Non-string values are ignored in favor
+ *   of defaults.
+ * @return {{bg: string, ink: string, layers: string[]}} A normalized palette object safe for rendering.
+ */
+function ensurePalette(input) {
+  if (!input || typeof input !== 'object') {
+    return {
+      bg: DEFAULT_PALETTE.bg,
+      ink: DEFAULT_PALETTE.ink,
+      layers: [...DEFAULT_PALETTE.layers]
+    };
+  }
+
+  const safe = {
+    bg: typeof input.bg === 'string' ? input.bg : DEFAULT_PALETTE.bg,
+    ink: typeof input.ink === 'string' ? input.ink : DEFAULT_PALETTE.ink,
+    layers: []
+  };
+
+  const sourceLayers = Array.isArray(input.layers) ? input.layers : [];
+  for (let i = 0; i < DEFAULT_PALETTE.layers.length; i += 1) {
+    const candidate = sourceLayers[i];
+    safe.layers.push(typeof candidate === 'string' ? candidate : DEFAULT_PALETTE.layers[i]);
   }
 
   const bg = typeof input.bg === 'string' ? input.bg : DEFAULT_PALETTE.bg;
@@ -200,6 +299,24 @@ function ensureNumerology(input) {
   for (const key of Object.keys(DEFAULT_NUM)) {
     if (typeof input[key] === 'number' && Number.isFinite(input[key]) && input[key] > 0) {
       result[key] = input[key];
+/**
+ * Return a safe numerology object by merging validated numeric overrides onto DEFAULT_NUM.
+ *
+ * Copies DEFAULT_NUM and, if `input` is an object, replaces any key present in DEFAULT_NUM
+ * with the numeric value from `input` when that value is finite and non-zero. Non-object
+ * or missing inputs yield an exact copy of DEFAULT_NUM.
+ *
+ * @param {Object|any} input - Optional overrides; properties matching DEFAULT_NUM keys will be used if they coerce to a finite, non-zero Number.
+ * @return {Object} A numerology object containing numeric constants (same keys as DEFAULT_NUM) guaranteed to be finite and non-zero.
+ */
+function ensureNumerology(input) {
+  const safe = { ...DEFAULT_NUM };
+  if (!input || typeof input !== 'object') return safe;
+
+  for (const key of Object.keys(safe)) {
+    const value = Number(input[key]);
+    if (Number.isFinite(value) && value !== 0) {
+      safe[key] = value;
     }
   }
 
@@ -215,6 +332,14 @@ function ensureNumerology(input) {
  * @param {number} width - Width of the area to fill, in pixels.
  * @param {number} height - Height of the area to fill, in pixels.
  * @param {string} color - CSS color string used as the fillStyle.
+ * Fill the entire canvas area with a solid color.
+ *
+ * Saves and restores the canvas drawing state while setting fillStyle and filling
+ * the rectangle from (0,0) to (width,height).
+ *
+ * @param {number} width - Width of the area to fill, in pixels.
+ * @param {number} height - Height of the area to fill, in pixels.
+ * @param {string} color - CSS-compatible color string to use for the fill.
  */
 function paintBackground(ctx, width, height, color) {
   ctx.save();
@@ -269,12 +394,44 @@ function drawVesicaField(ctx, width, height, palette, NUM) {
     for (let col = 0; col < cols - 1; col += 1) {
       const x = offset + horizontalStep * (col + 1);
       const y = verticalStep * (row + 1);
+ * Draw a scalable grid of overlapping circular "vesica" rings across the canvas.
+ *
+ * The ring radius, spacing, columns/rows and stroke width are derived from the
+ * provided numerology constants so the pattern scales with the canvas size.
+ *
+ * @param {number} width - Canvas width in pixels (used for layout calculations).
+ * @param {number} height - Canvas height in pixels (used for layout calculations).
+ * @param {string|CanvasPattern|CanvasGradient} color - Stroke style for the rings.
+ * @param {Object} NUM - Numerology constants controlling layout:
+ *   - SEVEN: number of columns (also used in scale ratio),
+ *   - NINE: number of rows (and used in vertical margin / scale calculations),
+ *   - ELEVEN: divisor for horizontal margin computation,
+ *   - NINETYNINE: divisor used to derive stroke width.
+ */
+function drawVesicaField(ctx, width, height, color, NUM) {
+  const columns = NUM.SEVEN;
+  const rows = NUM.NINE;
+  const marginX = width / NUM.ELEVEN;
+  const marginY = height / NUM.NINE;
+  const cellW = (width - marginX * 2) / (columns - 1);
+  const cellH = (height - marginY * 2) / (rows - 1);
+  const scale = NUM.SEVEN / NUM.NINE; // gentle overlap ratio derived from sacred numbers.
+  const radius = Math.min(cellW, cellH) * 0.5 * scale;
+  const lineWidth = Math.max(1, Math.min(width, height) / NUM.NINETYNINE);
+
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.globalAlpha = 0.45;
+  for (let row = 0; row < rows; row += 1) {
+    for (let col = 0; col < columns; col += 1) {
+      const x = marginX + col * cellW;
+      const y = marginY + row * cellH;
       ctx.beginPath();
       ctx.arc(x, y, radius, 0, Math.PI * 2);
       ctx.stroke();
     }
   }
-
   ctx.restore();
 }
 
@@ -361,6 +518,79 @@ function drawTreePaths(ctx, layout, strokeColor, NUM) {
     ctx.stroke();
   });
 
+/**
+ * Render a schematic "Tree of Life" (sephirot nodes and connecting paths) onto a 2D canvas.
+ *
+ * Draws positioned sephirot nodes and the predefined connections (TREE_PATHS) between them,
+ * scaling placement, stroke widths, and node sizes from the provided numerology constants.
+ *
+ * @param {CanvasRenderingContext2D} ctx - Canvas 2D rendering context to draw into.
+ * @param {number} width - Canvas drawing width; used to compute horizontal layout and scales.
+ * @param {number} height - Canvas drawing height; used to compute vertical layout and scales.
+ * @param {string} pathColor - Stroke color for the connecting paths between nodes.
+ * @param {string} nodeColor - Fill color for the node circles.
+ * @param {string} inkColor - Stroke color for node outlines.
+ * @param {Object} NUM - Numerology constants object (e.g., DEFAULT_NUM or an overridden set). Numeric fields (ONEFORTYFOUR, NINE, THREE, SEVEN, ELEVEN, TWENTYTWO, THIRTYTHREE, NINETYNINE) control spacing, radii, and stroke widths.
+ */
+function drawTreeOfLife(ctx, width, height, pathColor, nodeColor, inkColor, NUM) {
+  const verticalUnit = height / NUM.ONEFORTYFOUR;
+  const horizontalUnit = width / (NUM.NINE + NUM.THREE); // uses 3 and 9 to set gentle spread.
+  const centerX = width / 2;
+  const one = NUM.ELEVEN / NUM.ELEVEN;
+  const two = NUM.THREE - one;
+  const three = NUM.THREE;
+  const four = NUM.SEVEN - three;
+
+  const nodes = [
+    { key: 'kether', offset: 0, unitsY: NUM.NINE },
+    { key: 'chokmah', offset: two, unitsY: NUM.TWENTYTWO },
+    { key: 'binah', offset: -two, unitsY: NUM.TWENTYTWO },
+    { key: 'chesed', offset: three, unitsY: NUM.THIRTYTHREE + NUM.ELEVEN },
+    { key: 'geburah', offset: -three, unitsY: NUM.THIRTYTHREE + NUM.ELEVEN },
+    { key: 'tiphareth', offset: 0, unitsY: NUM.THIRTYTHREE + NUM.THIRTYTHREE },
+    { key: 'netzach', offset: four, unitsY: NUM.TWENTYTWO + NUM.THIRTYTHREE + NUM.THIRTYTHREE },
+    { key: 'hod', offset: -four, unitsY: NUM.TWENTYTWO + NUM.THIRTYTHREE + NUM.THIRTYTHREE },
+    { key: 'yesod', offset: 0, unitsY: NUM.NINETYNINE + NUM.ELEVEN },
+    { key: 'malkuth', offset: 0, unitsY: NUM.ONEFORTYFOUR - NUM.ELEVEN }
+  ];
+
+  const positions = new Map();
+  for (const node of nodes) {
+    const x = centerX + node.offset * horizontalUnit;
+    const y = node.unitsY * verticalUnit;
+    positions.set(node.key, { x, y });
+  }
+
+  const pathWidth = Math.max(1.5, Math.min(width, height) / NUM.ONEFORTYFOUR);
+  ctx.save();
+  ctx.strokeStyle = pathColor;
+  ctx.lineWidth = pathWidth;
+  ctx.globalAlpha = 0.65;
+  for (const path of TREE_PATHS) {
+    const start = positions.get(path.from);
+    const end = positions.get(path.to);
+    if (!start || !end) continue;
+    ctx.beginPath();
+    ctx.moveTo(start.x, start.y);
+    ctx.lineTo(end.x, end.y);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  const nodeRadius = Math.max(6, Math.min(width, height) / NUM.THIRTYTHREE);
+  const outlineWidth = Math.max(1, Math.min(width, height) / NUM.ONEFORTYFOUR);
+  ctx.save();
+  ctx.fillStyle = nodeColor;
+  ctx.strokeStyle = inkColor;
+  ctx.lineWidth = outlineWidth;
+  for (const node of nodes) {
+    const pos = positions.get(node.key);
+    if (!pos) continue;
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, nodeRadius, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+  }
   ctx.restore();
 }
 
@@ -404,6 +634,49 @@ function drawSephirotNodes(ctx, layout, fillColor, inkColor, width, height, NUM)
     ctx.fillStyle = fillColor;
   });
 
+ * Draw a static golden-ratio (Fibonacci-like) spiral onto a 2D canvas.
+ *
+ * Renders a single stroked spiral path centered and scaled to the provided canvas
+ * dimensions. The spiral radius grows exponentially by the golden ratio; sampling
+ * density, angular sweep, center offsets, and stroke width are derived from the
+ * supplied numerology object.
+ *
+ * @param {CanvasRenderingContext2D} ctx - Canvas 2D context to draw onto.
+ * @param {number} width - Canvas width used for layout and scaling.
+ * @param {number} height - Canvas height used for layout and scaling.
+ * @param {string} color - Stroke color for the spiral.
+ * @param {object} NUM - Numerology constants used to control sampling, sweep,
+ *   center offsets, and sizing. Expected numeric properties include:
+ *   NINETYNINE, THREE, ELEVEN, TWENTYTWO, THIRTYTHREE, ONEFORTYFOUR.
+ */
+function drawFibonacciCurve(ctx, width, height, color, NUM) {
+  const goldenRatio = (1 + Math.sqrt(5)) / 2;
+  const steps = NUM.NINETYNINE;
+  const turns = NUM.THREE - (NUM.ELEVEN / NUM.TWENTYTWO); // 2.5 pi sweep keeps curve contained.
+  const maxTheta = turns * Math.PI;
+  const baseRadius = Math.min(width, height) / (NUM.THREE + (NUM.ELEVEN / NUM.ELEVEN));
+  const centerX = width * (NUM.THIRTYTHREE + NUM.ELEVEN) / NUM.ONEFORTYFOUR;
+  const centerY = height * NUM.NINETYNINE / NUM.ONEFORTYFOUR;
+  const strokeWidth = Math.max(1.5, Math.min(width, height) / NUM.ONEFORTYFOUR);
+
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = strokeWidth;
+  ctx.globalAlpha = 0.75;
+  ctx.beginPath();
+  for (let i = 0; i <= steps; i += 1) {
+    const t = i / steps;
+    const theta = t * maxTheta;
+    const radius = baseRadius * Math.pow(goldenRatio, theta / (Math.PI * 2));
+    const x = centerX + Math.cos(theta) * radius;
+    const y = centerY - Math.sin(theta) * radius;
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  }
+  ctx.stroke();
   ctx.restore();
 }
 
@@ -541,6 +814,72 @@ function drawDoubleHelix(ctx, width, height, palette, NUM) {
     const a = strandA[i];
     const b = strandB[i];
     if (!a || !b) continue;
+ * Render a static double-helix lattice (two phase-shifted strands with cross rungs) into a Canvas 2D context.
+ *
+ * The lattice spans the full canvas width and is vertically centered. Two sine-like strands are stroked
+ * in `strandColorA` and `strandColorB`; short cross rungs connect corresponding points between strands.
+ *
+ * Rendering is performed directly on the provided CanvasRenderingContext2D (no value is returned).
+ *
+ * @param {number} width - Canvas width in pixels.
+ * @param {number} height - Canvas height in pixels.
+ * @param {string} strandColorA - Stroke color for the first strand.
+ * @param {string} strandColorB - Stroke color for the second strand.
+ * @param {string} rungColor - Stroke color for the cross rungs.
+ * @param {Object} NUM - Numerology constants controlling layout and sampling. Required numeric keys:
+ *   - ONEFORTYFOUR: total helix segment count (samples per strand).
+ *   - TWENTYTWO: number of cross rungs (approximate rung density).
+ *   - THREE, ELEVEN, THIRTYTHREE, NINETYNINE: used to compute amplitude, offset scaling, frequency, and stroke sizing.
+ *   Values should be finite, non-zero numbers; sensible rendering depends on typical defaults (e.g., those in DEFAULT_NUM).
+ */
+function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
+  const segmentCount = NUM.ONEFORTYFOUR;
+  const baseline = height / 2;
+  const amplitude = height / (NUM.THREE + (NUM.ELEVEN / NUM.ELEVEN));
+  const offsetScale = NUM.THIRTYTHREE / NUM.NINETYNINE; // one-third amplitude keeps lattice calm.
+  const frequency = NUM.TWENTYTWO / NUM.ELEVEN; // two full waves across the canvas.
+  const strandWidth = Math.max(1.5, Math.min(width, height) / NUM.ONEFORTYFOUR);
+  const rungWidth = Math.max(1, Math.min(width, height) / NUM.ONEFORTYFOUR);
+
+  const pointsA = [];
+  const pointsB = [];
+  for (let i = 0; i <= segmentCount; i += 1) {
+    const t = i / segmentCount;
+    const pointA = helixPoint(t, 0);
+    const pointB = helixPoint(t, Math.PI);
+    pointsA.push(pointA);
+    pointsB.push(pointB);
+  }
+
+  ctx.save();
+  ctx.lineWidth = strandWidth;
+  ctx.strokeStyle = strandColorA;
+  ctx.globalAlpha = 0.8;
+  ctx.beginPath();
+  for (let i = 0; i < pointsA.length; i += 1) {
+    const p = pointsA[i];
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = strandColorB;
+  ctx.beginPath();
+  for (let i = 0; i < pointsB.length; i += 1) {
+    const p = pointsB[i];
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  }
+  ctx.stroke();
+
+  ctx.strokeStyle = rungColor;
+  ctx.lineWidth = rungWidth;
+  ctx.globalAlpha = 0.55;
+  const rungCount = NUM.TWENTYTWO;
+  for (let i = 0; i <= rungCount; i += 1) {
+    const t = i / rungCount;
+    const a = helixPoint(t, 0);
+    const b = helixPoint(t, Math.PI);
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
@@ -568,4 +907,22 @@ export function drawFibonacci(ctx, width, height, strokeColor, NUM) {
 
 export function drawHelix(ctx, width, height, palette, NUM) {
   drawDoubleHelix(ctx, width, height, palette, NUM);
+  ctx.restore();
+
+  /**
+   * Compute a 2D point on a parametric helix strand for a given normalized horizontal parameter and phase.
+   *
+   * Uses surrounding scope values (frequency, width, baseline, amplitude, offsetScale) to map `t` to canvas
+   * coordinates: x is linear across the canvas width; y is a sine-based vertical displacement with the given phase.
+   *
+   * @param {number} t - Normalized horizontal position along the strand (expected ~0..1; values outside this range are allowed).
+   * @param {number} phase - Phase offset in radians applied to the sine displacement to produce phase-shifted strands.
+   * @return {{x: number, y: number}} Canvas coordinates for the helix point.
+   */
+  function helixPoint(t, phase) {
+    const angle = t * frequency * Math.PI + phase;
+    const x = width * t;
+    const y = baseline + Math.sin(angle) * amplitude * offsetScale;
+    return { x, y };
+  }
 }
