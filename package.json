@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "node scripts/build-codex.mjs",
     "test": "pytest -q",
     "dedup": "python scripts/dedup.py",
     "dedup:fix": "python scripts/dedup.py --fix",
