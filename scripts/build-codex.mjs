@@ -16,6 +16,17 @@ const DATA_DIR = path.join(ROOT, 'data');
 const DIST_DIR = path.join(ROOT, 'dist');
 const OUTPUT_PATH = path.join(DIST_DIR, 'codex.min.json');
 
+/**
+ * Read and parse a JSON file from the data directory, returning a fallback if the file is missing.
+ *
+ * Attempts to read and JSON-parse the file at DATA_DIR/filename. If the file does not exist (ENOENT),
+ * returns `fallback` instead so local builds can continue. Any other I/O or parse errors are propagated.
+ *
+ * @param {string} filename - Relative filename inside the data directory (e.g., 'constants.json').
+ * @param {*} [fallback=null] - Value to return if the file is missing; defaults to `null`.
+ * @returns {*} The parsed JSON value from the file, or the provided `fallback` when the file is not found.
+ * @throws {Error} Rethrows any non-ENOENT filesystem or JSON parsing errors.
+ */
 async function readJSON(filename, fallback = null) {
   const fullPath = path.join(DATA_DIR, filename);
   try {
@@ -30,6 +41,16 @@ async function readJSON(filename, fallback = null) {
   }
 }
 
+/**
+ * Assemble static data files into a single minified JSON bundle and write it to dist/codex.min.json.
+ *
+ * Reads optional JSON files from the data directory (using safe fallbacks), constructs a payload
+ * containing a generated_at ISO timestamp plus constants, nodes, citations, and palette, ensures
+ * the dist directory exists, writes the serialized payload to OUTPUT_PATH, and logs the relative
+ * output path and byte size.
+ *
+ * @return {Promise<void>} Resolves when the bundle has been written to disk.
+ */
 async function buildBundle() {
   const [constants, nodes, citations, palette] = await Promise.all([
     readJSON('constants.json', {}),
