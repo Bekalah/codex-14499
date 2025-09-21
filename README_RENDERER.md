@@ -116,3 +116,11 @@ Geometry parameters derive from sacred constants: 3, 7, 9, 11, 22, 33, 99, and 1
 4. If palette loading fails because of local file sandboxing, the fallback palette renders automatically and the header reports the safe mode.
 
 No bundlers, workflows, or external dependencies are introduced; the renderer remains lightweight, trauma-informed, and lore-aligned.
+
+## Offline Use
+1. Keep the repository folders intact so relative imports resolve (`js/` and `data/`).
+2. Optionally adjust `data/palette.json` before opening the page; provide background, ink, and six layer colors.
+3. Double-click `index.html`. Chromium, Firefox, and WebKit render the canvas offline with no additional tooling.
+4. If palette loading fails in file:// contexts, the fallback palette draws immediately and the status note acknowledges the safe mode.
+
+This renderer stays intentionally lightweight: no workflows, no dependencies, and no background services. Geometry is calculated by small pure functions so the layered cosmology remains legible and trauma-informed.
