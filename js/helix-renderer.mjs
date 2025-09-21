@@ -59,14 +59,20 @@ const TREE_PATHS = [
 ];
 
 /**
- * Render the calm, layered helix scene onto a canvas context.
+ * Render the calm, layered helix scene onto a Canvas 2D context.
  *
- * @param {CanvasRenderingContext2D} ctx - Destination 2D context.
+ * Renders a static composition in a single pass: a vesica field, Tree of Life scaffold,
+ * a Fibonacci (golden) curve, and a double-helix lattice from back to front. If `ctx`
+ * is falsy the function returns without drawing.
+ *
+ * @param {CanvasRenderingContext2D} ctx - Destination 2D drawing context.
  * @param {object} [opts] - Optional configuration overrides.
- * @param {number} [opts.width] - Canvas width in pixels.
- * @param {number} [opts.height] - Canvas height in pixels.
- * @param {object} [opts.palette] - Optional palette with bg, ink, and six layer colors.
- * @param {object} [opts.NUM] - Optional numerology overrides for sacred constants.
+ *   Recognized keys:
+ *     - width {number}: canvas width in pixels (overrides default).
+ *     - height {number}: canvas height in pixels (overrides default).
+ *     - palette {object}: color overrides; expected shape `{ bg, ink, layers }`.
+ *       `layers` should be an array with colors used for the four rendering layers.
+ *     - NUM {object}: numerology overrides for sizing and spacing; merged safely with defaults.
  */
 export function renderHelix(ctx, opts = {}) {
   if (!ctx) return;
@@ -80,6 +86,19 @@ export function renderHelix(ctx, opts = {}) {
   drawHelixLattice(ctx, width, height, palette.layers[4], palette.layers[5], palette.ink, NUM);
 }
 
+/**
+ * Normalize renderer options, applying defaults and sanitization.
+ *
+ * Produces a settled options object with numeric canvas dimensions, a validated
+ * palette, and a safe numerology object.
+ *
+ * @param {Object} [opts] - Optional settings.
+ * @param {number} [opts.width] - Canvas width in pixels; falls back to DEFAULT_DIMENSIONS.width if not finite.
+ * @param {number} [opts.height] - Canvas height in pixels; falls back to DEFAULT_DIMENSIONS.height if not finite.
+ * @param {Object} [opts.palette] - Palette override passed to ensurePalette.
+ * @param {Object} [opts.NUM] - Numerology overrides passed to ensureNumerology.
+ * @return {{width:number, height:number, palette:Object, NUM:Object}} Normalized options ready for rendering.
+ */
 function normalizeOptions(opts = {}) {
   const width = Number.isFinite(opts.width) ? opts.width : DEFAULT_DIMENSIONS.width;
   const height = Number.isFinite(opts.height) ? opts.height : DEFAULT_DIMENSIONS.height;
@@ -88,6 +107,20 @@ function normalizeOptions(opts = {}) {
   return { width, height, palette, NUM };
 }
 
+/**
+ * Validate and normalize a palette object, returning a safe palette with defaults filled.
+ *
+ * If `input` is falsy or not an object, returns a copy of the DEFAULT_PALETTE. Otherwise,
+ * `bg` and `ink` are taken from `input` when they are strings; `layers` is constructed by
+ * taking string entries from `input.layers` and falling back to DEFAULT_PALETTE.layers for
+ * missing or non-string entries. The returned `layers` array has the same length as the
+ * default layers array.
+ *
+ * @param {object|undefined} input - Optional palette overrides: may contain `bg` (string),
+ *   `ink` (string), and `layers` (array of strings). Non-string values are ignored in favor
+ *   of defaults.
+ * @return {{bg: string, ink: string, layers: string[]}} A normalized palette object safe for rendering.
+ */
 function ensurePalette(input) {
   if (!input || typeof input !== 'object') {
     return {
@@ -112,6 +145,16 @@ function ensurePalette(input) {
   return safe;
 }
 
+/**
+ * Return a safe numerology object by merging validated numeric overrides onto DEFAULT_NUM.
+ *
+ * Copies DEFAULT_NUM and, if `input` is an object, replaces any key present in DEFAULT_NUM
+ * with the numeric value from `input` when that value is finite and non-zero. Non-object
+ * or missing inputs yield an exact copy of DEFAULT_NUM.
+ *
+ * @param {Object|any} input - Optional overrides; properties matching DEFAULT_NUM keys will be used if they coerce to a finite, non-zero Number.
+ * @return {Object} A numerology object containing numeric constants (same keys as DEFAULT_NUM) guaranteed to be finite and non-zero.
+ */
 function ensureNumerology(input) {
   const safe = { ...DEFAULT_NUM };
   if (!input || typeof input !== 'object') return safe;
@@ -125,6 +168,16 @@ function ensureNumerology(input) {
   return safe;
 }
 
+/**
+ * Fill the canvas with a solid color.
+ *
+ * Fills the rectangle from (0,0) to (width,height) on the provided CanvasRenderingContext2D
+ * using the given CSS color.
+ *
+ * @param {number} width - Width of the fill area in pixels.
+ * @param {number} height - Height of the fill area in pixels.
+ * @param {string} color - CSS color or canvas-compatible color string to use as the fillStyle.
+ */
 function fillBackground(ctx, width, height, color) {
   ctx.save();
   ctx.fillStyle = color;
@@ -132,6 +185,20 @@ function fillBackground(ctx, width, height, color) {
   ctx.restore();
 }
 
+/**
+ * Draws a grid of overlapping circular "vesica" rings across the canvas.
+ *
+ * The grid layout is driven by sacred-number constants from `NUM` (columns, rows,
+ * margins, scale) so spacing, circle radius, stroke width, and translucency
+ * scale with the canvas size and numerology. The function strokes many
+ * semi-transparent circles and restores the drawing state before returning.
+ *
+ * @param {CanvasRenderingContext2D} ctx - 2D rendering context to draw into.
+ * @param {number} width - Canvas width in pixels (used for layout calculations).
+ * @param {number} height - Canvas height in pixels (used for layout calculations).
+ * @param {string|CanvasPattern|CanvasGradient} color - Stroke style used for the circles.
+ * @param {Object} NUM - Numeric constants object (expected to include SEVEN, NINE, ELEVEN, NINETYNINE) used to compute grid counts, margins, scale, and stroke width.
+ */
 function drawVesicaField(ctx, width, height, color, NUM) {
   const columns = NUM.SEVEN;
   const rows = NUM.NINE;
@@ -159,6 +226,20 @@ function drawVesicaField(ctx, width, height, color, NUM) {
   ctx.restore();
 }
 
+/**
+ * Render a schematic "Tree of Life" (sephirot nodes and connecting paths) onto a 2D canvas.
+ *
+ * Draws positioned sephirot nodes and the predefined connections (TREE_PATHS) between them,
+ * scaling placement, stroke widths, and node sizes from the provided numerology constants.
+ *
+ * @param {CanvasRenderingContext2D} ctx - Canvas 2D rendering context to draw into.
+ * @param {number} width - Canvas drawing width; used to compute horizontal layout and scales.
+ * @param {number} height - Canvas drawing height; used to compute vertical layout and scales.
+ * @param {string} pathColor - Stroke color for the connecting paths between nodes.
+ * @param {string} nodeColor - Fill color for the node circles.
+ * @param {string} inkColor - Stroke color for node outlines.
+ * @param {Object} NUM - Numerology constants object (e.g., DEFAULT_NUM or an overridden set). Numeric fields (ONEFORTYFOUR, NINE, THREE, SEVEN, ELEVEN, TWENTYTWO, THIRTYTHREE, NINETYNINE) control spacing, radii, and stroke widths.
+ */
 function drawTreeOfLife(ctx, width, height, pathColor, nodeColor, inkColor, NUM) {
   const verticalUnit = height / NUM.ONEFORTYFOUR;
   const horizontalUnit = width / (NUM.NINE + NUM.THREE); // uses 3 and 9 to set gentle spread.
@@ -221,6 +302,21 @@ function drawTreeOfLife(ctx, width, height, pathColor, nodeColor, inkColor, NUM)
   ctx.restore();
 }
 
+/**
+ * Draws a static golden-ratio (Fibonacci-like) spiral on a 2D canvas.
+ *
+ * Renders a stroked spiral curve computed with an exponential radius growth based on the golden ratio.
+ * The curve is sampled in NUM.NINETYNINE steps, centered using fractional offsets derived from NUM,
+ * and stroked with a modest width and 0.75 alpha. This function mutates the provided CanvasRenderingContext2D
+ * by creating and stroking a single path; it does not return a value.
+ *
+ * @param {CanvasRenderingContext2D} ctx - Canvas 2D context to draw onto.
+ * @param {number} width - Canvas width used for layout and scaling.
+ * @param {number} height - Canvas height used for layout and scaling.
+ * @param {string} color - Stroke color for the spiral.
+ * @param {object} NUM - Numerology constants object. Expected numeric properties used here:
+ *   NINETYNINE, THREE, ELEVEN, TWENTYTWO, THIRTYTHREE, ONEFORTYFOUR.
+ */
 function drawFibonacciCurve(ctx, width, height, color, NUM) {
   const goldenRatio = (1 + Math.sqrt(5)) / 2;
   const steps = NUM.NINETYNINE;
@@ -252,6 +348,15 @@ function drawFibonacciCurve(ctx, width, height, color, NUM) {
   ctx.restore();
 }
 
+/**
+ * Draws a static double-helix lattice (two sine-like strands with cross rungs) onto the provided Canvas 2D context.
+ *
+ * The lattice spans the full canvas width, is vertically centered, and is sampled into NUM.ONEFORTYFOUR segments.
+ * Strand amplitude, horizontal frequency, and a gentle vertical offset are derived from the provided NUM constants so the helix scales predictably with canvas size.
+ * Two strands are stroked in `strandColorA` and `strandColorB` and short cross rungs (NUM.TWENTYTWO across) connect matching points, stroked in `rungColor`.
+ *
+ * @param {Object} NUM - Numerology constants used for layout and scaling. Expected numeric properties: THREE, ELEVEN, TWENTYTWO, THIRTYTHREE, NINETYNINE, ONEFORTYFOUR. Values should be finite numbers.
+ */
 function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
   const segmentCount = NUM.ONEFORTYFOUR;
   const baseline = height / 2;
