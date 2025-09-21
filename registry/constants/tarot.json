@@ -1,0 +1,382 @@
+{
+  "$schema": "../schemas/correspondence.schema.json",
+  "version": "2024.06",
+  "domain": "tarot-major-arcana",
+  "updated": "2024-05-07",
+  "entries": [
+    {
+      "id": "major-00-fool",
+      "label": "The Fool",
+      "ordinal": 0,
+      "numerology": 0,
+      "alignments": {
+        "tree": "kether",
+        "path": "aleph",
+        "element": "air",
+        "angel": "Metatron",
+        "daemon": "Naamah",
+        "spine": "atlas"
+      },
+      "lore": "Pure potential held at the cliff before movement; breath anchors curiosity without push.",
+      "keywords": ["potential", "breath", "trust"],
+      "sources": ["Liber Arcanae", "Cosmogenesis field notes"]
+    },
+    {
+      "id": "major-01-magician",
+      "label": "The Magician",
+      "ordinal": 1,
+      "numerology": 1,
+      "alignments": {
+        "tree": "kether-chokmah",
+        "path": "beth",
+        "element": "mercury",
+        "angel": "Raziel",
+        "daemon": "Agares",
+        "spine": "axis-c1"
+      },
+      "lore": "Will focuses tools into gentle direction, orchestrating the first triad without force.",
+      "keywords": ["focus", "tools", "channel"],
+      "sources": ["Stone Cathedral manuscripts"]
+    },
+    {
+      "id": "major-02-priestess",
+      "label": "High Priestess",
+      "ordinal": 2,
+      "numerology": 2,
+      "alignments": {
+        "tree": "kether-binah",
+        "path": "gimel",
+        "element": "lunar",
+        "angel": "Gabriel",
+        "daemon": "Buer",
+        "spine": "axis-c2"
+      },
+      "lore": "Veiled intuition keeps thresholds soft, translating lunar memory into present care.",
+      "keywords": ["intuition", "threshold", "memory"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "major-03-empress",
+      "label": "The Empress",
+      "ordinal": 3,
+      "numerology": 3,
+      "alignments": {
+        "tree": "binah",
+        "path": "daleth",
+        "element": "venus",
+        "angel": "Haniel",
+        "daemon": "Bathin",
+        "spine": "axis-c3"
+      },
+      "lore": "Fertile abundance holds the vesica cradle, inviting sensory restoration without overwhelm.",
+      "keywords": ["abundance", "care", "fertility"],
+      "sources": ["Circuitum99 transmissions"]
+    },
+    {
+      "id": "major-04-emperor",
+      "label": "The Emperor",
+      "ordinal": 4,
+      "numerology": 4,
+      "alignments": {
+        "tree": "chokmah",
+        "path": "heh",
+        "element": "aries",
+        "angel": "Camael",
+        "daemon": "Marax",
+        "spine": "axis-c4"
+      },
+      "lore": "Steady structure forms a compassionate boundary so the body may rest into reliability.",
+      "keywords": ["structure", "stability", "protection"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "major-05-hierophant",
+      "label": "Hierophant",
+      "ordinal": 5,
+      "numerology": 5,
+      "alignments": {
+        "tree": "chesed",
+        "path": "vav",
+        "element": "taurus",
+        "angel": "Tzadkiel",
+        "daemon": "Vassago",
+        "spine": "axis-c5"
+      },
+      "lore": "Tradition passes through kind mentors, translating ritual into ND-safe invitations.",
+      "keywords": ["tradition", "mentorship", "keys"],
+      "sources": ["Circuitum99 transmissions"]
+    },
+    {
+      "id": "major-06-lovers",
+      "label": "The Lovers",
+      "ordinal": 6,
+      "numerology": 6,
+      "alignments": {
+        "tree": "binah-tiphereth",
+        "path": "zayin",
+        "element": "gemini",
+        "angel": "Raphael",
+        "daemon": "Valefor",
+        "spine": "axis-c6"
+      },
+      "lore": "Choice arises through honest dialogue, weaving twin helix strands without forcing fusion.",
+      "keywords": ["choice", "union", "dialogue"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "major-07-chariot",
+      "label": "The Chariot",
+      "ordinal": 7,
+      "numerology": 7,
+      "alignments": {
+        "tree": "geburah-tiphereth",
+        "path": "cheth",
+        "element": "cancer",
+        "angel": "Muriel",
+        "daemon": "Amon",
+        "spine": "axis-c7"
+      },
+      "lore": "Gentle motion inside protective shells keeps momentum aligned with purpose, not speed.",
+      "keywords": ["motion", "protection", "focus"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "major-08-strength",
+      "label": "Strength",
+      "ordinal": 8,
+      "numerology": 8,
+      "alignments": {
+        "tree": "chesed-geburah",
+        "path": "teth",
+        "element": "leo",
+        "angel": "Verchiel",
+        "daemon": "Barbatos",
+        "spine": "axis-t1"
+      },
+      "lore": "Compassion tames raw force; breath work steadies the nervous system in the helix ring.",
+      "keywords": ["compassion", "fortitude", "breath"],
+      "sources": ["Cosmogenesis practice log"]
+    },
+    {
+      "id": "major-09-hermit",
+      "label": "The Hermit",
+      "ordinal": 9,
+      "numerology": 9,
+      "alignments": {
+        "tree": "chesed-tiphereth",
+        "path": "yod",
+        "element": "virgo",
+        "angel": "Hamaliel",
+        "daemon": "Paimon",
+        "spine": "axis-t2"
+      },
+      "lore": "Quiet study lights the path ahead; solitude remains gentle and reversible.",
+      "keywords": ["solitude", "study", "lamp"],
+      "sources": ["Cosmogenesis practice log"]
+    },
+    {
+      "id": "major-10-wheel",
+      "label": "Wheel of Fortune",
+      "ordinal": 10,
+      "numerology": 10,
+      "alignments": {
+        "tree": "netzach",
+        "path": "kaph",
+        "element": "jupiter",
+        "angel": "Sachiel",
+        "daemon": "Buer",
+        "spine": "axis-t3"
+      },
+      "lore": "Cycles turn with measured tempo; watchers remind travelers of rest points each quarter turn.",
+      "keywords": ["cycles", "turning", "luck"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "major-11-justice",
+      "label": "Justice",
+      "ordinal": 11,
+      "numerology": 11,
+      "alignments": {
+        "tree": "geburah-tiphereth",
+        "path": "lamed",
+        "element": "libra",
+        "angel": "Anael",
+        "daemon": "Gaap",
+        "spine": "axis-t4"
+      },
+      "lore": "Balance invites reflection; scales ensure accountability stays trauma-aware.",
+      "keywords": ["balance", "accountability", "clarity"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "major-12-hanged",
+      "label": "Hanged Man",
+      "ordinal": 12,
+      "numerology": 12,
+      "alignments": {
+        "tree": "geburah-hod",
+        "path": "mem",
+        "element": "water",
+        "angel": "Asariel",
+        "daemon": "Focalor",
+        "spine": "axis-t5"
+      },
+      "lore": "Perspective shifts by pausing; suspension offers integration rather than punishment.",
+      "keywords": ["pause", "integration", "surrender"],
+      "sources": ["Cosmogenesis practice log"]
+    },
+    {
+      "id": "major-13-death",
+      "label": "Death",
+      "ordinal": 13,
+      "numerology": 13,
+      "alignments": {
+        "tree": "netzach-tiphereth",
+        "path": "nun",
+        "element": "scorpio",
+        "angel": "Azrael",
+        "daemon": "Bifrons",
+        "spine": "axis-t6"
+      },
+      "lore": "Transitions honor grief while clearing space; endings are gates, not erasures.",
+      "keywords": ["transition", "grief", "rebirth"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "major-14-temperance",
+      "label": "Temperance",
+      "ordinal": 14,
+      "numerology": 14,
+      "alignments": {
+        "tree": "netzach-yesod",
+        "path": "samekh",
+        "element": "sagittarius",
+        "angel": "Sachiel",
+        "daemon": "Ipos",
+        "spine": "axis-t7"
+      },
+      "lore": "Alchemy blends extremes into restorative medicine, honoring pacing and breath.",
+      "keywords": ["balance", "alchemy", "pacing"],
+      "sources": ["Cosmogenesis practice log"]
+    },
+    {
+      "id": "major-15-devil",
+      "label": "The Devil",
+      "ordinal": 15,
+      "numerology": 15,
+      "alignments": {
+        "tree": "hod-yesod",
+        "path": "ayin",
+        "element": "capricorn",
+        "angel": "Cassiel",
+        "daemon": "Belial",
+        "spine": "axis-t8"
+      },
+      "lore": "Shadow work acknowledges somatic chains and invites consensual liberation.",
+      "keywords": ["shadow", "sovereignty", "integration"],
+      "sources": ["Circuitum99 transmissions"]
+    },
+    {
+      "id": "major-16-tower",
+      "label": "The Tower",
+      "ordinal": 16,
+      "numerology": 16,
+      "alignments": {
+        "tree": "netzach-hod",
+        "path": "peh",
+        "element": "mars",
+        "angel": "Samael",
+        "daemon": "Phenex",
+        "spine": "axis-t9"
+      },
+      "lore": "Revelation dismantles brittle structures swiftly yet with trauma-informed aftercare.",
+      "keywords": ["revelation", "release", "aftercare"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "major-17-star",
+      "label": "The Star",
+      "ordinal": 17,
+      "numerology": 17,
+      "alignments": {
+        "tree": "yesod",
+        "path": "tzaddi",
+        "element": "aquarius",
+        "angel": "Uriel",
+        "daemon": "Seere",
+        "spine": "axis-l1"
+      },
+      "lore": "Hope pours steady light, refilling reservoirs gently after upheaval.",
+      "keywords": ["hope", "renewal", "calm"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "major-18-moon",
+      "label": "The Moon",
+      "ordinal": 18,
+      "numerology": 18,
+      "alignments": {
+        "tree": "netzach-malkuth",
+        "path": "qoph",
+        "element": "pisces",
+        "angel": "Zadkiel",
+        "daemon": "Marchosias",
+        "spine": "axis-l2"
+      },
+      "lore": "Dream tides stir the subconscious; guides ensure navigation remains grounded.",
+      "keywords": ["dreams", "intuition", "navigation"],
+      "sources": ["Cosmogenesis practice log"]
+    },
+    {
+      "id": "major-19-sun",
+      "label": "The Sun",
+      "ordinal": 19,
+      "numerology": 19,
+      "alignments": {
+        "tree": "yesod-tiphereth",
+        "path": "resh",
+        "element": "solar",
+        "angel": "Michael",
+        "daemon": "Balam",
+        "spine": "axis-l3"
+      },
+      "lore": "Joy warms the system, restoring confidence with inclusive radiance.",
+      "keywords": ["joy", "clarity", "vitality"],
+      "sources": ["Stone Cathedral ledgers"]
+    },
+    {
+      "id": "major-20-judgement",
+      "label": "Judgement",
+      "ordinal": 20,
+      "numerology": 20,
+      "alignments": {
+        "tree": "hod-yesod",
+        "path": "shin",
+        "element": "fire",
+        "angel": "Sandalphon",
+        "daemon": "Alloces",
+        "spine": "axis-l4"
+      },
+      "lore": "Awakening clarion invites compassionate accountability, never shaming sleepers.",
+      "keywords": ["awakening", "accountability", "song"],
+      "sources": ["Liber Arcanae"]
+    },
+    {
+      "id": "major-21-world",
+      "label": "The World",
+      "ordinal": 21,
+      "numerology": 21,
+      "alignments": {
+        "tree": "malkuth",
+        "path": "tau",
+        "element": "earth",
+        "angel": "Phanuel",
+        "daemon": "Andrealphus",
+        "spine": "axis-sacrum"
+      },
+      "lore": "Integration closes the circuit with grace, celebrating embodied wholeness.",
+      "keywords": ["integration", "wholeness", "celebration"],
+      "sources": ["Cosmogenesis practice log"]
+    }
+  ]
+}
