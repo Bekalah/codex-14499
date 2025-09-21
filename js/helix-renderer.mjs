@@ -59,20 +59,22 @@ const TREE_PATHS = [
 ];
 
 /**
- * Render the calm, layered helix scene onto a Canvas 2D context.
+ * Render a calm, layered helix scene onto a Canvas 2D context.
  *
- * Renders a static composition in a single pass: a vesica field, Tree of Life scaffold,
- * a Fibonacci (golden) curve, and a double-helix lattice from back to front. If `ctx`
- * is falsy the function returns without drawing.
+ * Renders a static composition in a single pass (back-to-front): a vesica field,
+ * a Tree of Life scaffold, a Fibonacci (golden) curve, and a double-helix lattice.
+ * If `ctx` is falsy the function returns immediately and draws nothing.
  *
- * @param {CanvasRenderingContext2D} ctx - Destination 2D drawing context.
+ * @param {CanvasRenderingContext2D} ctx - Destination 2D drawing context to paint into.
  * @param {object} [opts] - Optional configuration overrides.
  *   Recognized keys:
- *     - width {number}: canvas width in pixels (overrides default).
- *     - height {number}: canvas height in pixels (overrides default).
+ *     - width {number}: canvas width in pixels (falls back to DEFAULT_DIMENSIONS.width).
+ *     - height {number}: canvas height in pixels (falls back to DEFAULT_DIMENSIONS.height).
  *     - palette {object}: color overrides; expected shape `{ bg, ink, layers }`.
- *       `layers` should be an array with colors used for the four rendering layers.
- *     - NUM {object}: numerology overrides for sizing and spacing; merged safely with defaults.
+ *         `bg` and `ink` are background and outline colors; `layers` is an array of
+ *         layer colors used in rendering (vesica, tree path, tree nodes, curve, strands, etc.).
+ *     - NUM {object}: numerology overrides for sizing/spacing; values are merged with DEFAULT_NUM
+ *         (only finite, non-zero numeric entries replace defaults).
  */
 export function renderHelix(ctx, opts = {}) {
   if (!ctx) return;
@@ -186,18 +188,19 @@ function fillBackground(ctx, width, height, color) {
 }
 
 /**
- * Render a grid of overlapping circular "vesica" rings across the canvas.
+ * Draw a scalable grid of overlapping circular "vesica" rings across the canvas.
  *
- * The layout, ring radius, spacing, and stroke width are derived from the
- * provided numerology constants so the pattern scales with canvas size.
- * The function sets stroke style/alpha, draws a columns × rows grid of rings,
- * and restores the canvas state before returning.
+ * The ring radius, spacing, columns/rows and stroke width are derived from the
+ * provided numerology constants so the pattern scales with the canvas size.
  *
- * @param {CanvasRenderingContext2D} ctx - 2D rendering context to draw into.
  * @param {number} width - Canvas width in pixels (used for layout calculations).
  * @param {number} height - Canvas height in pixels (used for layout calculations).
- * @param {string|CanvasPattern|CanvasGradient} color - Stroke style used for the circles.
- * @param {Object} NUM - Numeric constants object. Expected keys: SEVEN (columns/scale), NINE (rows/scale), ELEVEN (horizontal margin divisor), NINETYNINE (stroke width divisor).
+ * @param {string|CanvasPattern|CanvasGradient} color - Stroke style for the rings.
+ * @param {Object} NUM - Numerology constants controlling layout:
+ *   - SEVEN: number of columns (also used in scale ratio),
+ *   - NINE: number of rows (and used in vertical margin / scale calculations),
+ *   - ELEVEN: divisor for horizontal margin computation,
+ *   - NINETYNINE: divisor used to derive stroke width.
  */
 function drawVesicaField(ctx, width, height, color, NUM) {
   const columns = NUM.SEVEN;
@@ -350,20 +353,23 @@ function drawFibonacciCurve(ctx, width, height, color, NUM) {
 }
 
 /**
- * Render a static double-helix lattice (two phase-shifted strands with cross rungs) across the canvas.
+ * Render a static double-helix lattice (two phase-shifted strands with cross rungs) into a Canvas 2D context.
  *
  * The lattice spans the full canvas width and is vertically centered. Two sine-like strands are stroked
  * in `strandColorA` and `strandColorB`; short cross rungs connect corresponding points between strands.
  *
- * @param {CanvasRenderingContext2D} ctx - 2D drawing context to render into.
+ * Rendering is performed directly on the provided CanvasRenderingContext2D (no value is returned).
+ *
  * @param {number} width - Canvas width in pixels.
  * @param {number} height - Canvas height in pixels.
  * @param {string} strandColorA - Stroke color for the first strand.
  * @param {string} strandColorB - Stroke color for the second strand.
  * @param {string} rungColor - Stroke color for the cross rungs.
- * @param {Object} NUM - Numerology constants controlling layout and sampling. Expected numeric keys:
- *   THREE, ELEVEN, TWENTYTWO, THIRTYTHREE, NINETYNINE, ONEFORTYFOUR. Values should be finite numbers;
- *   ONEFORTYFOUR is used as the helix segment count and TWENTYTWO as the rung count.
+ * @param {Object} NUM - Numerology constants controlling layout and sampling. Required numeric keys:
+ *   - ONEFORTYFOUR: total helix segment count (samples per strand).
+ *   - TWENTYTWO: number of cross rungs (approximate rung density).
+ *   - THREE, ELEVEN, THIRTYTHREE, NINETYNINE: used to compute amplitude, offset scaling, frequency, and stroke sizing.
+ *   Values should be finite, non-zero numbers; sensible rendering depends on typical defaults (e.g., those in DEFAULT_NUM).
  */
 function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
   const segmentCount = NUM.ONEFORTYFOUR;
@@ -421,14 +427,14 @@ function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungCo
   ctx.restore();
 
   /**
-   * Compute a single 2D point along a parametrized helix strand.
+   * Compute a 2D point on a parametric helix strand for a given normalized horizontal parameter and phase.
    *
-   * t is the normalized horizontal parameter (typically 0..1) that is mapped to canvas X;
-   * `phase` offsets the angular position so the function can produce phase-shifted strands.
+   * Uses surrounding scope values (frequency, width, baseline, amplitude, offsetScale) to map `t` to canvas
+   * coordinates: x is linear across the canvas width; y is a sine-based vertical displacement with the given phase.
    *
-   * @param {number} t - Normalized position along the helix (0 = left, 1 = right).
-   * @param {number} phase - Angular phase offset in radians applied to the sine-based vertical displacement.
-   * @return {{x: number, y: number}} Object with canvas coordinates { x, y } for the given parameter.
+   * @param {number} t - Normalized horizontal position along the strand (expected ~0..1; values outside this range are allowed).
+   * @param {number} phase - Phase offset in radians applied to the sine displacement to produce phase-shifted strands.
+   * @return {{x: number, y: number}} Canvas coordinates for the helix point.
    */
   function helixPoint(t, phase) {
     const angle = t * frequency * Math.PI + phase;
