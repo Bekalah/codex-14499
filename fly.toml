@@ -1,0 +1,31 @@
+# Fly.io configuration for the Cosmic Helix Renderer.
+# Update the `app` value before deploying; keep this static setup lightweight and workflow-free.
+app = "codex-helix-placeholder"
+primary_region = "ord"
+
+[build]
+  dockerfile = "deploy/fly/Dockerfile"
+
+[env]
+  PORT = "8080"
+
+[[services]]
+  processes = ["app"]
+  internal_port = 8080
+  protocol = "tcp"
+
+  [services.concurrency]
+    hard_limit = 25
+    soft_limit = 20
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.tcp_checks]]
+    interval = "15s"
+    timeout = "2s"

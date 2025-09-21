@@ -14,14 +14,18 @@
     - Small pure helpers make numerology-driven geometry easy to audit offline.
 */
 
+// Golden Ratio constant keeps the Fibonacci layer gentle and lore-aligned.
 const GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2;
 
 const DEFAULT_DIMENSIONS = { width: 1440, height: 900 };
 
+/*
+  Palette mirrors the "Bridge of Circuits" reference: deep stone blues, warm parchment ink, and copper helix tones.
+*/
 const DEFAULT_PALETTE = {
-  bg: '#0b0b12',
-  ink: '#e8e8f0',
-  layers: ['#b1c7ff', '#89f7fe', '#a0ffa1', '#ffd27f', '#f5a3ff', '#d0d0e6']
+  bg: '#081225',
+  ink: '#f1e8c7',
+  layers: ['#2b4b7c', '#3f6aa6', '#8ba9d6', '#e7c46f', '#d9984a', '#c7d7f5']
 };
 
 const DEFAULT_NUM = {
@@ -544,4 +548,24 @@ function drawDoubleHelix(ctx, width, height, palette, NUM) {
   }
 
   ctx.restore();
+}
+
+/*
+  Legacy wrapper exports keep the historical API words alive for tests and rituals that
+  expect the shorter function names. Each wrapper forwards to the richer helpers above.
+*/
+export function drawVesica(ctx, width, height, palette, NUM) {
+  drawVesicaField(ctx, width, height, palette, NUM);
+}
+
+export function drawTree(ctx, width, height, palette, NUM) {
+  drawTreeOfLife(ctx, width, height, palette, NUM);
+}
+
+export function drawFibonacci(ctx, width, height, strokeColor, NUM) {
+  drawFibonacciCurve(ctx, width, height, strokeColor, NUM);
+}
+
+export function drawHelix(ctx, width, height, palette, NUM) {
+  drawDoubleHelix(ctx, width, height, palette, NUM);
 }

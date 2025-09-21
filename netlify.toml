@@ -1,3 +1,4 @@
+# Legacy Netlify configuration retained for reference during the Fly.io transition.
 [build]
   publish = "."
   command = ""
