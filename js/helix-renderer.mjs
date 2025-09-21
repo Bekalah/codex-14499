@@ -169,14 +169,14 @@ function ensureNumerology(input) {
 }
 
 /**
- * Fill the canvas with a solid color.
+ * Fill the entire canvas area with a solid color.
  *
- * Fills the rectangle from (0,0) to (width,height) on the provided CanvasRenderingContext2D
- * using the given CSS color.
+ * Saves and restores the canvas drawing state while setting fillStyle and filling
+ * the rectangle from (0,0) to (width,height).
  *
- * @param {number} width - Width of the fill area in pixels.
- * @param {number} height - Height of the fill area in pixels.
- * @param {string} color - CSS color or canvas-compatible color string to use as the fillStyle.
+ * @param {number} width - Width of the area to fill, in pixels.
+ * @param {number} height - Height of the area to fill, in pixels.
+ * @param {string} color - CSS-compatible color string to use for the fill.
  */
 function fillBackground(ctx, width, height, color) {
   ctx.save();
@@ -186,18 +186,18 @@ function fillBackground(ctx, width, height, color) {
 }
 
 /**
- * Draws a grid of overlapping circular "vesica" rings across the canvas.
+ * Render a grid of overlapping circular "vesica" rings across the canvas.
  *
- * The grid layout is driven by sacred-number constants from `NUM` (columns, rows,
- * margins, scale) so spacing, circle radius, stroke width, and translucency
- * scale with the canvas size and numerology. The function strokes many
- * semi-transparent circles and restores the drawing state before returning.
+ * The layout, ring radius, spacing, and stroke width are derived from the
+ * provided numerology constants so the pattern scales with canvas size.
+ * The function sets stroke style/alpha, draws a columns × rows grid of rings,
+ * and restores the canvas state before returning.
  *
  * @param {CanvasRenderingContext2D} ctx - 2D rendering context to draw into.
  * @param {number} width - Canvas width in pixels (used for layout calculations).
  * @param {number} height - Canvas height in pixels (used for layout calculations).
  * @param {string|CanvasPattern|CanvasGradient} color - Stroke style used for the circles.
- * @param {Object} NUM - Numeric constants object (expected to include SEVEN, NINE, ELEVEN, NINETYNINE) used to compute grid counts, margins, scale, and stroke width.
+ * @param {Object} NUM - Numeric constants object. Expected keys: SEVEN (columns/scale), NINE (rows/scale), ELEVEN (horizontal margin divisor), NINETYNINE (stroke width divisor).
  */
 function drawVesicaField(ctx, width, height, color, NUM) {
   const columns = NUM.SEVEN;
@@ -303,18 +303,19 @@ function drawTreeOfLife(ctx, width, height, pathColor, nodeColor, inkColor, NUM)
 }
 
 /**
- * Draws a static golden-ratio (Fibonacci-like) spiral on a 2D canvas.
+ * Draw a static golden-ratio (Fibonacci-like) spiral onto a 2D canvas.
  *
- * Renders a stroked spiral curve computed with an exponential radius growth based on the golden ratio.
- * The curve is sampled in NUM.NINETYNINE steps, centered using fractional offsets derived from NUM,
- * and stroked with a modest width and 0.75 alpha. This function mutates the provided CanvasRenderingContext2D
- * by creating and stroking a single path; it does not return a value.
+ * Renders a single stroked spiral path centered and scaled to the provided canvas
+ * dimensions. The spiral radius grows exponentially by the golden ratio; sampling
+ * density, angular sweep, center offsets, and stroke width are derived from the
+ * supplied numerology object.
  *
  * @param {CanvasRenderingContext2D} ctx - Canvas 2D context to draw onto.
  * @param {number} width - Canvas width used for layout and scaling.
  * @param {number} height - Canvas height used for layout and scaling.
  * @param {string} color - Stroke color for the spiral.
- * @param {object} NUM - Numerology constants object. Expected numeric properties used here:
+ * @param {object} NUM - Numerology constants used to control sampling, sweep,
+ *   center offsets, and sizing. Expected numeric properties include:
  *   NINETYNINE, THREE, ELEVEN, TWENTYTWO, THIRTYTHREE, ONEFORTYFOUR.
  */
 function drawFibonacciCurve(ctx, width, height, color, NUM) {
@@ -349,13 +350,20 @@ function drawFibonacciCurve(ctx, width, height, color, NUM) {
 }
 
 /**
- * Draws a static double-helix lattice (two sine-like strands with cross rungs) onto the provided Canvas 2D context.
+ * Render a static double-helix lattice (two phase-shifted strands with cross rungs) across the canvas.
  *
- * The lattice spans the full canvas width, is vertically centered, and is sampled into NUM.ONEFORTYFOUR segments.
- * Strand amplitude, horizontal frequency, and a gentle vertical offset are derived from the provided NUM constants so the helix scales predictably with canvas size.
- * Two strands are stroked in `strandColorA` and `strandColorB` and short cross rungs (NUM.TWENTYTWO across) connect matching points, stroked in `rungColor`.
+ * The lattice spans the full canvas width and is vertically centered. Two sine-like strands are stroked
+ * in `strandColorA` and `strandColorB`; short cross rungs connect corresponding points between strands.
  *
- * @param {Object} NUM - Numerology constants used for layout and scaling. Expected numeric properties: THREE, ELEVEN, TWENTYTWO, THIRTYTHREE, NINETYNINE, ONEFORTYFOUR. Values should be finite numbers.
+ * @param {CanvasRenderingContext2D} ctx - 2D drawing context to render into.
+ * @param {number} width - Canvas width in pixels.
+ * @param {number} height - Canvas height in pixels.
+ * @param {string} strandColorA - Stroke color for the first strand.
+ * @param {string} strandColorB - Stroke color for the second strand.
+ * @param {string} rungColor - Stroke color for the cross rungs.
+ * @param {Object} NUM - Numerology constants controlling layout and sampling. Expected numeric keys:
+ *   THREE, ELEVEN, TWENTYTWO, THIRTYTHREE, NINETYNINE, ONEFORTYFOUR. Values should be finite numbers;
+ *   ONEFORTYFOUR is used as the helix segment count and TWENTYTWO as the rung count.
  */
 function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungColor, NUM) {
   const segmentCount = NUM.ONEFORTYFOUR;
@@ -412,6 +420,16 @@ function drawHelixLattice(ctx, width, height, strandColorA, strandColorB, rungCo
   }
   ctx.restore();
 
+  /**
+   * Compute a single 2D point along a parametrized helix strand.
+   *
+   * t is the normalized horizontal parameter (typically 0..1) that is mapped to canvas X;
+   * `phase` offsets the angular position so the function can produce phase-shifted strands.
+   *
+   * @param {number} t - Normalized position along the helix (0 = left, 1 = right).
+   * @param {number} phase - Angular phase offset in radians applied to the sine-based vertical displacement.
+   * @return {{x: number, y: number}} Object with canvas coordinates { x, y } for the given parameter.
+   */
   function helixPoint(t, phase) {
     const angle = t * frequency * Math.PI + phase;
     const x = width * t;
