@@ -1,0 +1,92 @@
+@import url("./tokens.css");
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--tone-bg);
+  color: var(--tone-ink);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(var(--panel-max-width), 1fr));
+  gap: var(--panel-gap);
+  width: 100%;
+  max-width: 1120px;
+}
+
+.panel {
+  background: var(--tone-surface);
+  border-radius: var(--radius-soft);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.panel header {
+  font-size: 1.125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tone-accent);
+}
+
+.panel p {
+  margin: 0;
+  color: var(--tone-muted);
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.button-row a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  min-height: 44px;
+  border-radius: var(--radius-pill);
+  background: var(--tone-accent);
+  color: #061322;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.button-row a:focus-visible {
+  outline: 2px solid var(--tone-focus);
+  outline-offset: 2px;
+}
+
+.motion-gate {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: var(--space-2);
+  border-radius: var(--radius-soft);
+  display: grid;
+  gap: var(--space-1);
+  background: var(--tone-bg-soft);
+}
+
+.motion-gate strong {
+  color: var(--tone-ink);
+}

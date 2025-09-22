@@ -6,97 +6,31 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <style>
-    /* ND-safe: calm contrast, no motion, generous spacing for sensory ease. */
+    /* ND-safe: calm contrast, no motion, generous spacing */
     /* ND-safe styling: calm contrast, no motion, generous spacing for sensory ease. */
-    :root {
-      --bg: #081225;
-      --ink: #f1e8c7;
-      --muted: #95a4c7;
-      --frame: #132241;
-    }
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-      background: var(--bg);
-      color: var(--ink);
-      font: 15px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
-    }
-    header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--frame);
-      background: #0a1530;
-      background: color-mix(in srgb, var(--bg) 90%, #0a1530 10%);
-    }
-    .status {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.03em;
-    }
-    #stage {
-      display: block;
-      margin: 24px auto 12px;
-      box-shadow: 0 0 0 1px var(--frame), 0 22px 45px rgba(7, 12, 24, 0.45);
-      margin: 16px auto;
-      box-shadow: 0 0 0 1px #1d1d2a;
-      background: var(--bg);
-    }
-    .note {
-      max-width: 960px;
-      margin: 0 auto 28px;
-      padding: 0 20px;
-      color: var(--muted);
-    }
-    .note strong {
-      color: var(--ink);
-    }
-    code {
-      background: rgba(19, 34, 65, 0.65);
-      color: var(--ink);
-      padding: 2px 5px;
-      border-radius: 4px;
-    }
+    :root { --bg:#0b0b12; --ink:#e8e8f0; --muted:#a6a6c1; }
+    html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font:14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+    header { padding:12px 16px; border-bottom:1px solid #1d1d2a; }
+    .status { color:var(--muted); font-size:12px; }
+    #stage { display:block; margin:16px auto; box-shadow:0 0 0 1px #1d1d2a; }
+    .note { max-width:900px; margin:0 auto 16px; color:var(--muted); }
+    code { background:#11111a; padding:2px 4px; border-radius:3px; }
   </style>
 </head>
 <body>
   <header>
-    <div><strong>Cosmic Helix Renderer</strong> - layered sacred geometry for a quiet, breathing space.</div>
-    <div class="status" id="status">Initializing palette...</div>
-  </header>
-
-  <canvas id="stage" width="1440" height="900" aria-label="Layered sacred geometry canvas"></canvas>
-  <p class="note">
-    <strong>Offline-first:</strong> This static canvas encodes the vesica field, Tree-of-Life scaffold, Fibonacci curve, and
-    a resting double-helix lattice. Open <code>index.html</code> directly to render the four calm layers with no
-    animation, no autoplay, and no external libraries.
-  </p>
-    <div><strong>Cosmic Helix Renderer</strong> &mdash; layered sacred geometry (offline, ND-safe)</div>
+    <div><strong>Cosmic Helix Renderer</strong> — layered sacred geometry (offline, ND-safe)</div>
     <div class="status" id="status">Loading palette...</div>
   </header>
 
   <canvas id="stage" width="1440" height="900" aria-label="Layered sacred geometry canvas"></canvas>
-  <p class="note">Static Vesica grid, Tree-of-Life scaffold, Fibonacci curve, and double-helix lattice &mdash; one calm render, no animation, no external libraries.</p>
-    <div><strong>Cosmic Helix Renderer</strong> &mdash; layered sacred geometry (offline, ND-safe)</div>
-    <div class="status" id="status">Loading palette...</div>
-  </header>
-
-  <canvas id="stage" width="1440" height="900" aria-label="Layered sacred geometry canvas"></canvas>
-  <p class="note">Static renderer for the Vesica grid, Tree-of-Life scaffold, Fibonacci curve, and double-helix lattice. No animation, no autoplay, no external libraries. Open this file directly.</p>
+  <p class="note">Static Vesica grid, Tree-of-Life scaffold, Fibonacci curve, and double-helix lattice — one calm render with no animation or external libraries.</p>
 
   <script type="module">
     import { renderHelix } from "./js/helix-renderer.mjs";
 
     const statusEl = document.getElementById("status");
-    const updateStatus = (message) => {
-      if (statusEl) {
-        statusEl.textContent = message;
-      }
-    };
-    const canvas = document.getElementById("stage");
-    const ctx = canvas ? canvas.getContext("2d") : null;
 
-    const DEFAULTS = Object.freeze({
     // Helper keeps status updates safe when the element is absent.
     function setStatus(text) {
       if (statusEl) {
@@ -104,123 +38,65 @@
       }
     }
 
-    async function loadJSON(path) {
-      try {
-        const response = await fetch(path, { cache: "no-store" });
-        if (!response || !response.ok) return null;
-        return await response.json();
-      } catch (error) {
-        /* Offline-first ND safety: browsers may block file:// fetch; return null so the fallback activates quietly. */
     const canvas = document.getElementById("stage");
     const ctx = canvas ? canvas.getContext("2d") : null;
 
     async function loadJSON(path) {
       try {
         const res = await fetch(path, { cache: "no-store" });
-        if (!res.ok) return null;
-        return await res.json();
+        if (!res.ok) throw new Error(String(res.status));
+        const data = await res.json();
+        return normalizePalette(data);
       } catch (err) {
-        /* Offline-first ND safety: browsers may block file:// fetch. Returning null keeps the render calm. */
+        /* Offline-first ND safety: browsers may block file:// fetch; returning null keeps the fallback gentle. */
         return null;
       }
     }
 
-    // Calm fallback palette keeps the scene readable when palette.json is missing or blocked.
     const FALLBACK = {
       palette: {
-        bg: "#081225",
-        ink: "#f1e8c7",
-        layers: ["#2b4b7c", "#3f6aa6", "#8ba9d6", "#e7c46f", "#d9984a", "#c7d7f5"]
+        bg:"#0b0b12",
+        ink:"#e8e8f0",
+        layers:["#b1c7ff","#89f7fe","#a0ffa1","#ffd27f","#f5a3ff","#d0d0e6"]
       }
-    });
     };
 
     const paletteData = await loadJSON("./data/palette.json");
     const activePalette = paletteData ?? FALLBACK.palette;
     const statusMessage = paletteData ? "Palette loaded." : "Palette missing; using safe fallback.";
+    setStatus(statusMessage);
 
     const rootStyle = document.documentElement.style;
     // ND-safe shell: sync CSS custom properties with the active palette for consistent contrast.
     rootStyle.setProperty("--bg", activePalette.bg);
     rootStyle.setProperty("--ink", activePalette.ink);
     rootStyle.setProperty("--muted", "#a6a6c1");
-    const fallbackPalette = {
-      bg: "#0b0b12",
-      ink: "#e8e8f0",
-      layers: ["#b1c7ff", "#89f7fe", "#a0ffa1", "#ffd27f", "#f5a3ff", "#d0d0e6"]
-    };
-
-    const paletteData = await loadJSON("./data/palette.json");
-    const palette = paletteData || fallbackPalette;
-    if (statusEl) {
-      statusEl.textContent = paletteData ? "Palette loaded." : "Palette missing; using safe fallback.";
-    }
-
-    const NUM = Object.freeze({
-      THREE: 3,
-      SEVEN: 7,
-      NINE: 9,
-      ELEVEN: 11,
-      TWENTYTWO: 22,
-      THIRTYTHREE: 33,
-      NINETYNINE: 99,
-      ONEFORTYFOUR: 144
-    });
-
-    async function loadPalette(path) {
-      if (typeof fetch !== "function") {
-        return null;
-      }
-
-      try {
-        const response = await fetch(path, { cache: "no-store" });
-        if (!response.ok) {
-          return null;
-        }
-        return await response.json();
-      } catch (error) {
-        /* Offline-first ND safety: browsers often block file:// fetch calls, so we fall back quietly. */
-        return null;
-      }
-    }
-
-    async function init() {
-      if (!ctx) {
-        updateStatus("Canvas unavailable; rendering skipped.");
-        return;
-      }
-
-      const palette = await loadPalette("./data/palette.json");
-      const activePalette = palette ?? DEFAULTS.palette;
-      updateStatus(
-        palette ? "Palette loaded." : "Palette missing or blocked; using safe fallback."
-      );
-
-      document.documentElement.style.setProperty("--bg", activePalette.bg);
-      document.documentElement.style.setProperty("--ink", activePalette.ink);
-      const mutedAccent = activePalette.layers[2] || activePalette.ink;
-      document.documentElement.style.setProperty("--muted", mutedAccent);
 
     if (!ctx) {
-      setStatus(`${statusMessage} Canvas context unavailable; rendering skipped.`);
-    } else {
-      setStatus(statusMessage);
-      // ND-safe rationale: one synchronous render with calm tones and clear layer order.
-      renderHelix(ctx, {
-        width: canvas.width,
-        height: canvas.height,
-        palette: activePalette,
-        NUM
-      });
+      setStatus("Canvas context unavailable; rendering skipped.");
+      return;
     }
 
-    init().catch((error) => {
-      updateStatus("Render aborted; see console for details.");
-      console.error("Cosmic Helix Renderer init failed", error);
-    });
-    if (ctx) {
-      /* ND-safe rationale: one synchronous render, layered geometry stays static for sensory stability. */
-      renderHelix(ctx, { width: canvas.width, height: canvas.height, palette, NUM });
+    const NUM = { THREE:3, SEVEN:7, NINE:9, ELEVEN:11, TWENTYTWO:22, THIRTYTHREE:33, NINETYNINE:99, ONEFORTYFOUR:144 };
+
+    // ND-safe rationale: no motion, high readability, soft colors, layered order.
+    renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:activePalette, NUM });
+
+    function normalizePalette(source) {
+      if (!source || typeof source !== "object") return null;
+      if (Array.isArray(source.layers) && typeof source.bg === "string" && typeof source.ink === "string") {
+        return { bg:source.bg, ink:source.ink, layers:source.layers.slice(0, 6) };
+      }
+      if (typeof source.background === "string" && typeof source.ink === "string") {
+        const layers = [];
+        Object.keys(source).forEach((key) => {
+          if (key !== "background" && key !== "ink") {
+            layers.push(source[key]);
+          }
+        });
+        return { bg:source.background, ink:source.ink, layers:layers.slice(0, 6) };
+      }
+      return null;
     }
   </script>
 </body>

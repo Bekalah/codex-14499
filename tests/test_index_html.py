@@ -21,7 +21,7 @@ def _load_index_html():
 
 def test_doctype_and_language():
     html, path = _load_index_html()
-    assert html.lstrip().lower().startswith("<\!doctype html>"), f"Missing/incorrect doctype in {path}"
+    assert html.lstrip().lower().startswith("<!doctype html>"), f"Missing/incorrect doctype in {path}"
     assert re.search(r'<html[^>]*\blang=["\']en["\']', html, re.I), "html lang=en is required for a11y"
 
 def test_head_meta_and_title_present():
@@ -104,19 +104,18 @@ def test_numerology_constants_defined_exactly():
         "THREE": 3, "SEVEN": 7, "NINE": 9, "ELEVEN": 11,
         "TWENTYTWO": 22, "THIRTYTHREE": 33, "NINETYNINE": 99, "ONEFORTYFOUR": 144
     }
+    upper_html = html.upper()
     for name, val in constants.items():
-        assert re.search(rf'\\b{name}\\b\\s*:\\s*{val}\\s*,?', html), f"NUM.{name} should equal {val}"
+        expected = f"{name}:{val}"
+        assert expected in upper_html, f"NUM.{name} should equal {val}"
 
 def test_rendering_invocation_and_ctx_guard_present():
     html, _ = _load_index_html()
     # Guard when ctx is falsy
     assert re.search(r'if\s*\(\s*\!\s*ctx\s*\)\s*\{', html)
     # renderHelix invocation with expected object properties
-    call_pattern = re.compile(
-        r'renderHelix\\(\\s*ctx\\s*,\\s*\\{[^}]*\\bwidth\\s*:\\s*canvas\\.width\\b[^}]*\\bheight\\s*:\\s*canvas\\.height\\b[^}]*\\bpalette\\s*:\\s*activePalette\\b[^}]*\\bNUM\\b[^}]*\\}\\s*\\)\\s*;',
-        re.S
-    )
-    assert call_pattern.search(html), "renderHelix(ctx, { width, height, palette, NUM }) call missing or malformed"
+    snippet = "renderHelix(ctx, { width:canvas.width, height:canvas.height, palette:activePalette, NUM });"
+    assert snippet in html.replace("\n", " "), "renderHelix(ctx, { width, height, palette, NUM }) call missing or malformed"
 
 def test_accessibility_and_nd_safe_comments_present():
     html, _ = _load_index_html()

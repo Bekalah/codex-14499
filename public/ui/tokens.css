@@ -1,0 +1,26 @@
+/* Kanso/Ma/Shibumi inspired tokens; ND-safe calm palette and spacing */
+:root {
+  --tone-bg: #0b0b12;
+  --tone-bg-soft: #13131f;
+  --tone-surface: #1a1a29;
+  --tone-ink: #ececf4;
+  --tone-muted: #a6a6c1;
+  --tone-accent: #7fd7ff;
+  --tone-focus: #ffd27f;
+
+  --font-family-sans: "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-size-base: 16px;
+  --line-height-base: 1.5;
+
+  --radius-soft: 12px;
+  --radius-pill: 22px;
+
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+
+  --panel-max-width: 420px;
+  --panel-gap: 40px;
+  --shadow-soft: 0 20px 45px rgba(5, 5, 12, 0.45);
+}

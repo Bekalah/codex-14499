@@ -140,15 +140,14 @@ def test_referenced_files_when_present():
     palette_json = ROOT / "data" / "palette.json"
     if palette_json.exists():
         data = json.loads(palette_json.read_text(encoding="utf-8"))
-        # Required keys
-        for key in ["background", "ink"]:
+        for key in ["bg", "ink", "layers"]:
             assert key in data, f"palette.json missing '{key}'"
-        # Expect 6 additional layer colors (names are project-defined; only count)
-        other_keys = [k for k in data.keys() if k not in {"background", "ink"}]
-        assert len(other_keys) == 6, f"Expected 6 layer colors, found {len(other_keys)}"
-        # Hex color format
-        for k, v in data.items():
-            assert isinstance(v, str) and re.fullmatch(r"#[0-9A-Fa-f]{6}", v), f"Invalid hex color for {k}: {v}"
+        assert isinstance(data["layers"], list), "palette.json layers must be an array"
+        assert len(data["layers"]) == 6, f"Expected 6 layer colors, found {len(data['layers'])}"
+        # Hex color format for background, ink, and layer entries
+        palette_colors = [data["bg"], data["ink"], *data["layers"]]
+        for color in palette_colors:
+            assert isinstance(color, str) and re.fullmatch(r"#[0-9A-Fa-f]{6}", color), f"Invalid hex color: {color}"
 
 
 def test_no_remote_dependencies_in_index_html():
