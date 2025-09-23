@@ -41,6 +41,7 @@ function isFiniteNumber(value) {
 }
 
 function ensureNumerology(input) {
+  // Merge user numerology while ignoring zero or NaN to keep sacred ratios stable.
   const source = input && typeof input === 'object' ? input : {};
   const result = { ...DEFAULT_NUM };
   for (const key of Object.keys(DEFAULT_NUM)) {
@@ -57,6 +58,7 @@ function normalizeColor(value, fallback) {
 }
 
 function ensurePalette(input) {
+  // Guarantee six hues even if the palette file is absent, preserving layer contrast offline.
   const base = input && typeof input === 'object' ? input : {};
   const layers = Array.isArray(base.layers) ? base.layers.filter(color => typeof color === 'string') : [];
   const padded = [...layers];
@@ -75,6 +77,7 @@ function ensurePalette(input) {
 }
 
 function normalizeOptions(opts = {}) {
+  // Normalize options so every downstream helper receives predictable dimensions and numerology.
   const NUM = ensureNumerology(opts.NUM || opts.numerology);
   const palette = ensurePalette(opts.palette);
   const width = isFiniteNumber(opts.width) ? opts.width : DEFAULT_WIDTH;
@@ -83,6 +86,7 @@ function normalizeOptions(opts = {}) {
 }
 
 function prepareContext(ctx, width, height, palette) {
+  // Reset transforms and paint a calm background so layers remain high contrast without flashing.
   ctx.save();
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.clearRect(0, 0, width, height);
@@ -106,8 +110,10 @@ function drawVesica(ctx, width, height, palette, NUM) {
   ctx.lineWidth = 1.25;
   ctx.globalAlpha = 0.6;
 
+  // Nine columns and seven rows echo sacred numbers while producing a vesica-style overlap grid.
   const columns = NUM.NINE;
   const rows = NUM.SEVEN;
+  // Radius is reduced to 75 percent of the spacing to keep intersections soft rather than overwhelming.
   const radius = Math.min(width / (columns + 2), height / (rows + 2)) * 0.75;
   const offsetX = (width - (columns - 1) * radius) / 2;
   const offsetY = (height - (rows - 1) * radius) / 2;
@@ -116,6 +122,7 @@ function drawVesica(ctx, width, height, palette, NUM) {
     for (let col = 0; col < columns; col += 1) {
       const cx = offsetX + col * radius;
       const cy = offsetY + row * radius;
+      // Each circle is stroked only once to avoid flicker while still suggesting the vesica weave.
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
       ctx.stroke();
@@ -151,7 +158,9 @@ const TREE_PATHS = [
 function mapTreePositions(width, height, NUM) {
   const verticalSpan = height * 0.72;
   const top = height * 0.12;
+  // 144/22 calibrates the level spacing so twenty-two paths stay balanced across the height.
   const levelStep = verticalSpan / (NUM.ONEFORTYFOUR / NUM.TWENTYTWO);
+  // Width is divided by 3*7 to respect triads and sevens when spacing the columns.
   const horizontalUnit = width / (NUM.THREE * NUM.SEVEN);
   const centerX = width / 2;
 
@@ -171,6 +180,7 @@ function drawTree(ctx, width, height, palette, NUM) {
   ctx.strokeStyle = palette.layers[1];
   ctx.lineWidth = 1.5;
   ctx.globalAlpha = 0.8;
+  // Paths are drawn before nodes so lines recede gently behind the luminous sephirot.
   for (const [fromKey, toKey] of TREE_PATHS) {
     const from = positions.get(fromKey);
     const to = positions.get(toKey);
@@ -195,6 +205,7 @@ function drawTree(ctx, width, height, palette, NUM) {
 }
 
 function fibonacciPoints(width, height, NUM) {
+  // Sample ninety-nine points to keep the static spiral smooth without hinting at motion.
   const samples = NUM.NINETYNINE;
   const centerX = width * 0.32;
   const centerY = height * 0.64;
@@ -222,6 +233,7 @@ function drawFibonacci(ctx, width, height, palette, NUM) {
   ctx.strokeStyle = palette.layers[3];
   ctx.lineWidth = 2;
   ctx.globalAlpha = 0.85;
+  // The spiral is rendered as a calm polyline so no easing curves imply motion.
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
   for (let i = 1; i < points.length; i += 1) {
@@ -236,6 +248,7 @@ function drawFibonacci(ctx, width, height, palette, NUM) {
   const step = Math.max(6, Math.floor(points.length / NUM.TWENTYTWO));
   for (let i = 0; i < points.length; i += step) {
     const p = points[i];
+    // Evenly spaced markers act as quiet milestones instead of animated highlights.
     drawCircle(ctx, p.x, p.y, markerRadius, true);
   }
 
@@ -253,7 +266,9 @@ function drawHelix(ctx, width, height, palette, NUM) {
   ctx.save();
   const verticalMargin = height * 0.12;
   const usableHeight = height - verticalMargin * 2;
+  // Amplitude is governed by eleven to keep the helix within gentle bounds.
   const amplitude = width / NUM.ELEVEN;
+  // Frequency leans on 3 and 7, scaled by 22, to honor the requested numerology set.
   const frequency = NUM.THREE + NUM.SEVEN / NUM.TWENTYTWO;
   const samples = NUM.ONEFORTYFOUR;
 
@@ -315,6 +330,7 @@ function renderHelix(ctx, opts = {}) {
   ctx.save();
   ctx.translate((canvas.width - width) / 2, (canvas.height - height) / 2);
 
+  // Paint layers from background to foreground so overlaps stay coherent and legible.
   drawVesica(ctx, width, height, palette, NUM);
   drawTree(ctx, width, height, palette, NUM);
   drawFibonacci(ctx, width, height, palette, NUM);
