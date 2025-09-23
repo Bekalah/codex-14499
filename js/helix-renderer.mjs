@@ -186,7 +186,7 @@ function drawTree(ctx, width, height, palette, NUM) {
   ctx.fillStyle = palette.layers[2];
   ctx.strokeStyle = palette.ink;
   ctx.lineWidth = 1;
-  const nodeRadius = Math.max(8, Math.min(width, height) / 60);
+  const nodeRadius = Math.max(8, Math.min(width, height) / NUM.THIRTYTHREE);
   for (const [, pos] of positions) {
     drawCircle(ctx, pos.x, pos.y, nodeRadius, true);
   }
@@ -278,12 +278,13 @@ function drawHelix(ctx, width, height, palette, NUM) {
   drawStrand(palette.layers[5], 0);
   drawStrand(palette.layers[4], Math.PI);
 
-  // Crossbars tie the two strands without implying motion.
-  const rungCount = NUM.TWENTYTWO;
+  // Crossbars tie the two strands without implying motion; 33 anchors yield 22 calm rungs.
+  const rungCount = NUM.THIRTYTHREE - NUM.ELEVEN;
   ctx.strokeStyle = palette.ink;
   ctx.globalAlpha = 0.6;
-  for (let i = 0; i <= rungCount; i += 1) {
-    const t = i / rungCount;
+  const rungStep = Math.max(1, rungCount - 1);
+  for (let i = 0; i < rungCount; i += 1) {
+    const t = i / rungStep;
     const a = helixPoint(t, 0, width, verticalMargin, usableHeight, amplitude, frequency);
     const b = helixPoint(t, Math.PI, width, verticalMargin, usableHeight, amplitude, frequency);
     ctx.beginPath();
