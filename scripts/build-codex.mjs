@@ -15,6 +15,7 @@ const ROOT = path.resolve(__dirname, '..');
 const DATA_DIR = path.join(ROOT, 'data');
 const DIST_DIR = path.join(ROOT, 'dist');
 const OUTPUT_PATH = path.join(DIST_DIR, 'codex.min.json');
+const PKG_PATH = path.join(ROOT, 'package.json');
 
 /**
  * Read and parse a JSON file from the data directory, returning a fallback when the file is missing.
@@ -49,14 +50,19 @@ async function readJSON(filename, fallback = null) {
  * @return {Promise<void>} Resolves when the bundle has been written.
  */
 async function buildBundle() {
-  const [constants, nodes, citations, palette] = await Promise.all([
+  const [pkgRaw, constants, nodes, citations, palette] = await Promise.all([
+    fs.readFile(PKG_PATH, 'utf8').catch(() => null),
     readJSON('constants.json', {}),
     readJSON('nodes.json', []),
     readJSON('citations.json', []),
     readJSON('palette.json', null)
   ]);
 
+  const pkg = pkgRaw ? JSON.parse(pkgRaw) : {};
+
   const payload = {
+    name: typeof pkg.name === 'string' ? pkg.name : 'codex-14499',
+    version: typeof pkg.version === 'string' ? pkg.version : '0.0.0',
     generated_at: new Date().toISOString(),
     constants,
     nodes,
