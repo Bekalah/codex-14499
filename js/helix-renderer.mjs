@@ -108,14 +108,16 @@ function drawVesica(ctx, width, height, palette, NUM) {
 
   const columns = NUM.NINE;
   const rows = NUM.SEVEN;
-  const radius = Math.min(width / (columns + 2), height / (rows + 2)) * 0.75;
-  const offsetX = (width - (columns - 1) * radius) / 2;
-  const offsetY = (height - (rows - 1) * radius) / 2;
+  const radius = Math.min(width / (columns + 2), height / (rows + 2)) * 0.9;
+  const spacingX = radius * (NUM.SEVEN / NUM.NINE); // 7/9 keeps lenses interlocked.
+  const spacingY = radius * (NUM.THREE / NUM.SEVEN); // 3/7 keeps vertical cadence gentle.
+  const startX = (width - (columns - 1) * spacingX) / 2;
+  const startY = (height - (rows - 1) * spacingY) / 2;
 
   for (let row = 0; row < rows; row += 1) {
     for (let col = 0; col < columns; col += 1) {
-      const cx = offsetX + col * radius;
-      const cy = offsetY + row * radius;
+      const cx = startX + col * spacingX;
+      const cy = startY + row * spacingY;
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
       ctx.stroke();
@@ -151,7 +153,8 @@ const TREE_PATHS = [
 function mapTreePositions(width, height, NUM) {
   const verticalSpan = height * 0.72;
   const top = height * 0.12;
-  const levelStep = verticalSpan / (NUM.ONEFORTYFOUR / NUM.TWENTYTWO);
+  const levels = NUM.SEVEN; // Seven vertical steps echo Tree-of-Life pillars.
+  const levelStep = verticalSpan / (levels - 1);
   const horizontalUnit = width / (NUM.THREE * NUM.SEVEN);
   const centerX = width / 2;
 
@@ -170,6 +173,8 @@ function drawTree(ctx, width, height, palette, NUM) {
 
   ctx.strokeStyle = palette.layers[1];
   ctx.lineWidth = 1.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
   ctx.globalAlpha = 0.8;
   for (const [fromKey, toKey] of TREE_PATHS) {
     const from = positions.get(fromKey);
@@ -221,6 +226,7 @@ function drawFibonacci(ctx, width, height, palette, NUM) {
 
   ctx.strokeStyle = palette.layers[3];
   ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
   ctx.globalAlpha = 0.85;
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
@@ -254,10 +260,11 @@ function drawHelix(ctx, width, height, palette, NUM) {
   const verticalMargin = height * 0.12;
   const usableHeight = height - verticalMargin * 2;
   const amplitude = width / NUM.ELEVEN;
-  const frequency = NUM.THREE + NUM.SEVEN / NUM.TWENTYTWO;
+  const frequency = NUM.THREE + NUM.SEVEN / NUM.TWENTYTWO; // 3 + 7/22 keeps the twist gentle.
   const samples = NUM.ONEFORTYFOUR;
 
   ctx.lineWidth = 1.5;
+  ctx.lineCap = 'round';
   ctx.globalAlpha = 0.9;
 
   function drawStrand(color, phase) {
@@ -278,13 +285,13 @@ function drawHelix(ctx, width, height, palette, NUM) {
   drawStrand(palette.layers[5], 0);
   drawStrand(palette.layers[4], Math.PI);
 
-  // Crossbars tie the two strands without implying motion; 33 anchors yield 22 calm rungs.
-  const rungCount = NUM.THIRTYTHREE - NUM.ELEVEN;
+  // Crossbars tie the two strands without implying motion; twenty-two rungs honor the path count.
+  const rungCount = NUM.TWENTYTWO;
   ctx.strokeStyle = palette.ink;
   ctx.globalAlpha = 0.6;
-  const rungStep = Math.max(1, rungCount - 1);
+  const rungSpacing = rungCount > 1 ? 1 / (rungCount - 1) : 0;
   for (let i = 0; i < rungCount; i += 1) {
-    const t = i / rungStep;
+    const t = i * rungSpacing;
     const a = helixPoint(t, 0, width, verticalMargin, usableHeight, amplitude, frequency);
     const b = helixPoint(t, Math.PI, width, verticalMargin, usableHeight, amplitude, frequency);
     ctx.beginPath();
