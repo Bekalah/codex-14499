@@ -8,7 +8,6 @@
     "test": "pytest -q",
     "dedup": "python scripts/dedup.py",
     "dedup:fix": "python scripts/dedup.py --fix",
-    "contrast": "node scripts/check-contrast.mjs",
-    "build": "node scripts/build-dist.mjs"
+    "contrast": "node scripts/check-contrast.mjs"
   }
 }
