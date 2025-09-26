@@ -113,28 +113,19 @@ function drawVesica(ctx, width, height, palette, NUM) {
   // Nine columns and seven rows echo sacred numbers while producing a vesica-style overlap grid.
   const columns = NUM.NINE;
   const rows = NUM.SEVEN;
-  const radius = Math.min(width / (columns + 2), height / (rows + 2)) * 0.9;
-  const spacingX = radius * (NUM.SEVEN / NUM.NINE); // 7/9 keeps lenses interlocked.
-  const spacingY = radius * (NUM.THREE / NUM.SEVEN); // 3/7 keeps vertical cadence gentle.
-  const startX = (width - (columns - 1) * spacingX) / 2;
-  const startY = (height - (rows - 1) * spacingY) / 2;
+  const baseRadius = Math.min(width / (columns + 2), height / (rows + 2)) * 0.75;
+  const spacingX = baseRadius * (NUM.SEVEN / NUM.NINE);
+  const spacingY = baseRadius * (NUM.THREE / NUM.SEVEN);
+  const startX = (width - spacingX * (columns - 1)) / 2;
+  const startY = (height - spacingY * (rows - 1)) / 2;
 
   for (let row = 0; row < rows; row += 1) {
     for (let col = 0; col < columns; col += 1) {
       const cx = startX + col * spacingX;
       const cy = startY + row * spacingY;
-  // Radius is reduced to 75 percent of the spacing to keep intersections soft rather than overwhelming.
-  const radius = Math.min(width / (columns + 2), height / (rows + 2)) * 0.75;
-  const offsetX = (width - (columns - 1) * radius) / 2;
-  const offsetY = (height - (rows - 1) * radius) / 2;
-
-  for (let row = 0; row < rows; row += 1) {
-    for (let col = 0; col < columns; col += 1) {
-      const cx = offsetX + col * radius;
-      const cy = offsetY + row * radius;
-      // Each circle is stroked only once to avoid flicker while still suggesting the vesica weave.
+      // Each circle is stroked once to suggest the vesica weave without over-stimulating.
       ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.arc(cx, cy, baseRadius, 0, Math.PI * 2);
       ctx.stroke();
     }
   }
@@ -168,11 +159,7 @@ const TREE_PATHS = [
 function mapTreePositions(width, height, NUM) {
   const verticalSpan = height * 0.72;
   const top = height * 0.12;
-  const levels = NUM.SEVEN; // Seven vertical steps echo Tree-of-Life pillars.
-  const levelStep = verticalSpan / (levels - 1);
-  // 144/22 calibrates the level spacing so twenty-two paths stay balanced across the height.
   const levelStep = verticalSpan / (NUM.ONEFORTYFOUR / NUM.TWENTYTWO);
-  // Width is divided by 3*7 to respect triads and sevens when spacing the columns.
   const horizontalUnit = width / (NUM.THREE * NUM.SEVEN);
   const centerX = width / 2;
 
@@ -283,7 +270,6 @@ function drawHelix(ctx, width, height, palette, NUM) {
   const usableHeight = height - verticalMargin * 2;
   // Amplitude is governed by eleven to keep the helix within gentle bounds.
   const amplitude = width / NUM.ELEVEN;
-  const frequency = NUM.THREE + NUM.SEVEN / NUM.TWENTYTWO; // 3 + 7/22 keeps the twist gentle.
   // Frequency leans on 3 and 7, scaled by 22, to honor the requested numerology set.
   const frequency = NUM.THREE + NUM.SEVEN / NUM.TWENTYTWO;
   const samples = NUM.ONEFORTYFOUR;
@@ -366,6 +352,7 @@ export {
   prepareContext,
   drawCircle,
   drawVesica,
+  mapTreePositions,
   drawTree,
   fibonacciPoints,
   drawFibonacci,
