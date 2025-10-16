@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+  <title>Cathedral of Circuits</title>
+  <meta name="description" content="Cathedral of Circuits — living grimoire engine, chapels, and cosmogenesis learning. ND-safe, fast, and modular." />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#0b0b0f" />
+
+  <!-- Favicon / Logo (optional; place files in apps/web/public/) -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.png" type="image/png" />
+
+  <!-- Respect motion sensitivity -->
+  <style>
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+    }
+    html, body, #root { height: 100%; margin: 0; background: #0b0b0f; color: #eaeaf2; }
+    /* Small, tasteful default so a blank page still looks intentional */
+    .boot {
+      display: grid; place-items: center; height: 100%;
+      font: 600 1rem/1.6 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      letter-spacing: .2px; opacity: .9;
+    }
+    .boot b { color: #7dd3fc; } /* accent */
+  </style>
+
+  <!-- Preload fonts (optional) -->
+  <!-- <link rel="preload" href="/fonts/your-font.woff2" as="font" type="font/woff2" crossorigin> -->
+</head>
+<body>
+  <noscript>This site needs JavaScript to render the chapels and grimoires.</noscript>
+  <div id="root">
+    <div class="boot">Loading <b>Cathedral</b>…</div>
+  </div>
+
+  <!-- Vite entry (lives in apps/web/src/main.tsx) -->
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
