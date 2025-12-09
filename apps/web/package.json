@@ -18,5 +18,10 @@
     "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.4.5",
     "vite": "^5.2.0"
+  },
+  "alchemical": {
+    "name": "Cathedral Web",
+    "symbol": "⊙",
+    "label": "⊙ Cathedral Web (cathedral-web)"
   }
 }

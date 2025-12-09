@@ -5,3 +5,11 @@ __pycache__/
 node_modules/
 apps/web/node_modules/
 apps/web/dist/
+
+# Security
+.env.local
+.env.production
+*.pem
+*.key
+secrets/
+*.secret

@@ -9,5 +9,21 @@
     "dedup": "python scripts/dedup.py",
     "dedup:fix": "python scripts/dedup.py --fix",
     "contrast": "node scripts/check-contrast.mjs"
+  },
+  "alchemical": {
+    "name": "Codex 14499",
+    "symbol": "⊙",
+    "label": "⊙ Codex 14499 (codex-14499)",
+    "magnumOpus": true,
+    "hermetic": true,
+    "enochian": true,
+    "goldStandard": true
+  },
+  "cathedral": {
+    "quality": "Gold Standard A+",
+    "theme": "magnum-opus-master",
+    "palette": "hermetic-enochian-alchemical",
+    "accuracy": "artistic-scientific-creative-research-based",
+    "control": "turbo-openspec"
   }
 }
