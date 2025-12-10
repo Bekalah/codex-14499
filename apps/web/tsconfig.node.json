@@ -1,4 +1,8 @@
 {
+<<<<<<< origin
+=======
+<<<<<<< HEAD
+>>>>>>> modified
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
@@ -7,3 +11,17 @@
   },
   "include": ["vite.config.ts"]
 }
+<<<<<<< origin
+=======
+=======
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["vite.config.ts"]
+}
+>>>>>>> 238560e80e8a371b7ddac79f30ccbecd9fca80b0
+>>>>>>> modified

@@ -1,3 +1,7 @@
+<<<<<<< origin
+=======
+<<<<<<< HEAD
+>>>>>>> modified
 .DS_Store
 Thumbs.db
 __pycache__/
@@ -13,3 +17,78 @@ apps/web/dist/
 *.key
 secrets/
 *.secret
+<<<<<<< origin
+=======
+=======
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Experiment files
+experiment-state.json
+IMPROVEMENT_EXPERIMENT_LOG.json
+improvements-summary.md
+experiment.out
+
+# Continuous improvement files
+.continuous-improvement-state.json
+.continuous-improvement.log
+.continuous-improvement.pid
+
+# GitHub token (if accidentally committed)
+.env.local
+.env.*.local
+*.token
+*.key
+
+# Backup and duplicate directories (for GitLab transfer)
+cathedral-master/
+.safe-merge-backup/
+.archive/
+.backups/
+.cleanup-backup/
+.consolidation-backups/
+.real-duplicate-backups/
+.remote-repos/
+
+# Logs and temporary directories
+.logs/
+>>>>>>> 238560e80e8a371b7ddac79f30ccbecd9fca80b0
+>>>>>>> modified
